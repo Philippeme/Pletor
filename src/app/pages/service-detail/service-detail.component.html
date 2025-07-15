@@ -1,0 +1,200 @@
+<div class="service-detail-page">
+    <div class="container py-4">
+
+        <!-- Loading State -->
+        <div class="text-center py-5" *ngIf="isLoading">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+
+        <!-- Error State -->
+        <div class="text-center py-5" *ngIf="errorMessage && !isLoading">
+            <div class="error-icon mb-3">
+                <i class="fas fa-exclamation-triangle fa-3x text-warning"></i>
+            </div>
+            <h3>{{ errorMessage }}</h3>
+            <button class="btn btn-primary mt-3" (click)="goBack()">
+                <i class="fas fa-arrow-left me-2"></i>
+                Go Back
+            </button>
+        </div>
+
+        <!-- Service Detail Content -->
+        <div *ngIf="service && !isLoading">
+
+            <!-- Page Header -->
+            <div class="page-header mb-4">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a routerLink="/procedures">Procedures</a>
+                        </li>
+                        <li class="breadcrumb-item active">
+                            {{ service.pname }}
+                        </li>
+                    </ol>
+                </nav>
+
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h1 class="service-title">{{ service.pname }}</h1>
+                        <p class="service-subtitle">{{ service.shortdesc }}</p>
+                    </div>
+                    <div class="col-md-4 text-md-end">
+                        <div class="service-status">
+                            <span class="badge badge-lg"
+                                [ngClass]="service.published ? 'bg-success' : 'bg-secondary'">
+                                <i [ngClass]="service.published ? 'fas fa-check-circle' : 'fas fa-clock'"
+                                    class="me-2"></i>
+                                {{ service.published ? 'Available Online' : 'Coming Soon' }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Service Overview -->
+            <div class="service-overview mb-5">
+                <div class="row g-4">
+                    <div class="col-lg-8">
+                        <div class="service-description-card">
+                            <h3 class="card-title">
+                                <i class="fas fa-info-circle me-2"></i>
+                                Service Description
+                            </h3>
+                            <div class="card-content">
+                                <p class="description-text">{{ service.longdesc }}</p>
+
+                                <!-- Legal Texts -->
+                                <div class="legal-texts" *ngIf="service.legaltext">
+                                    <h5 class="mt-4 mb-3">Legal Framework</h5>
+                                    <div class="legal-document">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="legal-title">Legal Reference</h6>
+                                                <p class="legal-excerpt">{{ service.legaltext }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="service-details-card">
+                            <h4 class="card-title">Service Details</h4>
+
+                            <div class="detail-item">
+                                <div class="detail-icon">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div class="detail-content">
+                                    <strong>Processing Time</strong>
+                                    <span>{{ service.processtime }}</span>
+                                </div>
+                            </div>
+
+                            <div class="detail-item">
+                                <div class="detail-icon">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                </div>
+                                <div class="detail-content">
+                                    <strong>Cost</strong>
+                                    <span>{{ formatCurrency(service.servicecost, service.currency) }}</span>
+                                </div>
+                            </div>
+
+                            <div class="detail-item">
+                                <div class="detail-icon">
+                                    <i class="fas fa-building"></i>
+                                </div>
+                                <div class="detail-content">
+                                    <strong>Provided By</strong>
+                                    <span>{{ service.providingAdministration.institutionName }}</span>
+                                </div>
+                            </div>
+
+                            <!-- Apply Button -->
+                            <button class="btn btn-primary btn-lg w-100 mt-4" [disabled]="!service.published"
+                                (click)="onApplyForService()">
+                                <i class="fas fa-paper-plane me-2"></i>
+                                {{ service.published ? 'Apply Now' : 'Coming Soon' }}
+                            </button>
+
+                            <div class="alert alert-info mt-3" *ngIf="!service.published">
+                                <small>
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    This service will be available online soon. Please visit the relevant office for
+                                    now.
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Required Documents -->
+            <div class="required-documents mb-5" *ngIf="service.documents && service.documents.length > 0">
+                <h3 class="section-title">
+                    <i class="fas fa-file-alt me-2"></i>
+                    Required Documents
+                </h3>
+
+                <div class="row g-3">
+                    <div class="col-md-6" *ngFor="let requirement of service.documents">
+                        <div class="document-card">
+                            <div class="document-header">
+                                <div class="document-icon">
+                                    <i class="fas fa-file-alt"></i>
+                                </div>
+                                <div class="document-info">
+                                    <h6 class="document-name">{{ requirement.name }}</h6>
+                                    <span class="badge" [class.bg-danger]="requirement.isRequired"
+                                        [class.bg-secondary]="!requirement.isRequired">
+                                        {{ requirement.isRequired ? 'Required' : 'Optional' }}
+                                    </span>
+                                </div>
+                            </div>
+                            <p class="document-description">{{ requirement.description }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Help Section -->
+            <div class="help-section">
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="help-card">
+                            <div class="help-icon">
+                                <i class="fas fa-question-circle"></i>
+                            </div>
+                            <h5>Need Help?</h5>
+                            <p>Contact our support team for assistance with your application.</p>
+                            <button class="btn btn-outline-primary">
+                                <i class="fas fa-phone me-2"></i>
+                                Contact Support
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="help-card">
+                            <div class="help-icon">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <h5>Track Your Application</h5>
+                            <p>Already submitted? Track the status of your application.</p>
+                            <button class="btn btn-outline-primary" routerLink="/search-files">
+                                <i class="fas fa-search me-2"></i>
+                                Track Application
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

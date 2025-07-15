@@ -1,0 +1,176 @@
+.search-files-page {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+
+    .page-header {
+        .search-icon {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 1rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.1rem;
+            color: #666;
+        }
+    }
+
+    .search-card {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+
+        .input-group-text {
+            background-color: #f8f9fa;
+            border-right: none;
+        }
+
+        .form-control {
+            border-left: none;
+            border-right: none;
+
+            &:focus {
+                box-shadow: none;
+                border-color: var(--primary-color);
+            }
+        }
+
+        .btn-primary {
+            border-radius: 0 8px 8px 0;
+        }
+    }
+
+    .result-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+
+        .application-header {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 2rem;
+            border-bottom: 1px solid #dee2e6;
+
+            .application-title {
+                color: var(--primary-color);
+                font-weight: 700;
+                margin-bottom: 1rem;
+            }
+
+            .application-meta {
+                margin-bottom: 0.5rem;
+                color: #666;
+            }
+
+            .badge-status {
+                font-size: 1rem;
+                padding: 0.5rem 1rem;
+                border-radius: 20px;
+            }
+        }
+
+        .application-timeline {
+            padding: 2rem;
+            border-bottom: 1px solid #dee2e6;
+
+            .timeline-title {
+                color: var(--dark-color);
+                font-weight: 600;
+            }
+        }
+
+        .payment-info {
+            padding: 2rem;
+            border-bottom: 1px solid #dee2e6;
+
+            .payment-title {
+                color: var(--dark-color);
+                font-weight: 600;
+            }
+
+            .payment-item {
+                background: #f8f9fa;
+                padding: 1rem;
+                border-radius: 8px;
+                margin-bottom: 1rem;
+
+                .payment-amount {
+                    font-size: 1.2rem;
+                    font-weight: 600;
+                    color: var(--success-color);
+                }
+            }
+        }
+
+        .additional-info {
+            padding: 2rem;
+
+            .info-title {
+                color: var(--dark-color);
+                font-weight: 600;
+            }
+
+            .info-text {
+                color: #666;
+                line-height: 1.6;
+            }
+        }
+    }
+
+    .help-section {
+        .help-title {
+            color: var(--dark-color);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .help-text {
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .help-actions {
+            .btn {
+                border-radius: 25px;
+                padding: 0.75rem 1.5rem;
+                font-weight: 500;
+            }
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .search-files-page {
+        .page-header .page-title {
+            font-size: 2rem;
+        }
+
+        .result-card .application-header {
+            text-align: center;
+
+            .badge-status {
+                margin-top: 1rem;
+            }
+        }
+
+        .help-actions .btn {
+            display: block;
+            width: 100%;
+            margin: 0.5rem 0;
+        }
+    }
+}

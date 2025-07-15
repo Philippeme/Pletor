@@ -1,0 +1,185 @@
+<div class="search-files-page">
+    <div class="container py-5">
+
+        <!-- Page Header -->
+        <div class="page-header text-center mb-5">
+            <div class="search-icon mb-3">
+                <i class="fas fa-search fa-3x text-primary"></i>
+            </div>
+            <h1 class="page-title">{{ 'navigation.search_files' | translate }}</h1>
+            <p class="page-subtitle">Track your application status using your tracking number</p>
+        </div>
+
+        <!-- Search Form -->
+        <div class="row justify-content-center mb-5">
+            <div class="col-lg-6">
+                <div class="search-card">
+                    <form [formGroup]="searchForm" (ngSubmit)="onSearch()">
+                        <div class="mb-3">
+                            <label class="form-label">Application Tracking Number</label>
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-text">
+                                    <i class="fas fa-hashtag"></i>
+                                </span>
+                                <input type="text" class="form-control" formControlName="trackingNumber"
+                                    placeholder="MKG123456789ABC"
+                                    [class.is-invalid]="searchForm.get('trackingNumber')?.invalid && searchForm.get('trackingNumber')?.touched">
+                                <button type="submit" class="btn btn-primary"
+                                    [disabled]="isLoading || searchForm.invalid">
+                                    <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+                                    <i class="fas fa-search me-2" *ngIf="!isLoading"></i>
+                                    {{ 'buttons.search' | translate }}
+                                </button>
+                            </div>
+                            <div class="invalid-feedback"
+                                *ngIf="searchForm.get('trackingNumber')?.invalid && searchForm.get('trackingNumber')?.touched">
+                                <small *ngIf="searchForm.get('trackingNumber')?.errors?.['required']">
+                                    Tracking number is required
+                                </small>
+                                <small *ngIf="searchForm.get('trackingNumber')?.errors?.['pattern']">
+                                    Invalid tracking number format (e.g., MKG123456789ABC)
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="button" class="btn btn-outline-secondary" *ngIf="hasSearched"
+                                (click)="clearSearch()">
+                                <i class="fas fa-times me-2"></i>
+                                Clear Search
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Error Message -->
+        <div class="row justify-content-center" *ngIf="errorMessage && !isLoading">
+            <div class="col-lg-8">
+                <div class="alert alert-warning text-center" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    {{ errorMessage }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Results -->
+        <div class="row justify-content-center" *ngIf="searchResult && !isLoading">
+            <div class="col-lg-8">
+                <div class="result-card">
+
+                    <!-- Application Header -->
+                    <div class="application-header">
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <h3 class="application-title">{{ searchResult.serviceName | translate }}</h3>
+                                <p class="application-meta">
+                                    <strong>Tracking Number:</strong> {{ searchResult.trackingNumber }}
+                                </p>
+                                <p class="application-meta">
+                                    <strong>Submitted:</strong> {{ formatDate(searchResult.submissionDate) }}
+                                </p>
+                            </div>
+                            <div class="col-md-4 text-md-end">
+                                <span class="badge badge-status" [class]="'bg-' + getStatusColor(searchResult.status)">
+                                    <i [class]="getStatusIcon(searchResult.status)" class="me-2"></i>
+                                    {{ searchResult.status | titlecase }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Application Timeline -->
+                    <div class="application-timeline" *ngIf="searchResult.timeline && searchResult.timeline.length > 0">
+                        <h5 class="timeline-title mb-4">
+                            <i class="fas fa-route me-2"></i>
+                            Application Progress
+                        </h5>
+
+                        <div class="timeline">
+                            <div class="timeline-item" *ngFor="let step of searchResult.timeline"
+                                [class.completed]="step.isCompleted" [class.active]="step.status === 'in_progress'">
+                                <div class="timeline-marker"></div>
+                                <div class="timeline-content">
+                                    <div class="timeline-header">
+                                        <h6 class="timeline-step">{{ step.step }}</h6>
+                                        <span class="timeline-date">{{ formatDate(step.date) }}</span>
+                                    </div>
+                                    <p class="timeline-description">{{ step.description }}</p>
+                                    <div class="timeline-duration" *ngIf="step.estimatedDuration">
+                                        <i class="fas fa-clock me-1"></i>
+                                        {{ 'timeline.estimated_duration' | translate }}: {{ step.estimatedDuration }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Information -->
+                    <div class="payment-info" *ngIf="searchResult.payments && searchResult.payments.length > 0">
+                        <h5 class="payment-title mb-3">
+                            <i class="fas fa-credit-card me-2"></i>
+                            Payment Information
+                        </h5>
+
+                        <div class="payment-item" *ngFor="let payment of searchResult.payments">
+                            <div class="row align-items-center">
+                                <div class="col-md-6">
+                                    <strong>{{ payment.description }}</strong>
+                                    <br>
+                                    <small class="text-muted">Ref: {{ payment.referenceNumber }}</small>
+                                </div>
+                                <div class="col-md-3 text-center">
+                                    <span class="payment-amount">
+                                        {{ payment.amount | currency:payment.currency:'symbol':'1.0-0' }}
+                                    </span>
+                                </div>
+                                <div class="col-md-3 text-end">
+                                    <span class="badge" [class]="'bg-' + getStatusColor(payment.status)">
+                                        {{ payment.status | titlecase }}
+                                    </span>
+                                    <br>
+                                    <small class="text-muted">{{ formatDate(payment.date) }}</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Information -->
+                    <div class="additional-info" *ngIf="searchResult.notes">
+                        <h5 class="info-title mb-3">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Additional Information
+                        </h5>
+                        <p class="info-text">{{ searchResult.notes }}</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Help Section -->
+        <div class="row justify-content-center mt-5" *ngIf="!searchResult || errorMessage">
+            <div class="col-lg-8">
+                <div class="help-section text-center">
+                    <h4 class="help-title">Need Help?</h4>
+                    <p class="help-text">
+                        If you can't find your application or need assistance, please contact our support team.
+                    </p>
+                    <div class="help-actions">
+                        <button class="btn btn-outline-primary me-3">
+                            <i class="fas fa-phone me-2"></i>
+                            Contact Support
+                        </button>
+                        <button class="btn btn-outline-secondary">
+                            <i class="fas fa-question-circle me-2"></i>
+                            View FAQ
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

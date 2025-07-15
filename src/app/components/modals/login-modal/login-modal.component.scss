@@ -1,0 +1,28 @@
+.modal-header {
+    .modal-title {
+        font-weight: 600;
+        color: var(--primary-color);
+    }
+}
+
+.modal-body {
+    .input-group-text {
+        background-color: #f8f9fa;
+        border-right: none;
+        color: #6c757d;
+    }
+
+    .form-control {
+        border-left: none;
+
+        &:focus {
+            box-shadow: 0 0 0 0.2rem rgba(26, 115, 232, 0.25);
+        }
+    }
+
+    .btn-primary {
+        border-radius: 25px;
+        font-weight: 500;
+        padding: 12px;
+    }
+}

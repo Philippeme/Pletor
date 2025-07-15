@@ -1,0 +1,168 @@
+{
+    "app": {
+        "title": "MK Gov",
+        "subtitle": "Portal Governamental para Cidadãos Camaroneses",
+        "welcome": "Bem-vindo ao MK Gov"
+    },
+    "navigation": {
+        "home": "Início",
+        "procedures": "Procedimentos",
+        "registration": "Inscrição",
+        "login": "Entrar",
+        "search_files": "Pesquisar Arquivos",
+        "logout": "Sair",
+        "my_account": "Minha Conta",
+        "language": "Idioma"
+    },
+    "categories": {
+        "police_justice": {
+            "name": "Polícia & Justiça",
+            "description": "Documentos de identidade, registros judiciais e serviços legais"
+        },
+        "family": {
+            "name": "Família",
+            "description": "Documentos de estado civil e serviços familiares"
+        },
+        "transport": {
+            "name": "Transporte",
+            "description": "Carteiras de motorista, registro de veículos e licenças de transporte"
+        },
+        "education": {
+            "name": "Educação",
+            "description": "Certificação de diplomas, autorizações educacionais"
+        },
+        "business": {
+            "name": "Empresas",
+            "description": "Registro de empresas, licenças comerciais e serviços"
+        },
+        "public_service": {
+            "name": "Serviço Público",
+            "description": "Candidaturas serviço público e procedimentos administrativos"
+        },
+        "land_construction": {
+            "name": "Terra & Construção",
+            "description": "Títulos de terra, licenças de construção e certificados de propriedade"
+        },
+        "consular": {
+            "name": "Serviços Consulares",
+            "description": "Pedidos de visto e legalização de documentos"
+        },
+        "health": {
+            "name": "Saúde",
+            "description": "Autorizações de estabelecimentos de saúde e serviços médicos"
+        },
+        "civic_life": {
+            "name": "Vida Cívica",
+            "description": "Autorizações de eventos e atividades cívicas"
+        }
+    },
+    "services": {
+        "passport": {
+            "name": "Pedido de Passaporte",
+            "description": "Solicitar passaporte camaronês",
+            "detailed_description": "Serviço eletrônico para solicitar um passaporte camaronês. O pedido é processado pelas autoridades governamentais locais através da plataforma digital DGSN."
+        },
+        "birth_certificate_copy": {
+            "name": "Cópia Certificada de Certidão de Nascimento",
+            "description": "Solicitar cópia certificada de certidão de nascimento",
+            "detailed_description": "Serviço para obter uma cópia certificada de certidão de nascimento. O pedido é processado pelo registro civil do local de registro do nascimento."
+        },
+        "national_id": {
+            "name": "Cartão Nacional de Identidade",
+            "description": "Solicitar cartão nacional de identidade",
+            "detailed_description": "Serviço de solicitação de cartão nacional de identidade ou renovação de cartão existente."
+        }
+    },
+    "forms": {
+        "login": {
+            "title": "Entrar",
+            "phone_email": "Número de Telefone ou Email",
+            "password": "Senha",
+            "forgot_password": "Esqueceu a senha?",
+            "login_button": "Entrar",
+            "no_account": "Não tem uma conta?",
+            "create_account": "Criar uma",
+            "terms_text": "Ao entrar, você aceita os termos de uso incluindo a política de privacidade do MK Gov"
+        },
+        "registration": {
+            "title": "Inscrição",
+            "account_type": "Tipo de Conta",
+            "local_citizen": "Cidadão Local",
+            "diaspora_citizen": "Cidadão da Diáspora",
+            "cni_number": "Número do Cartão de Identidade",
+            "consular_card": "Número do Cartão Consular",
+            "phone_number": "Número de Telefone",
+            "email": "Endereço de Email",
+            "password": "Senha",
+            "confirm_password": "Confirmar Senha",
+            "register_button": "Inscrever-se",
+            "already_have_account": "Já tem uma conta?",
+            "login_link": "Entrar",
+            "step1": "Enviar informações necessárias",
+            "step2": "Verificação da conta",
+            "step3": "Criar sua senha",
+            "terms_acceptance": "Ao se inscrever, você aceita os novos termos de uso incluindo a política de privacidade do MK Gov"
+        },
+        "service_application": {
+            "apply_for": "Para quem está se candidatando?",
+            "self": "Para mim",
+            "child": "Meu filho",
+            "other": "Outra pessoa",
+            "apply_button": "Candidatar-se",
+            "processing_time": "Tempo de Processamento",
+            "cost": "Custo",
+            "provided_by": "Fornecido por",
+            "required_documents": "Documentos Necessários"
+        }
+    },
+    "requirements": {
+        "passport_form": "Formulário de Pedido de Passaporte",
+        "passport_form_desc": "Formulário de pedido de passaporte preenchido",
+        "birth_certificate": "Certidão de Nascimento",
+        "birth_cert_desc": "Cópia certificada da certidão de nascimento (menos de 3 meses)",
+        "national_id": "Cartão Nacional de Identidade",
+        "national_id_desc": "Cópia do cartão nacional de identidade válido",
+        "passport_photos": "Fotos de Passaporte",
+        "passport_photos_desc": "12 fotos de passaporte padronizadas",
+        "residence_proof": "Comprovante de Residência",
+        "residence_proof_desc": "Certificado de residência da administração local",
+        "request_form": "Formulário de Pedido",
+        "request_form_desc": "Formulário de pedido preenchido para cópia certificada",
+        "fiscal_stamp": "Selo Fiscal",
+        "fiscal_stamp_desc": "Selo fiscal de 200 XAF",
+        "requester_id": "Identidade do Requerente",
+        "requester_id_desc": "Documento de identificação válido do requerente"
+    },
+    "buttons": {
+        "submit": "Enviar",
+        "cancel": "Cancelar",
+        "continue": "Continuar",
+        "back": "Voltar",
+        "close": "Fechar",
+        "save": "Salvar",
+        "search": "Pesquisar",
+        "apply": "Candidatar-se",
+        "download": "Baixar",
+        "upload": "Carregar",
+        "pay": "Pagar",
+        "confirm": "Confirmar"
+    },
+    "messages": {
+        "loading": "Carregando...",
+        "success": "Sucesso",
+        "error": "Erro",
+        "warning": "Aviso",
+        "info": "Informação",
+        "no_results": "Nenhum resultado encontrado",
+        "coming_soon": "Em Breve",
+        "service_not_available": "Este serviço ainda não está disponível online",
+        "login_required": "Por favor, faça login para acessar este serviço",
+        "payment_simulation": "Esta é uma simulação de pagamento para fins de demonstração"
+    },
+    "timeline": {
+        "pending": "Pendente",
+        "in_progress": "Em Andamento",
+        "completed": "Concluído",
+        "estimated_duration": "Duração Estimada"
+    }
+}

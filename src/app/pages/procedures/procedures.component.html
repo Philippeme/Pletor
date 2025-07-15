@@ -1,0 +1,129 @@
+<div class="procedures-page">
+    <div class="container py-4">
+
+        <!-- Page Header -->
+        <div class="page-header mb-4">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h1 class="page-title">
+                        <i class="fas fa-list-alt me-3"></i>
+                        {{ 'navigation.procedures' | translate }}
+                    </h1>
+                    <p class="text-muted" *ngIf="viewMode === 'categories'">
+                        Browse government services by category
+                    </p>
+                    <div class="breadcrumb-nav" *ngIf="viewMode === 'services' && selectedCategory">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a href="#" (click)="backToCategories(); $event.preventDefault()">
+                                        {{ 'navigation.procedures' | translate }}
+                                    </a>
+                                </li>
+                                <li class="breadcrumb-item active" *ngIf="getCategoryById(selectedCategory)">
+                                    {{ getCategoryById(selectedCategory)!.fname }}
+                                </li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <!-- Search Bar -->
+                    <div class="search-container">
+                        <div class="input-group">
+                            <input type="text" class="form-control" [(ngModel)]="searchQuery" (keyup.enter)="onSearch()"
+                                placeholder="Search procedures...">
+                            <button class="btn btn-primary" (click)="onSearch()">
+                                <i class="fas fa-search"></i>
+                            </button>
+                            <button class="btn btn-outline-secondary" *ngIf="searchQuery || selectedCategory"
+                                (click)="backToCategories()">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div class="text-center py-5" *ngIf="isLoading">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+
+        <!-- Categories View -->
+        <div *ngIf="!isLoading && viewMode === 'categories'">
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6" *ngFor="let category of serviceCategories">
+                    <div class="category-card" (click)="onCategoryClick(category.id)">
+                        <div class="category-icon">
+                            <i [class]="getCategoryIcon(category.icon)"></i>
+                        </div>
+                        <h4 class="category-name">{{ category.fname }}</h4>
+                        <p class="category-description">{{ category.description }}</p>
+                        <div class="category-meta">
+                            <span class="service-count">
+                                {{ category.procedures.length || 0 }} services
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Services View -->
+        <div *ngIf="!isLoading && viewMode === 'services'">
+            <div class="row">
+                <div class="col-12">
+                    <div class="services-header mb-4">
+                        <h3 *ngIf="selectedCategory && getCategoryById(selectedCategory)">
+                            {{ getCategoryById(selectedCategory)!.fname }}
+                        </h3>
+                        <h3 *ngIf="!selectedCategory && searchQuery">
+                            Search Results for "{{ searchQuery }}"
+                        </h3>
+                        <p class="text-muted">{{ filteredServices.length }} service(s) found</p>
+                    </div>
+
+                    <!-- No Results -->
+                    <div class="text-center py-5" *ngIf="filteredServices.length === 0">
+                        <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                        <h4>{{ 'messages.no_results' | translate }}</h4>
+                        <p class="text-muted">Try adjusting your search criteria</p>
+                    </div>
+
+                    <!-- Services List -->
+                    <div class="services-grid">
+                        <div class="service-item" *ngFor="let service of filteredServices"
+                            (click)="onServiceClick(service)">
+                            <div class="service-header">
+                                <h5 class="service-name">{{ service.pname }}</h5>
+                                <div class="service-badges">
+                                    <span class="badge bg-success" *ngIf="service.published">Available</span>
+                                    <span class="badge bg-secondary" *ngIf="!service.published">Coming Soon</span>
+                                </div>
+                            </div>
+                            <p class="service-description">{{ service.shortdesc }}</p>
+                            <div class="service-meta">
+                                <div class="meta-item">
+                                    <i class="fas fa-clock me-1"></i>
+                                    <small>{{ service.processtime }}</small>
+                                </div>
+                                <div class="meta-item">
+                                    <i class="fas fa-money-bill-wave me-1"></i>
+                                    <small>{{ service.servicecost }}</small>
+                                </div>
+                                <div class="meta-item">
+                                    <i class="fas fa-building me-1"></i>
+                                    <small>{{ service.providingAdministration.institutionName }}</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

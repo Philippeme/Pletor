@@ -1,0 +1,171 @@
+.hero-section {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: white;
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+
+    .hero-title {
+        font-size: 3.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+
+        @media (max-width: 768px) {
+            font-size: 2.5rem;
+        }
+    }
+
+    .hero-subtitle {
+        font-size: 1.2rem;
+        opacity: 0.9;
+        margin-bottom: 2rem;
+    }
+
+    .search-container {
+        .search-input {
+            border: none;
+            border-radius: 50px 0 0 50px;
+            padding: 1rem 1.5rem;
+            font-size: 1.1rem;
+
+            &:focus {
+                box-shadow: none;
+                border-color: white;
+            }
+        }
+
+        .search-btn {
+            border-radius: 0 50px 50px 0;
+            padding: 1rem 2rem;
+            font-weight: 600;
+            background-color: var(--warning-color);
+            border-color: var(--warning-color);
+            color: var(--dark-color);
+
+            &:hover {
+                background-color: var(--warning-color-dark);
+                transform: translateY(-1px);
+            }
+        }
+    }
+
+    .hero-image img {
+        max-height: 300px;
+        filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2));
+    }
+}
+
+.categories-section {
+    .section-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--dark-color);
+        margin-bottom: 3rem;
+    }
+
+    .category-card {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        height: 100%;
+
+        &:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .category-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .category-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+        }
+
+        .category-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 0;
+        }
+
+        .category-description {
+            color: #666;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .services-list {
+            border-top: 1px solid #eee;
+            padding-top: 1rem;
+
+            .services-title {
+                font-size: 0.9rem;
+                font-weight: 600;
+                color: var(--primary-color);
+                margin-bottom: 0.5rem;
+            }
+
+            .service-link {
+                padding: 0.25rem 0;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                border-radius: 4px;
+                padding-left: 0.5rem;
+
+                &:hover {
+                    background-color: #f8f9fa;
+                    color: var(--primary-color);
+                    padding-left: 1rem;
+                }
+            }
+        }
+    }
+}
+
+.quick-actions-section {
+    .quick-action-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+
+        &:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        i {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        h5 {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            color: #666;
+            margin-bottom: 0;
+            font-size: 0.9rem;
+        }
+    }
+}

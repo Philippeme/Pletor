@@ -1,0 +1,89 @@
+<div class="modal-header border-0">
+    <div class="w-100 text-center">
+      
+        <h4 class="modal-title">{{ 'forms.login.title' | translate }}</h4>
+    </div>
+    <button type="button" class="btn-close" (click)="close()"></button>
+</div>
+
+<div class="modal-body px-4 pb-4">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <!-- Error Alert -->
+        <div class="alert alert-danger" *ngIf="errorMessage" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            {{ errorMessage }}
+        </div>
+
+        <!-- Phone/Email Field -->
+        <div class="mb-3">
+            <label class="form-label">{{ 'forms.login.phone_email' | translate }}</label>
+            <div class="input-group">
+                <span class="input-group-text">
+                    <i class="fas fa-user"></i>
+                </span>
+                <input type="text" class="form-control" formControlName="identifier"
+                    [placeholder]="'forms.login.phone_email' | translate"
+                    [class.is-invalid]="loginForm.get('identifier')?.invalid && loginForm.get('identifier')?.touched">
+            </div>
+            <div class="invalid-feedback"
+                *ngIf="loginForm.get('identifier')?.invalid && loginForm.get('identifier')?.touched">
+                <small *ngIf="loginForm.get('identifier')?.errors?.['required']">
+                    This field is required
+                </small>
+            </div>
+        </div>
+
+        <!-- Password Field -->
+        <div class="mb-3">
+            <label class="form-label">{{ 'forms.login.password' | translate }}</label>
+            <div class="input-group">
+                <span class="input-group-text">
+                    <i class="fas fa-lock"></i>
+                </span>
+                <input [type]="showPassword ? 'text' : 'password'" class="form-control" formControlName="password"
+                    [placeholder]="'forms.login.password' | translate"
+                    [class.is-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+                <button type="button" class="btn btn-outline-secondary" (click)="togglePasswordVisibility()">
+                    <i class="fas" [class.fa-eye]="!showPassword" [class.fa-eye-slash]="showPassword"></i>
+                </button>
+            </div>
+            <div class="invalid-feedback"
+                *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+                <small *ngIf="loginForm.get('password')?.errors?.['required']">
+                    Password is required
+                </small>
+                <small *ngIf="loginForm.get('password')?.errors?.['minlength']">
+                    Password must be at least 6 characters
+                </small>
+            </div>
+        </div>
+
+        <!-- Forgot Password Link -->
+        <div class="text-center mb-3">
+            <a href="#" class="text-primary text-decoration-none"
+                (click)="openForgotPasswordModal(); $event.preventDefault()">
+                {{ 'forms.login.forgot_password' | translate }}
+            </a>
+        </div>
+
+        <!-- Login Button -->
+        <button type="submit" class="btn btn-primary w-100 mb-3" [disabled]="isLoading">
+            <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+            {{ 'forms.login.login_button' | translate }}
+        </button>
+
+        <!-- Terms Text -->
+        <p class="text-center text-muted small mb-3">
+            {{ 'forms.login.terms_text' | translate }}
+        </p>
+
+        <!-- Registration Link -->
+        <div class="text-center">
+            <span class="text-muted">{{ 'forms.login.no_account' | translate }}</span>
+            <a href="#" class="text-primary text-decoration-none ms-1"
+                (click)="navigateToRegistration(); $event.preventDefault()">
+                {{ 'forms.login.create_account' | translate }}
+            </a>
+        </div>
+    </form>
+</div>

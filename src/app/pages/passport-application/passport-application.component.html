@@ -1,0 +1,392 @@
+<div class="passport-application-page">
+    <div class="container py-4">
+
+        <!-- Page Header -->
+        <div class="page-header mb-4">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="page-title">
+                        <i class="fas fa-passport me-3"></i>
+                        Passport Application
+                    </h1>
+                    <p class="text-muted">Apply for a Cameroonian passport online</p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <div class="tracking-info" *ngIf="application">
+                        <strong>Tracking #:</strong> {{ application.trackingNumber }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Indicator -->
+        <div class="progress-container mb-5">
+            <div class="progress-steps">
+                <div class="step" [class.active]="currentStep >= 1" [class.completed]="currentStep > 1">
+                    <div class="step-circle">1</div>
+                    <span class="step-label">Personal Info</span>
+                </div>
+                <div class="step-line" [class.completed]="currentStep > 1"></div>
+                <div class="step" [class.active]="currentStep >= 2" [class.completed]="currentStep > 2">
+                    <div class="step-circle">2</div>
+                    <span class="step-label">Contact Details</span>
+                </div>
+                <div class="step-line" [class.completed]="currentStep > 2"></div>
+                <div class="step" [class.active]="currentStep >= 3" [class.completed]="currentStep > 3">
+                    <div class="step-circle">3</div>
+                    <span class="step-label">Documents</span>
+                </div>
+                <div class="step-line" [class.completed]="currentStep > 3"></div>
+                <div class="step" [class.active]="currentStep >= 4" [class.completed]="currentStep > 4">
+                    <div class="step-circle">4</div>
+                    <span class="step-label">Payment</span>
+                </div>
+                <div class="step-line" [class.completed]="currentStep > 4"></div>
+                
+                <div class="step" [class.active]="currentStep >= 5" [class.completed]="currentStep > 5">
+                    <div class="step-circle">5</div>
+                    <span class="step-label">Confirm Biometric identification</span>
+                </div>
+                <div class="step-line" [class.completed]="currentStep > 6"></div>
+                <div class="step" [class.active]="currentStep >= 6" [class.completed]="currentStep > 6">
+                    <div class="step-circle">6</div>
+                    <span class="step-label">Passport collection</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Application Form -->
+        <div class="application-form">
+
+            <!-- Error/Success Messages -->
+            <div class="alert alert-danger" *ngIf="errorMessage" role="alert">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                {{ errorMessage }}
+            </div>
+
+            <div class="alert alert-success" *ngIf="successMessage" role="alert">
+                <i class="fas fa-check-circle me-2"></i>
+                {{ successMessage }}
+            </div>
+
+            <form [formGroup]="passportForm">
+
+                <!-- Step 1: Personal Information -->
+                <div class="form-step" *ngIf="currentStep === 1">
+                    <div class="step-header mb-4">
+                        <h3>Personal Information</h3>
+                        <p class="text-muted">Please provide your personal details as they appear on your birth
+                            certificate</p>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">First Name *</label>
+                            <input type="text" class="form-control" formControlName="firstName"
+                                [class.is-invalid]="passportForm.get('firstName')?.invalid && passportForm.get('firstName')?.touched">
+                            <div class="invalid-feedback">First name is required</div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Middle Name</label>
+                            <input type="text" class="form-control" formControlName="middleName">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Last Name *</label>
+                            <input type="text" class="form-control" formControlName="lastName"
+                                [class.is-invalid]="passportForm.get('lastName')?.invalid && passportForm.get('lastName')?.touched">
+                            <div class="invalid-feedback">Last name is required</div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Date of Birth *</label>
+                            <input type="date" class="form-control" formControlName="dateOfBirth"
+                                [class.is-invalid]="passportForm.get('dateOfBirth')?.invalid && passportForm.get('dateOfBirth')?.touched">
+                            <div class="invalid-feedback">Date of birth is required</div>
+                            <small class="form-text text-muted" *ngIf="passportForm.get('dateOfBirth')?.value">
+                                Age: {{ calculateAge(passportForm.get('dateOfBirth')?.value) }} years
+                            </small>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Place of Birth *</label>
+                            <input type="text" class="form-control" formControlName="placeOfBirth"
+                                [class.is-invalid]="passportForm.get('placeOfBirth')?.invalid && passportForm.get('placeOfBirth')?.touched">
+                            <div class="invalid-feedback">Place of birth is required</div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Nationality *</label>
+                            <input type="text" class="form-control" formControlName="nationality" readonly>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Gender *</label>
+                            <select class="form-select" formControlName="gender"
+                                [class.is-invalid]="passportForm.get('gender')?.invalid && passportForm.get('gender')?.touched">
+                                <option value="">Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                            <div class="invalid-feedback">Gender is required</div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Marital Status *</label>
+                            <select class="form-select" formControlName="maritalStatus"
+                                [class.is-invalid]="passportForm.get('maritalStatus')?.invalid && passportForm.get('maritalStatus')?.touched">
+                                <option value="">Select Marital Status</option>
+                                <option value="Single">Single</option>
+                                <option value="Married">Married</option>
+                                <option value="Divorced">Divorced</option>
+                                <option value="Widowed">Widowed</option>
+                            </select>
+                            <div class="invalid-feedback">Marital status is required</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Contact Information -->
+                <div class="form-step" *ngIf="currentStep === 2">
+                    <div class="step-header mb-4">
+                        <h3>Contact & Emergency Information</h3>
+                        <p class="text-muted">Provide your current contact details and emergency contact</p>
+                    </div>
+
+                    <!-- Contact Information -->
+                    <h5 class="mb-3">Contact Information</h5>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Phone Number *</label>
+                            <input type="tel" class="form-control" formControlName="phoneNumber"
+                                [class.is-invalid]="passportForm.get('phoneNumber')?.invalid && passportForm.get('phoneNumber')?.touched">
+                            <div class="invalid-feedback">Phone number is required</div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Email Address *</label>
+                            <input type="email" class="form-control" formControlName="email"
+                                [class.is-invalid]="passportForm.get('email')?.invalid && passportForm.get('email')?.touched">
+                            <div class="invalid-feedback">Valid email is required</div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Current Address *</label>
+                            <textarea class="form-control" rows="3" formControlName="currentAddress"
+                                [class.is-invalid]="passportForm.get('currentAddress')?.invalid && passportForm.get('currentAddress')?.touched"></textarea>
+                            <div class="invalid-feedback">Current address is required</div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Permanent Address *</label>
+                            <textarea class="form-control" rows="3" formControlName="permanentAddress"
+                                [class.is-invalid]="passportForm.get('permanentAddress')?.invalid && passportForm.get('permanentAddress')?.touched"></textarea>
+                            <div class="invalid-feedback">Permanent address is required</div>
+                        </div>
+                    </div>
+
+                    <!-- Emergency Contact -->
+                    <h5 class="mb-3 mt-4">Emergency Contact</h5>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Full Name *</label>
+                            <input type="text" class="form-control" formControlName="emergencyContactName"
+                                [class.is-invalid]="passportForm.get('emergencyContactName')?.invalid && passportForm.get('emergencyContactName')?.touched">
+                            <div class="invalid-feedback">Emergency contact name is required</div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Phone Number *</label>
+                            <input type="tel" class="form-control" formControlName="emergencyContactPhone"
+                                [class.is-invalid]="passportForm.get('emergencyContactPhone')?.invalid && passportForm.get('emergencyContactPhone')?.touched">
+                            <div class="invalid-feedback">Emergency contact phone is required</div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Relationship *</label>
+                            <select class="form-select" formControlName="emergencyContactRelation"
+                                [class.is-invalid]="passportForm.get('emergencyContactRelation')?.invalid && passportForm.get('emergencyContactRelation')?.touched">
+                                <option value="">Select Relationship</option>
+                                <option value="Parent">Parent</option>
+                                <option value="Spouse">Spouse</option>
+                                <option value="Sibling">Sibling</option>
+                                <option value="Child">Child</option>
+                                <option value="Friend">Friend</option>
+                                <option value="Other">Other</option>
+                            </select>
+                            <div class="invalid-feedback">Relationship is required</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Document Upload -->
+                <div class="form-step" *ngIf="currentStep === 3">
+                    <div class="step-header mb-4">
+                        <h3>Required Documents</h3>
+                        <p class="text-muted">Upload all required documents. Files must be in PDF, JPEG, or PNG format
+                            (max 5MB each)</p>
+                    </div>
+
+                    <div class="documents-grid">
+                        <div class="document-item" *ngFor="let doc of requiredDocuments">
+                            <div class="document-header">
+                                <h6 class="document-name">
+                                    {{ doc.name }}
+                                    <span class="badge bg-danger ms-2" *ngIf="doc.required">Required</span>
+                                    <span class="badge bg-secondary ms-2" *ngIf="!doc.required">Optional</span>
+                                </h6>
+                            </div>
+
+                            <div class="document-upload" *ngIf="!uploadedFiles[doc.id]">
+                                <input type="file" [id]="'file-' + doc.id" (change)="onFileUpload($event, doc.id)"
+                                    accept=".pdf,.jpg,.jpeg,.png" class="d-none">
+                                <label [for]="'file-' + doc.id" class="upload-label">
+                                    <i class="fas fa-cloud-upload-alt fa-2x mb-2"></i>
+                                    <span>Click to upload or drag and drop</span>
+                                    <small class="text-muted d-block">PDF, JPEG, PNG (max 5MB)</small>
+                                </label>
+                            </div>
+
+                            <div class="document-uploaded" *ngIf="uploadedFiles[doc.id]">
+                                <div class="uploaded-file">
+                                    <div class="file-info">
+                                        <i class="fas fa-file-alt fa-2x text-success me-3"></i>
+                                        <div>
+                                            <strong>{{ uploadedFiles[doc.id].name }}</strong>
+                                            <small class="text-muted d-block">{{ (uploadedFiles[doc.id].size /
+                                                1024).toFixed(1) }} KB</small>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-outline-danger btn-sm"
+                                        (click)="removeFile(doc.id)">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4: Payment -->
+                <div class="form-step" *ngIf="currentStep === 4">
+                    <div class="step-header mb-4">
+                        <h3>Payment</h3>
+                        <p class="text-muted">Complete your payment to process your passport application</p>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="payment-summary mb-4">
+                                <h5>Payment Summary</h5>
+                                <div class="fee-item">
+                                    <div class="d-flex justify-content-between">
+                                        <span>Passport Application Fee</span>
+                                        <strong>110,000 XAF</strong>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="total-amount">
+                                    <div class="d-flex justify-content-between">
+                                        <strong>Total Amount</strong>
+                                        <strong class="text-primary">110,000 XAF</strong>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="payment-methods">
+                                <h5 class="mb-3">Select Payment Method</h5>
+                                <div class="payment-options">
+                                    <div class="payment-option" *ngFor="let method of paymentMethods">
+                                        <input type="radio" [id]="'payment-' + method.value"
+                                            [(ngModel)]="selectedPaymentMethod" [value]="method.value"
+                                            [ngModelOptions]="{standalone: true}">
+                                        <label [for]="'payment-' + method.value" class="payment-label">
+                                            <i [class]="method.icon" class="me-3"></i>
+                                            {{ method.label }}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="alert alert-info mt-3">
+                                <i class="fas fa-info-circle me-2"></i>
+                                {{ 'messages.payment_simulation' | translate }}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="payment-info-card">
+                                <h6>Important Information</h6>
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-check text-success me-2"></i>Secure payment processing</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Instant payment confirmation</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>48-hour processing time</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>SMS and email notifications</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 5: Confirmation -->
+                <div class="form-step" *ngIf="currentStep === 5">
+                    <div class="confirmation-content text-center">
+                        <div class="success-icon mb-4">
+                            <i class="fas fa-check-circle fa-4x text-success"></i>
+                        </div>
+                        <h3>Application Submitted Successfully!</h3>
+                        <p class="text-muted mb-4">Your passport application has been submitted and payment processed.
+                        </p>
+
+                        <div class="confirmation-details">
+                            <div class="detail-item">
+                                <strong>Tracking Number:</strong>
+                                <span class="text-primary">{{ application?.trackingNumber }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Expected Processing Time:</strong> 48 hours to 3 months
+                            </div>
+                            <div class="detail-item">
+                                <strong>Next Steps:</strong> Visit DGSN center for biometric enrollment
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+
+            <!-- Navigation Buttons -->
+            <div class="form-navigation mt-4">
+                <div class="d-flex justify-content-between">
+                    <button type="button" class="btn btn-outline-secondary" *ngIf="currentStep > 1 && currentStep < 5"
+                        (click)="previousStep()">
+                        <i class="fas fa-arrow-left me-2"></i>
+                        Previous
+                    </button>
+
+                    <div class="ms-auto">
+                        <button type="button" class="btn btn-primary" *ngIf="currentStep < 3" (click)="nextStep()">
+                            Next
+                            <i class="fas fa-arrow-right ms-2"></i>
+                        </button>
+
+                        <button type="button" class="btn btn-success" *ngIf="currentStep === 3"
+                            [disabled]="isSubmitting || !validateDocumentUploads()" (click)="onSubmitApplication()">
+                            <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
+                            Submit Application
+                        </button>
+
+                        <button type="button" class="btn btn-warning" *ngIf="currentStep === 4" [disabled]="isLoading"
+                            (click)="onPayment()">
+                            <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+                            Pay Now
+                        </button>
+
+                        <button type="button" class="btn btn-primary" *ngIf="currentStep === 5"
+                            (click)="goToTracking()">
+                            <i class="fas fa-search me-2"></i>
+                            Track Application
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

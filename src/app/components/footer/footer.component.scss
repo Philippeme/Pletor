@@ -1,0 +1,267 @@
+.footer {
+    margin-top: auto;
+    border-top: 1px solid #343a40;
+    background-color: #212529 !important;
+    position: relative;
+    z-index: 1;
+
+    // Ensure footer visibility
+    .container {
+        position: relative;
+        z-index: 2;
+    }
+
+    // Footer links styling - Base color for all clickable elements
+    .footer-link {
+        color: #adb5bd !important;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: block;
+        padding: 0.25rem 0;
+        border-radius: 4px;
+
+        &:hover {
+            color: var(--primary-color) !important;
+            background-color: rgba(26, 115, 232, 0.1);
+            padding-left: 0.5rem;
+            transform: translateX(5px);
+        }
+
+        i {
+            color: var(--primary-color);
+            font-size: 0.9rem;
+        }
+    }
+
+    // Agency links - Fixed color visibility
+    .agency-link {
+        color: #adb5bd !important;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: block;
+        padding: 0.5rem;
+        border-radius: 8px;
+        border: 1px solid transparent;
+
+        &:hover {
+            color: var(--primary-color) !important;
+            background-color: rgba(26, 115, 232, 0.1);
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(26, 115, 232, 0.2);
+        }
+
+        small {
+            color: #adb5bd !important;
+            font-weight: 500;
+            font-size: 0.8rem;
+        }
+    }
+
+    // Contact info styling - Fixed color visibility
+    .contact-info {
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+
+            i {
+                font-size: 0.9rem;
+                width: 16px;
+                text-align: center;
+                color: var(--primary-color) !important;
+            }
+
+            small {
+                color: #adb5bd !important;
+                font-size: 0.85rem;
+            }
+        }
+    }
+
+    // Copyright and legal text - Fixed color visibility
+    .row {
+        p {
+            color: #adb5bd !important;
+
+            &.text-muted {
+                color: #adb5bd !important;
+            }
+        }
+    }
+
+    // Legal notice - Fixed color visibility
+    .legal-notice {
+        background-color: rgba(255, 255, 255, 0.02) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 8px;
+
+        small {
+            color: #adb5bd !important;
+            line-height: 1.5;
+
+            i.fa-info-circle {
+                font-size: 1rem;
+                color: var(--primary-color) !important;
+            }
+
+            strong {
+                color: #ffffff !important;
+            }
+        }
+    }
+
+    // Social links styling
+    .social-links {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+
+        @media (max-width: 768px) {
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        a {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            color: #adb5bd !important;
+
+            &:hover {
+                color: white !important;
+                background-color: var(--primary-color);
+                transform: translateY(-3px);
+                box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
+            }
+
+            i {
+                font-size: 1.1rem;
+                color: inherit !important;
+            }
+        }
+    }
+
+    // Separator line
+    .separator-line {
+        height: 2px;
+        background: linear-gradient(90deg,
+                transparent 0%,
+                var(--primary-color) 20%,
+                var(--secondary-color) 50%,
+                var(--primary-color) 80%,
+                transparent 100%);
+        border: none;
+        margin: 2rem 0;
+    }
+
+    // Certification badges
+    .certification-badges {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+
+        @media (max-width: 768px) {
+            justify-content: center;
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 15px;
+
+            i {
+                font-size: 0.7rem;
+                color: inherit !important;
+            }
+        }
+    }
+
+    // Headings in footer
+    h6 {
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: white !important;
+        font-size: 1rem;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+
+        &::after {
+            content: '';
+            display: block;
+            width: 30px;
+            height: 2px;
+            background-color: var(--primary-color);
+            margin-top: 0.5rem;
+        }
+    }
+
+    // Lists styling
+    ul.list-unstyled {
+        li {
+            margin-bottom: 0.5rem;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    // Text color overrides for all muted text elements
+    .text-muted {
+        color: #adb5bd !important;
+    }
+
+    // Responsive design
+    @media (max-width: 768px) {
+        .agency-link {
+            margin-bottom: 0.5rem;
+        }
+
+        .text-lg-end {
+            text-align: center !important;
+        }
+
+        .social-links {
+            margin-bottom: 1rem;
+        }
+
+        .certification-badges {
+            margin-top: 1rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        padding: 2rem 0 !important;
+
+        h6 {
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .agency-link small {
+            font-size: 0.75rem;
+            color: #adb5bd !important;
+        }
+
+        .contact-info .contact-item {
+            margin-bottom: 0.25rem;
+
+            i {
+                font-size: 0.8rem;
+                color: var(--primary-color) !important;
+            }
+
+            small {
+                font-size: 0.8rem;
+                color: #adb5bd !important;
+            }
+        }
+    }
+}

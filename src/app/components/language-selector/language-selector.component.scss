@@ -1,0 +1,19 @@
+.language-selector {
+    .dropdown-item {
+        transition: all 0.3s ease;
+
+        &:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        &.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+    }
+
+    .flag-icon {
+        font-size: 1.1em;
+    }
+}

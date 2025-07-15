@@ -1,0 +1,168 @@
+{
+    "app": {
+        "title": "MK Gov",
+        "subtitle": "Portail Gouvernemental pour les Citoyens Camerounais",
+        "welcome": "Bienvenue sur MK Gov"
+    },
+    "navigation": {
+        "home": "Accueil",
+        "procedures": "Procédures",
+        "registration": "Inscription",
+        "login": "Connexion",
+        "search_files": "Rechercher un Dossier",
+        "logout": "Déconnexion",
+        "my_account": "Mon Compte",
+        "language": "Langue"
+    },
+    "categories": {
+        "police_justice": {
+            "name": "Police & Justice",
+            "description": "Documents d'identité, casiers judiciaires et services juridiques"
+        },
+        "family": {
+            "name": "Famille",
+            "description": "Documents d'état civil et services familiaux"
+        },
+        "transport": {
+            "name": "Transport",
+            "description": "Permis de conduire, immatriculation et permis de transport"
+        },
+        "education": {
+            "name": "Éducation",
+            "description": "Certification de diplômes, autorisations éducatives"
+        },
+        "business": {
+            "name": "Entreprises",
+            "description": "Création d'entreprise, permis commerciaux et services"
+        },
+        "public_service": {
+            "name": "Fonction Publique",
+            "description": "Candidatures fonction publique et procédures administratives"
+        },
+        "land_construction": {
+            "name": "Terre & Construction",
+            "description": "Titres fonciers, permis de construire et certificats de propriété"
+        },
+        "consular": {
+            "name": "Services Consulaires",
+            "description": "Demandes de visa et légalisation de documents"
+        },
+        "health": {
+            "name": "Santé",
+            "description": "Autorisations établissements sanitaires et services médicaux"
+        },
+        "civic_life": {
+            "name": "Vie Citoyenne",
+            "description": "Autorisations d'événements et activités civiques"
+        }
+    },
+    "services": {
+        "passport": {
+            "name": "Demande de Passeport",
+            "description": "Demander un passeport camerounais",
+            "detailed_description": "Service électronique pour demander un passeport camerounais. La demande est traitée par les autorités gouvernementales locales via la plateforme numérique DGSN."
+        },
+        "birth_certificate_copy": {
+            "name": "Copie Certifiée Conforme d'Acte de Naissance",
+            "description": "Demander une copie certifiée conforme d'acte de naissance",
+            "detailed_description": "Service pour obtenir une copie certifiée conforme d'un acte de naissance. La demande est traitée par l'état civil du lieu d'enregistrement de la naissance."
+        },
+        "national_id": {
+            "name": "Carte Nationale d'Identité",
+            "description": "Demander une carte nationale d'identité",
+            "detailed_description": "Service de demande de carte nationale d'identité ou de renouvellement d'une carte existante."
+        }
+    },
+    "forms": {
+        "login": {
+            "title": "Connexion",
+            "phone_email": "Numéro de Téléphone ou Email",
+            "password": "Mot de Passe",
+            "forgot_password": "Mot de passe oublié ?",
+            "login_button": "Se Connecter",
+            "no_account": "Vous n'avez pas de compte ?",
+            "create_account": "Créez-en un",
+            "terms_text": "En vous connectant, vous acceptez les conditions d'utilisation incluant la politique de confidentialité de MK Gov"
+        },
+        "registration": {
+            "title": "Inscription",
+            "account_type": "Type de Compte",
+            "local_citizen": "Citoyen Résidant au Pays",
+            "diaspora_citizen": "Citoyen de la Diaspora",
+            "cni_number": "Numéro de la CNI",
+            "consular_card": "Numéro de Carte Consulaire",
+            "phone_number": "Numéro de Téléphone",
+            "email": "Adresse Email",
+            "password": "Mot de Passe",
+            "confirm_password": "Confirmer le Mot de Passe",
+            "register_button": "S'inscrire",
+            "already_have_account": "Vous avez déjà un compte ?",
+            "login_link": "Se connecter",
+            "step1": "Envoyer les informations requises",
+            "step2": "Vérification du compte",
+            "step3": "Créer votre mot de passe",
+            "terms_acceptance": "En vous inscrivant, vous acceptez les nouvelles conditions d'utilisation incluant la politique de confidentialité de MK Gov"
+        },
+        "service_application": {
+            "apply_for": "Pour qui postulez-vous ?",
+            "self": "Moi-même",
+            "child": "Mon enfant",
+            "other": "Quelqu'un d'autre",
+            "apply_button": "Postuler",
+            "processing_time": "Délai de Traitement",
+            "cost": "Coût",
+            "provided_by": "Fourni par",
+            "required_documents": "Documents Requis"
+        }
+    },
+    "requirements": {
+        "passport_form": "Formulaire de Demande de Passeport",
+        "passport_form_desc": "Formulaire de demande de passeport rempli",
+        "birth_certificate": "Acte de Naissance",
+        "birth_cert_desc": "Copie certifiée conforme de l'acte de naissance (moins de 3 mois)",
+        "national_id": "Carte Nationale d'Identité",
+        "national_id_desc": "Copie de la carte nationale d'identité valide",
+        "passport_photos": "Photos de Passeport",
+        "passport_photos_desc": "12 photos de passeport normalisées",
+        "residence_proof": "Justificatif de Résidence",
+        "residence_proof_desc": "Attestation de résidence de l'administration locale",
+        "request_form": "Formulaire de Demande",
+        "request_form_desc": "Formulaire de demande rempli pour copie certifiée",
+        "fiscal_stamp": "Timbre Fiscal",
+        "fiscal_stamp_desc": "Timbre fiscal de 200 XAF",
+        "requester_id": "Pièce d'Identité du Demandeur",
+        "requester_id_desc": "Document d'identification valide du demandeur"
+    },
+    "buttons": {
+        "submit": "Soumettre",
+        "cancel": "Annuler",
+        "continue": "Continuer",
+        "back": "Retour",
+        "close": "Fermer",
+        "save": "Enregistrer",
+        "search": "Rechercher",
+        "apply": "Postuler",
+        "download": "Télécharger",
+        "upload": "Téléverser",
+        "pay": "Payer",
+        "confirm": "Confirmer"
+    },
+    "messages": {
+        "loading": "Chargement...",
+        "success": "Succès",
+        "error": "Erreur",
+        "warning": "Avertissement",
+        "info": "Information",
+        "no_results": "Aucun résultat trouvé",
+        "coming_soon": "Bientôt Disponible",
+        "service_not_available": "Ce service n'est pas encore disponible en ligne",
+        "login_required": "Veuillez vous connecter pour accéder à ce service",
+        "payment_simulation": "Ceci est une simulation de paiement à des fins de démonstration"
+    },
+    "timeline": {
+        "pending": "En Attente",
+        "in_progress": "En Cours",
+        "completed": "Terminé",
+        "estimated_duration": "Durée Estimée"
+    }
+}

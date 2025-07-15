@@ -1,0 +1,177 @@
+.registration-page {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+
+    .registration-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2rem;
+
+            .card-title {
+                font-weight: 700;
+                margin-bottom: 1rem;
+            }
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+    }
+
+    .progress-steps {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 2rem 0;
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0.5;
+            transition: all 0.3s ease;
+
+            &.active {
+                opacity: 1;
+            }
+
+            &.completed {
+                opacity: 1;
+
+                .step-circle {
+                    background-color: var(--success-color);
+                }
+            }
+
+            .step-circle {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background-color: rgba(255, 255, 255, 0.3);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+                margin-bottom: 0.5rem;
+                transition: all 0.3s ease;
+            }
+
+            .step-label {
+                font-size: 0.8rem;
+                text-align: center;
+            }
+        }
+
+        .step-line {
+            width: 60px;
+            height: 2px;
+            background-color: rgba(255, 255, 255, 0.3);
+            margin: 0 1rem;
+            transition: all 0.3s ease;
+
+            &.completed {
+                background-color: var(--success-color);
+            }
+        }
+    }
+
+    .step-content {
+        .step-title {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+    }
+
+    .account-type-selection {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+
+        .form-check-card {
+            margin: 0;
+
+            .form-check-input {
+                display: none;
+
+                &:checked+.form-check-label {
+                    border-color: var(--primary-color);
+                    background-color: rgba(26, 115, 232, 0.05);
+
+                    .card-content {
+                        color: var(--primary-color);
+                    }
+                }
+            }
+
+            .form-check-label {
+                border: 2px solid #dee2e6;
+                border-radius: 12px;
+                padding: 1.5rem;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                display: block;
+                text-align: center;
+
+                &:hover {
+                    border-color: var(--primary-color);
+                    transform: translateY(-2px);
+                }
+
+                .card-content {
+                    h6 {
+                        margin-bottom: 0.5rem;
+                        font-weight: 600;
+                    }
+                }
+            }
+        }
+    }
+
+    .form-control {
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        border: 1px solid #dee2e6;
+        transition: all 0.3s ease;
+
+        &:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(26, 115, 232, 0.25);
+        }
+    }
+
+    .btn {
+        border-radius: 8px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+
+        &:hover {
+            transform: translateY(-1px);
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .registration-page {
+        .account-type-selection {
+            grid-template-columns: 1fr;
+        }
+
+        .progress-steps {
+            .step-label {
+                font-size: 0.7rem;
+            }
+
+            .step-line {
+                width: 40px;
+            }
+        }
+    }
+}

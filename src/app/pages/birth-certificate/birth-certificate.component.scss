@@ -1,0 +1,282 @@
+.birth-certificate-page {
+    background: #f8f9fa;
+    min-height: 100vh;
+
+    .page-header {
+        .page-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+
+        .tracking-info {
+            background: var(--success-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+    }
+
+    .progress-container {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+        .progress-steps {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            .step {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                opacity: 0.5;
+                transition: all 0.3s ease;
+
+                &.active,
+                &.completed {
+                    opacity: 1;
+                }
+
+                &.completed .step-circle {
+                    background-color: var(--success-color);
+                }
+
+                .step-circle {
+                    width: 45px;
+                    height: 45px;
+                    border-radius: 50%;
+                    background-color: var(--success-color);
+                    color: white;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: bold;
+                    margin-bottom: 0.5rem;
+                }
+
+                .step-label {
+                    font-size: 0.85rem;
+                    text-align: center;
+                    font-weight: 500;
+                }
+            }
+
+            .step-line {
+                width: 80px;
+                height: 3px;
+                background-color: #dee2e6;
+                margin: 0 1rem;
+
+                &.completed {
+                    background-color: var(--success-color);
+                }
+            }
+        }
+    }
+
+    .application-form {
+        background: white;
+        padding: 2.5rem;
+        border-radius: 15px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+        .form-step {
+            .step-header {
+                h3 {
+                    color: var(--success-color);
+                    font-weight: 600;
+                    margin-bottom: 0.5rem;
+                }
+            }
+        }
+
+        .request-type-selection {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+
+            .form-check-card {
+                margin: 0;
+
+                .form-check-input {
+                    display: none;
+
+                    &:checked+.form-check-label {
+                        border-color: var(--success-color);
+                        background-color: rgba(52, 168, 83, 0.05);
+
+                        .card-content {
+                            color: var(--success-color);
+                        }
+                    }
+                }
+
+                .form-check-label {
+                    border: 2px solid #dee2e6;
+                    border-radius: 12px;
+                    padding: 1.5rem;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    display: block;
+                    text-align: center;
+
+                    &:hover {
+                        border-color: var(--success-color);
+                        transform: translateY(-2px);
+                    }
+
+                    .card-content {
+                        h6 {
+                            margin-bottom: 0.5rem;
+                            font-weight: 600;
+                        }
+                    }
+                }
+            }
+        }
+
+        .form-check-premium {
+            .form-check-label {
+                cursor: pointer;
+
+                .premium-option {
+                    background: #fff8e1;
+                    border: 2px solid #ffc107;
+                    border-radius: 12px;
+                    padding: 1rem;
+                    transition: all 0.3s ease;
+
+                    &:hover {
+                        background: #fff3c4;
+                    }
+
+                    .premium-header {
+                        display: flex;
+                        align-items: center;
+                        margin-bottom: 0.5rem;
+                    }
+                }
+            }
+
+            .form-check-input:checked+.form-check-label .premium-option {
+                background: #e8f5e8;
+                border-color: var(--success-color);
+            }
+        }
+
+        .payment-summary {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 12px;
+
+            .fee-item {
+                margin-bottom: 0.5rem;
+            }
+
+            .total-amount {
+                font-size: 1.1rem;
+            }
+        }
+
+        .payment-options {
+            .payment-option {
+                margin-bottom: 1rem;
+
+                input[type="radio"] {
+                    display: none;
+
+                    &:checked+.payment-label {
+                        background-color: rgba(52, 168, 83, 0.1);
+                        border-color: var(--success-color);
+                        color: var(--success-color);
+                    }
+                }
+
+                .payment-label {
+                    display: block;
+                    padding: 1rem 1.5rem;
+                    border: 2px solid #dee2e6;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+
+                    &:hover {
+                        border-color: var(--success-color);
+                    }
+                }
+            }
+        }
+
+        .delivery-info-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 12px;
+
+            h6 {
+                font-weight: 600;
+                margin-bottom: 1rem;
+            }
+
+            .info-item {
+                margin-bottom: 1.5rem;
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+        }
+
+        .confirmation-content {
+            padding: 3rem 2rem;
+
+            .success-icon {
+                animation: bounceIn 0.8s ease;
+            }
+
+            .confirmation-details {
+                background: #f8f9fa;
+                padding: 2rem;
+                border-radius: 12px;
+                margin: 2rem 0;
+
+                .detail-item {
+                    margin-bottom: 1rem;
+
+                    &:last-child {
+                        margin-bottom: 0;
+                    }
+                }
+            }
+        }
+    }
+
+    .form-navigation {
+        background: white;
+        padding: 1.5rem 2.5rem;
+        border-radius: 0 0 15px 15px;
+        margin-top: -1px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+}
+
+@media (max-width: 768px) {
+    .birth-certificate-page {
+        .request-type-selection {
+            grid-template-columns: 1fr;
+        }
+
+        .progress-steps {
+            .step-label {
+                font-size: 0.7rem;
+            }
+
+            .step-line {
+                width: 40px;
+            }
+        }
+    }
+}

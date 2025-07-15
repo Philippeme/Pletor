@@ -1,0 +1,78 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+    <div class="container">
+        <!-- Brand -->
+        <a class="navbar-brand d-flex align-items-center" routerLink="/home">
+        
+            <span class="brand-text">{{ 'app.title' | translate }}</span>
+        </a>
+
+        <!-- Mobile menu button -->
+        <button class="navbar-toggler" type="button" (click)="isMenuCollapsed = !isMenuCollapsed"
+            [attr.aria-expanded]="!isMenuCollapsed">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navigation menu -->
+        <div class="collapse navbar-collapse" [ngClass]="{'show': !isMenuCollapsed}">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/home" routerLinkActive="active" (click)="navigateTo('/home')">
+                        {{ 'navigation.home' | translate }}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/procedures" routerLinkActive="active"
+                        (click)="navigateTo('/procedures')">
+                        {{ 'navigation.procedures' | translate }}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/search-files" routerLinkActive="active"
+                        (click)="navigateTo('/search-files')">
+                        {{ 'navigation.search_files' | translate }}
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Right side menu -->
+            <ul class="navbar-nav ms-auto align-items-center">
+                <!-- Language Selector -->
+                <li class="nav-item">
+                    <app-language-selector></app-language-selector>
+                </li>
+
+                <!-- Authentication menu -->
+                <li class="nav-item" *ngIf="!currentUser">
+                    <a class="nav-link" routerLink="/registration" routerLinkActive="active"
+                        (click)="navigateTo('/registration')">
+                        {{ 'navigation.registration' | translate }}
+                    </a>
+                </li>
+                <li class="nav-item" *ngIf="!currentUser">
+                    <button class="btn btn-outline-light btn-sm ms-2" (click)="openLoginModal()">
+                        {{ 'navigation.login' | translate }}
+                    </button>
+                </li>
+
+                <!-- User menu -->
+                <li class="nav-item dropdown" *ngIf="currentUser" ngbDropdown>
+                    <a class="nav-link dropdown-toggle" id="userDropdown" ngbDropdownToggle>
+                        <i class="fas fa-user me-1"></i>
+                        {{ currentUser.firstName || currentUser.email }}
+                    </a>
+                    <div class="dropdown-menu" ngbDropdownMenu>
+                        <a class="dropdown-item" href="#" (click)="$event.preventDefault()">
+                            <i class="fas fa-user me-2"></i>
+                            {{ 'navigation.my_account' | translate }}
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#" (click)="logout(); $event.preventDefault()">
+                            <i class="fas fa-sign-out-alt me-2"></i>
+                            {{ 'navigation.logout' | translate }}
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

@@ -1,0 +1,459 @@
+<div class="birth-certificate-page">
+    <div class="container py-4">
+
+        <!-- Page Header -->
+        <div class="page-header mb-4">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="page-title">
+                        <i class="fas fa-certificate me-3"></i>
+                        Birth Certificate Copy
+                    </h1>
+                    <p class="text-muted">Request a certified copy of birth certificate</p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <div class="tracking-info" *ngIf="application">
+                        <strong>Tracking #:</strong> {{ application.trackingNumber }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Indicator -->
+        <div class="progress-container mb-5">
+            <div class="progress-steps">
+                <div class="step" [class.active]="currentStep >= 1" [class.completed]="currentStep > 1">
+                    <div class="step-circle">1</div>
+                    <span class="step-label">Person Info</span>
+                </div>
+                <div class="step-line" [class.completed]="currentStep > 1"></div>
+                <div class="step" [class.active]="currentStep >= 2" [class.completed]="currentStep > 2">
+                    <div class="step-circle">2</div>
+                    <span class="step-label">Requester Info</span>
+                </div>
+                <div class="step-line" [class.completed]="currentStep > 2"></div>
+                <div class="step" [class.active]="currentStep >= 3" [class.completed]="currentStep > 3">
+                    <div class="step-circle">3</div>
+                    <span class="step-label">Payment</span>
+                </div>
+                <div class="step-line" [class.completed]="currentStep > 3"></div>
+                <div class="step" [class.active]="currentStep >= 4">
+                    <div class="step-circle">4</div>
+                    <span class="step-label">Confirmation</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Application Form -->
+        <div class="application-form">
+
+            <!-- Error/Success Messages -->
+            <div class="alert alert-danger" *ngIf="errorMessage" role="alert">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                {{ errorMessage }}
+            </div>
+
+            <div class="alert alert-success" *ngIf="successMessage" role="alert">
+                <i class="fas fa-check-circle me-2"></i>
+                {{ successMessage }}
+            </div>
+
+            <form [formGroup]="certificateForm">
+
+                <!-- Step 1: Person Information -->
+                <div class="form-step" *ngIf="currentStep === 1">
+                    <div class="step-header mb-4">
+                        <h3>Birth Certificate Information</h3>
+                        <p class="text-muted">Provide details of the person whose birth certificate is being requested
+                        </p>
+                    </div>
+
+                    <!-- Request Type -->
+                    <div class="mb-4">
+                        <label class="form-label">Who is this request for? *</label>
+                        <div class="request-type-selection">
+                            <div class="form-check form-check-card">
+                                <input class="form-check-input" type="radio" value="self" formControlName="requestType"
+                                    id="self" (change)="onRequestTypeChange()">
+                                <label class="form-check-label" for="self">
+                                    <div class="card-content">
+                                        <i class="fas fa-user fa-2x mb-2"></i>
+                                        <h6>For Myself</h6>
+                                        <small class="text-muted">My own birth certificate</small>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="form-check form-check-card">
+                                <input class="form-check-input" type="radio" value="other" formControlName="requestType"
+                                    id="other" (change)="onRequestTypeChange()">
+                                <label class="form-check-label" for="other">
+                                    <div class="card-content">
+                                        <i class="fas fa-users fa-2x mb-2"></i>
+                                        <h6>For Someone Else</h6>
+                                        <small class="text-muted">Child, relative, or other person</small>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Person's Information -->
+                    <h5 class="mb-3">Person's Information</h5>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">First Name *</label>
+                            <input type="text" class="form-control" formControlName="personFirstName"
+                                [class.is-invalid]="certificateForm.get('personFirstName')?.invalid && certificateForm.get('personFirstName')?.touched">
+                            <div class="invalid-feedback">First name is required</div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Middle Name</label>
+                            <input type="text" class="form-control" formControlName="personMiddleName">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Last Name *</label>
+                            <input type="text" class="form-control" formControlName="personLastName"
+                                [class.is-invalid]="certificateForm.get('personLastName')?.invalid && certificateForm.get('personLastName')?.touched">
+                            <div class="invalid-feedback">Last name is required</div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Date of Birth *</label>
+                            <input type="date" class="form-control" formControlName="personDateOfBirth"
+                                [class.is-invalid]="certificateForm.get('personDateOfBirth')?.invalid && certificateForm.get('personDateOfBirth')?.touched">
+                            <div class="invalid-feedback">Date of birth is required</div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Place of Birth *</label>
+                            <input type="text" class="form-control" formControlName="personPlaceOfBirth"
+                                [class.is-invalid]="certificateForm.get('personPlaceOfBirth')?.invalid && certificateForm.get('personPlaceOfBirth')?.touched">
+                            <div class="invalid-feedback">Place of birth is required</div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Gender *</label>
+                            <select class="form-select" formControlName="personGender"
+                                [class.is-invalid]="certificateForm.get('personGender')?.invalid && certificateForm.get('personGender')?.touched">
+                                <option value="">Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                            <div class="invalid-feedback">Gender is required</div>
+                        </div>
+                    </div>
+
+                    <!-- Parents Information -->
+                    <h5 class="mb-3 mt-4">Parents Information</h5>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Father's First Name *</label>
+                            <input type="text" class="form-control" formControlName="fatherFirstName"
+                                [class.is-invalid]="certificateForm.get('fatherFirstName')?.invalid && certificateForm.get('fatherFirstName')?.touched">
+                            <div class="invalid-feedback">Father's first name is required</div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Father's Last Name *</label>
+                            <input type="text" class="form-control" formControlName="fatherLastName"
+                                [class.is-invalid]="certificateForm.get('fatherLastName')?.invalid && certificateForm.get('fatherLastName')?.touched">
+                            <div class="invalid-feedback">Father's last name is required</div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Mother's First Name *</label>
+                            <input type="text" class="form-control" formControlName="motherFirstName"
+                                [class.is-invalid]="certificateForm.get('motherFirstName')?.invalid && certificateForm.get('motherFirstName')?.touched">
+                            <div class="invalid-feedback">Mother's first name is required</div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Mother's Last Name *</label>
+                            <input type="text" class="form-control" formControlName="motherLastName"
+                                [class.is-invalid]="certificateForm.get('motherLastName')?.invalid && certificateForm.get('motherLastName')?.touched">
+                            <div class="invalid-feedback">Mother's last name is required</div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Mother's Maiden Name</label>
+                            <input type="text" class="form-control" formControlName="motherMaidenName">
+                            <small class="form-text text-muted">If different from last name</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Requester Information -->
+                <div class="form-step" *ngIf="currentStep === 2">
+                    <div class="step-header mb-4">
+                        <h3>Requester Information</h3>
+                        <p class="text-muted" *ngIf="certificateForm.get('requestType')?.value === 'self'">
+                            Confirm your contact information
+                        </p>
+                        <p class="text-muted" *ngIf="certificateForm.get('requestType')?.value === 'other'">
+                            Provide your information as the person requesting this certificate
+                        </p>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Your First Name *</label>
+                            <input type="text" class="form-control" formControlName="requesterFirstName"
+                                [class.is-invalid]="certificateForm.get('requesterFirstName')?.invalid && certificateForm.get('requesterFirstName')?.touched">
+                            <div class="invalid-feedback">First name is required</div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Your Last Name *</label>
+                            <input type="text" class="form-control" formControlName="requesterLastName"
+                                [class.is-invalid]="certificateForm.get('requesterLastName')?.invalid && certificateForm.get('requesterLastName')?.touched">
+                            <div class="invalid-feedback">Last name is required</div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Phone Number *</label>
+                            <input type="tel" class="form-control" formControlName="requesterPhoneNumber"
+                                [class.is-invalid]="certificateForm.get('requesterPhoneNumber')?.invalid && certificateForm.get('requesterPhoneNumber')?.touched">
+                            <div class="invalid-feedback">Phone number is required</div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Email Address *</label>
+                            <input type="email" class="form-control" formControlName="requesterEmail"
+                                [class.is-invalid]="certificateForm.get('requesterEmail')?.invalid && certificateForm.get('requesterEmail')?.touched">
+                            <div class="invalid-feedback">Valid email is required</div>
+                        </div>
+                    </div>
+
+                    <!-- Additional fields for requests on behalf of others -->
+                    <div *ngIf="certificateForm.get('requestType')?.value === 'other'">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Your ID Number *</label>
+                                <input type="text" class="form-control" formControlName="requesterIdNumber"
+                                    [class.is-invalid]="certificateForm.get('requesterIdNumber')?.invalid && certificateForm.get('requesterIdNumber')?.touched">
+                                <div class="invalid-feedback">ID number is required</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Relationship to Person *</label>
+                                <select class="form-select" formControlName="relationshipToPerson"
+                                    [class.is-invalid]="certificateForm.get('relationshipToPerson')?.invalid && certificateForm.get('relationshipToPerson')?.touched">
+                                    <option value="">Select Relationship</option>
+                                    <option value="Parent">Parent</option>
+                                    <option value="Child">Child</option>
+                                    <option value="Spouse">Spouse</option>
+                                    <option value="Sibling">Sibling</option>
+                                    <option value="Legal Guardian">Legal Guardian</option>
+                                    <option value="Legal Representative">Legal Representative</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                                <div class="invalid-feedback">Relationship is required</div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Your Address *</label>
+                            <textarea class="form-control" rows="3" formControlName="requesterAddress"
+                                [class.is-invalid]="certificateForm.get('requesterAddress')?.invalid && certificateForm.get('requesterAddress')?.touched"></textarea>
+                            <div class="invalid-feedback">Address is required</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Reason for Request *</label>
+                            <textarea class="form-control" rows="2" formControlName="reasonForRequest"
+                                placeholder="e.g., School enrollment, passport application, legal proceedings"
+                                [class.is-invalid]="certificateForm.get('reasonForRequest')?.invalid && certificateForm.get('reasonForRequest')?.touched"></textarea>
+                            <div class="invalid-feedback">Reason for request is required</div>
+                        </div>
+                    </div>
+
+                    <!-- Collection Method -->
+                    <h5 class="mb-3 mt-4">Collection Information</h5>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Collection Method *</label>
+                            <select class="form-select" formControlName="collectionMethod">
+                                <option value="pickup">Pickup at Registry Office</option>
+                                <option value="mail">Mail Delivery</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Registry Office *</label>
+                            <select class="form-select" formControlName="collectionLocation"
+                                [class.is-invalid]="certificateForm.get('collectionLocation')?.invalid && certificateForm.get('collectionLocation')?.touched">
+                                <option value="">Select Registry Office</option>
+                                <option value="Yaoundé Central Registry">Yaoundé Central Registry</option>
+                                <option value="Douala Registry Office">Douala Registry Office</option>
+                                <option value="Bamenda Registry Office">Bamenda Registry Office</option>
+                                <option value="Bafoussam Registry Office">Bafoussam Registry Office</option>
+                                <option value="Garoua Registry Office">Garoua Registry Office</option>
+                            </select>
+                            <div class="invalid-feedback">Registry office selection is required</div>
+                        </div>
+                    </div>
+
+                    <!-- Urgent Request Option -->
+                    <div class="mb-3">
+                        <div class="form-check form-check-premium">
+                            <input class="form-check-input" type="checkbox" formControlName="urgentRequest"
+                                id="urgentRequest">
+                            <label class="form-check-label" for="urgentRequest">
+                                <div class="premium-option">
+                                    <div class="premium-header">
+                                        <i class="fas fa-bolt text-warning me-2"></i>
+                                        <strong>Urgent Processing</strong>
+                                        <span class="badge bg-warning text-dark ms-2">+500 XAF</span>
+                                    </div>
+                                    <small class="text-muted">Same-day processing (within 4 hours)</small>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Payment -->
+                <div class="form-step" *ngIf="currentStep === 3">
+                    <div class="step-header mb-4">
+                        <h3>Payment</h3>
+                        <p class="text-muted">Complete your payment to process your certificate request</p>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="payment-summary mb-4">
+                                <h5>Payment Summary</h5>
+                                <div class="fee-item">
+                                    <div class="d-flex justify-content-between">
+                                        <span>Birth Certificate Copy</span>
+                                        <span>200 XAF</span>
+                                    </div>
+                                </div>
+                                <div class="fee-item" *ngIf="certificateForm.get('urgentRequest')?.value">
+                                    <div class="d-flex justify-content-between">
+                                        <span>Urgent Processing Fee</span>
+                                        <span>500 XAF</span>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="total-amount">
+                                    <div class="d-flex justify-content-between">
+                                        <strong>Total Amount</strong>
+                                        <strong class="text-primary">{{ calculateTotalAmount() }} XAF</strong>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="payment-methods">
+                                <h5 class="mb-3">Select Payment Method</h5>
+                                <div class="payment-options">
+                                    <div class="payment-option" *ngFor="let method of paymentMethods">
+                                        <input type="radio" [id]="'payment-' + method.value"
+                                            [(ngModel)]="selectedPaymentMethod" [value]="method.value"
+                                            [ngModelOptions]="{standalone: true}">
+                                        <label [for]="'payment-' + method.value" class="payment-label">
+                                            <i [class]="method.icon" class="me-3"></i>
+                                            {{ method.label }}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="alert alert-info mt-3">
+                                <i class="fas fa-info-circle me-2"></i>
+                                {{ 'messages.payment_simulation' | translate }}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="delivery-info-card">
+                                <h6>Delivery Information</h6>
+                                <div class="info-item">
+                                    <i class="fas fa-clock text-primary me-2"></i>
+                                    <strong>Expected Delivery:</strong>
+                                    <br>
+                                    <span class="text-muted">{{ getExpectedDeliveryTime() }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                                    <strong>Collection Point:</strong>
+                                    <br>
+                                    <span class="text-muted">{{ certificateForm.get('collectionLocation')?.value
+                                        }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <i class="fas fa-shield-alt text-success me-2"></i>
+                                    <strong>Certified Document:</strong>
+                                    <br>
+                                    <span class="text-muted">Official government seal and signature</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4: Confirmation -->
+                <div class="form-step" *ngIf="currentStep === 4">
+                    <div class="confirmation-content text-center">
+                        <div class="success-icon mb-4">
+                            <i class="fas fa-check-circle fa-4x text-success"></i>
+                        </div>
+                        <h3>Request Submitted Successfully!</h3>
+                        <p class="text-muted mb-4">Your birth certificate request has been submitted and payment
+                            processed.</p>
+
+                        <div class="confirmation-details">
+                            <div class="detail-item">
+                                <strong>Tracking Number:</strong>
+                                <span class="text-primary">{{ application?.trackingNumber }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Expected Completion:</strong> {{ getExpectedDeliveryTime() }}
+                            </div>
+                            <div class="detail-item">
+                                <strong>Collection Point:</strong> {{ certificateForm.get('collectionLocation')?.value
+                                }}
+                            </div>
+                            <div class="detail-item">
+                                <strong>Total Paid:</strong> {{ calculateTotalAmount() }} XAF
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+
+            <!-- Navigation Buttons -->
+            <div class="form-navigation mt-4">
+                <div class="d-flex justify-content-between">
+                    <button type="button" class="btn btn-outline-secondary" *ngIf="currentStep > 1 && currentStep < 4"
+                        (click)="previousStep()">
+                        <i class="fas fa-arrow-left me-2"></i>
+                        Previous
+                    </button>
+
+                    <div class="ms-auto">
+                        <button type="button" class="btn btn-primary" *ngIf="currentStep < 2" (click)="nextStep()">
+                            Next
+                            <i class="fas fa-arrow-right ms-2"></i>
+                        </button>
+
+                        <button type="button" class="btn btn-success" *ngIf="currentStep === 2"
+                            [disabled]="isSubmitting" (click)="onSubmitApplication()">
+                            <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
+                            Submit Request
+                        </button>
+
+                        <button type="button" class="btn btn-warning" *ngIf="currentStep === 3" [disabled]="isLoading"
+                            (click)="onPayment()">
+                            <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+                            Pay Now
+                        </button>
+
+                        <button type="button" class="btn btn-primary" *ngIf="currentStep === 4"
+                            (click)="goToTracking()">
+                            <i class="fas fa-search me-2"></i>
+                            Track Request
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

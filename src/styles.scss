@@ -1,0 +1,603 @@
+/* You can add global styles to this file, and also import other style files */
+@import 'bootstrap/scss/bootstrap';
+
+// Font Awesome Import (fallback if CDN fails)
+@import '~@fortawesome/fontawesome-free/css/all.min.css';
+
+// Custom CSS Variables
+:root {
+    --primary-color: #1a73e8;
+    --primary-color-dark: #1557b0;
+    --secondary-color: #34a853;
+    --warning-color: #fbbc04;
+    --warning-color-dark: #e6a600;
+    --danger-color: #ea4335;
+    --success-color: #34a853;
+    --dark-color: #202124;
+    --light-color: #f8f9fa;
+    --cameroon-green: #009639;
+    --cameroon-red: #ce1126;
+    --cameroon-yellow: #fcdd09;
+
+    --font-family-primary: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --border-radius: 8px;
+    --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+}
+
+// Global Styles
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family-primary);
+    line-height: 1.6;
+    color: var(--dark-color);
+    position: relative;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+}
+
+#root,
+app-root {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+// Font Awesome Icons Global Fix
+.fas,
+.far,
+.fab,
+.fal,
+.fad {
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 6 Brands" !important;
+    font-weight: 900;
+    display: inline-block !important;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.fab {
+    font-family: "Font Awesome 6 Brands" !important;
+    font-weight: 400 !important;
+}
+
+.far {
+    font-weight: 400 !important;
+}
+
+// Specific icon fixes
+.fa-check-circle::before {
+    content: "\f058";
+}
+
+.fa-clock::before {
+    content: "\f017";
+}
+
+// Badge and Status Elements
+.badge {
+    i {
+        margin-right: 0.25rem;
+        font-size: 0.9em;
+        vertical-align: baseline;
+    }
+
+    &.bg-success {
+        background-color: var(--success-color) !important;
+        color: white !important;
+
+        i {
+            color: white !important;
+        }
+    }
+
+    &.bg-secondary {
+        background-color: #6c757d !important;
+        color: white !important;
+
+        i {
+            color: white !important;
+        }
+    }
+}
+
+// Ensure icons are visible
+i[class*="fa-"] {
+    min-width: 1em;
+    text-align: center;
+}
+
+// Category Icons with proper sizing
+.category-icon {
+    i {
+        font-size: inherit !important;
+        color: inherit !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        display: inline-block !important;
+        line-height: 1;
+        vertical-align: middle;
+    }
+}
+
+// Service Status Indicators
+.service-badges {
+    .badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 12px;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+
+        &.bg-success {
+            background-color: #28a745 !important;
+            color: white !important;
+        }
+
+        &.bg-secondary {
+            background-color: #6c757d !important;
+            color: white !important;
+        }
+    }
+}
+
+// Ensure pages take full height to push footer down
+.home-page,
+.procedures-page,
+.registration-page,
+.search-files-page,
+.passport-application-page,
+.birth-certificate-page,
+.service-detail-page {
+    flex: 1;
+    min-height: calc(100vh - 80px);
+}
+
+// Navigation and Links
+.breadcrumb {
+    background: none;
+    padding: 0;
+    margin-bottom: 1rem;
+
+    .breadcrumb-item {
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+
+            &:hover {
+                text-decoration: underline;
+                color: var(--primary-color-dark);
+            }
+        }
+
+        &.active {
+            color: #6c757d;
+        }
+
+        &:not(:last-child)::after {
+            content: ">";
+            color: #6c757d;
+            margin: 0 0.5rem;
+        }
+    }
+}
+
+.service-detail-page {
+    .service-status {
+        .badge-lg {
+            font-size: 1rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+
+            i.fas {
+                font-size: 1rem;
+                display: inline-block !important;
+                width: auto;
+                height: auto;
+                line-height: 1;
+
+                &.fa-check-circle {
+                    color: white;
+                }
+
+                &.fa-clock {
+                    color: white;
+                }
+            }
+        }
+    }
+}
+
+// Service Icons
+.service-item {
+    .meta-item i {
+        color: var(--primary-color) !important;
+        margin-right: 0.5rem;
+    }
+}
+
+// Header Icons
+.navbar .nav-link i,
+.btn i {
+    margin-right: 0.5rem;
+}
+
+// Custom Bootstrap Overrides
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    border-radius: var(--border-radius);
+    font-weight: 500;
+    padding: 12px 24px;
+    transition: var(--transition);
+
+    &:hover {
+        background-color: var(--primary-color-dark);
+        border-color: var(--primary-color-dark);
+        transform: translateY(-1px);
+    }
+}
+
+.btn-success {
+    background-color: var(--cameroon-green);
+    border-color: var(--cameroon-green);
+}
+
+.card {
+    border: none;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    transition: var(--transition);
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
+}
+
+.form-control {
+    border-radius: var(--border-radius);
+    border: 1px solid #dadce0;
+    padding: 12px 16px;
+    transition: var(--transition);
+
+    &:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(26, 115, 232, 0.25);
+    }
+}
+
+// Loading Overlay
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+
+    .loading-spinner {
+        background-color: white;
+        padding: 2rem;
+        border-radius: var(--border-radius);
+        text-align: center;
+    }
+}
+
+// Modal and overlay fixes
+.modal {
+    z-index: 1055;
+}
+
+.modal-backdrop {
+    z-index: 1050;
+}
+
+// Category Cards with Proper Icons
+.category-card {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: var(--box-shadow);
+    cursor: pointer;
+    transition: var(--transition);
+    height: 100%;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .category-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 1.5rem;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 2rem;
+
+        i {
+            font-size: 2rem !important;
+            line-height: 1;
+        }
+    }
+
+    .category-name {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: var(--dark-color);
+        text-align: center;
+    }
+
+    .category-description {
+        color: #666;
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .services-list {
+        border-top: 1px solid #eee;
+        padding-top: 1rem;
+
+        .services-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .service-link {
+            padding: 0.25rem 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+            padding-left: 0.5rem;
+
+            &:hover {
+                background-color: #f8f9fa;
+                color: var(--primary-color);
+                padding-left: 1rem;
+            }
+
+            i {
+                color: var(--primary-color);
+                font-size: 0.8rem;
+            }
+        }
+    }
+}
+
+// Service List Items
+.service-item {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: var(--box-shadow);
+    cursor: pointer;
+    transition: var(--transition);
+
+    &:hover {
+        transform: translateX(5px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    }
+
+    .service-name {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+    }
+
+    .service-description {
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    .service-meta {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #eee;
+
+        .meta-item {
+            display: inline-block;
+            margin-right: 1rem;
+            font-size: 0.8rem;
+            color: #888;
+
+            i {
+                margin-right: 0.25rem;
+                color: var(--primary-color);
+            }
+        }
+    }
+}
+
+// Timeline Styles
+.timeline {
+    position: relative;
+
+    &:before {
+        content: '';
+        position: absolute;
+        left: 20px;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: var(--primary-color);
+    }
+
+    .timeline-item {
+        position: relative;
+        margin-bottom: 2rem;
+        padding-left: 60px;
+
+        .timeline-marker {
+            position: absolute;
+            left: 12px;
+            top: 0;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px var(--primary-color);
+
+            &.completed {
+                background: var(--success-color);
+                box-shadow: 0 0 0 3px var(--success-color);
+            }
+
+            &.pending {
+                background: #ccc;
+                box-shadow: 0 0 0 3px #ccc;
+            }
+        }
+
+        .timeline-content {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+
+            .timeline-title {
+                font-weight: 600;
+                margin-bottom: 0.5rem;
+            }
+
+            .timeline-description {
+                color: #666;
+                margin-bottom: 0.5rem;
+            }
+
+            .timeline-duration {
+                font-size: 0.8rem;
+                color: #888;
+            }
+        }
+    }
+}
+
+.app-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.main-content {
+    flex: 1;
+    padding-top: 80px; // Account for fixed header
+    min-height: calc(100vh - 80px);
+    display: flex;
+    flex-direction: column;
+}
+
+// Footer positioning and visibility
+.footer {
+    margin-top: auto;
+    flex-shrink: 0;
+    width: 100%;
+    position: relative;
+    z-index: 10;
+    background-color: #212529 !important;
+
+    // Ensure footer appears above other elements
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #212529;
+        z-index: -1;
+    }
+}
+
+// Cameroon Flag Colors Helper Classes
+.bg-cameroon-green {
+    background-color: var(--cameroon-green) !important;
+}
+
+.bg-cameroon-red {
+    background-color: var(--cameroon-red) !important;
+}
+
+.bg-cameroon-yellow {
+    background-color: var(--cameroon-yellow) !important;
+}
+
+.text-cameroon-green {
+    color: var(--cameroon-green) !important;
+}
+
+.text-cameroon-red {
+    color: var(--cameroon-red) !important;
+}
+
+.text-cameroon-yellow {
+    color: var(--cameroon-yellow) !important;
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+    .container-fluid {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .category-card {
+        .category-icon {
+            width: 60px;
+            height: 60px;
+            font-size: 1.5rem;
+
+            i {
+                font-size: 1.5rem !important;
+            }
+        }
+    }
+
+    .service-status {
+        margin-top: 1rem;
+        text-align: center;
+
+        .badge-lg {
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+        }
+    }
+
+    .main-content {
+        padding-top: 70px;
+    }
+}

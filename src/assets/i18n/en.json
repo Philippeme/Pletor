@@ -1,0 +1,312 @@
+{
+    "app": {
+        "title": "MK Gov",
+        "subtitle": "Digital Government Portal for Guinea Bissau Citizens",
+        "welcome": "Welcome to MK Gov",
+        "description": "Your one-stop digital platform for accessing government services efficiently and transparently."
+    },
+    "navigation": {
+        "home": "Home",
+        "procedures": "Procedures",
+        "registration": "Registration",
+        "login": "Login",
+        "search_files": "Search Files",
+        "logout": "Logout",
+        "my_account": "My Account",
+        "language": "Language"
+    },
+    "categories": {
+        "police_justice": {
+            "name": "Police & Justice",
+            "description": "Identity documents, judicial records, and legal services"
+        },
+        "family": {
+            "name": "Family",
+            "description": "Civil status documents and family-related services"
+        },
+        "transport": {
+            "name": "Transport",
+            "description": "Driving licenses, vehicle registration, and transport permits"
+        },
+        "education": {
+            "name": "Education",
+            "description": "Diploma certification, educational authorizations, and academic services"
+        },
+        "business": {
+            "name": "Business",
+            "description": "Company registration, business permits, and commercial services"
+        },
+        "public_service": {
+            "name": "Public Service",
+            "description": "Civil service applications and administrative procedures"
+        },
+        "land_construction": {
+            "name": "Land & Construction",
+            "description": "Land titles, building permits, and property certificates"
+        },
+        "consular": {
+            "name": "Consular Services",
+            "description": "Visa applications and document legalization"
+        },
+        "health": {
+            "name": "Health",
+            "description": "Healthcare facility authorizations and medical services"
+        },
+        "civic_life": {
+            "name": "Civic Life",
+            "description": "Event permits and civic activities authorization"
+        }
+    },
+    "services": {
+        "passport": {
+            "name": "Passport Application",
+            "description": "Apply for a Cameroonian biometric passport online",
+            "detailed_description": "Electronic service for applying for a Cameroonian biometric passport. The application is processed by the General Delegation for National Security (DGSN) through their digital platform. The new biometric passport features advanced security technology with an integrated electronic chip and is internationally recognized."
+        },
+        "birth_certificate_copy": {
+            "name": "Certified Copy of Birth Certificate",
+            "description": "Request a certified copy of birth certificate",
+            "detailed_description": "Official service to obtain a certified copy of a birth certificate. The request is processed by the civil registry office where the birth was originally registered. This document is essential for various administrative procedures including passport applications, school enrollment, and legal proceedings."
+        },
+        "national_id": {
+            "name": "National Identity Card",
+            "description": "Apply for national identity card",
+            "detailed_description": "Service for requesting a new national identity card or renewing an existing one. The CNI is a mandatory identity document for all Cameroonian citizens."
+        },
+        "criminal_record": {
+            "name": "Criminal Record Extract",
+            "description": "Request criminal record extract",
+            "detailed_description": "Official document certifying the criminal history or clean record of an individual. Required for various administrative procedures including business registration and employment."
+        },
+        "marriage_certificate": {
+            "name": "Marriage Certificate Copy",
+            "description": "Request certified copy of marriage certificate",
+            "detailed_description": "Official copy of marriage certificate issued by the civil registry office."
+        },
+        "death_certificate": {
+            "name": "Death Certificate Copy",
+            "description": "Request certified copy of death certificate",
+            "detailed_description": "Official copy of death certificate issued by the civil registry office."
+        },
+        "driving_license": {
+            "name": "Driving License",
+            "description": "Apply for driving license",
+            "detailed_description": "Service for obtaining a driving license after passing the required theoretical and practical tests."
+        },
+        "diploma_certification": {
+            "name": "Diploma Certification",
+            "description": "Certify academic diplomas",
+            "detailed_description": "Official certification of academic diplomas for use abroad or for professional purposes."
+        },
+        "business_registration": {
+            "name": "Business Registration",
+            "description": "Register a new business",
+            "detailed_description": "Complete business registration process including commercial registry inscription and tax registration."
+        },
+        "civil_service_application": {
+            "name": "Civil Service Application",
+            "description": "Apply for civil service positions",
+            "detailed_description": "Application process for civil service competitions and government positions."
+        },
+        "land_title": {
+            "name": "Land Title",
+            "description": "Obtain land title",
+            "detailed_description": "Process for obtaining official land ownership titles and property certificates."
+        },
+        "visa_application": {
+            "name": "Visa Application",
+            "description": "Apply for travel visa",
+            "detailed_description": "Application process for travel visas to various countries through consular services."
+        },
+        "health_facility_authorization": {
+            "name": "Health Facility Authorization",
+            "description": "Authorization to operate health facilities",
+            "detailed_description": "Licensing process for opening and operating healthcare facilities including clinics and pharmacies."
+        },
+        "event_authorization": {
+            "name": "Event Authorization",
+            "description": "Authorization for public events",
+            "detailed_description": "Permit application for organizing public events, demonstrations, and cultural activities."
+        }
+    },
+    "forms": {
+        "login": {
+            "title": "Login",
+            "phone_email": "Phone Number or Email",
+            "password": "Password",
+            "forgot_password": "Forgot Password?",
+            "login_button": "Login",
+            "no_account": "Don't have an account?",
+            "create_account": "Create one",
+            "terms_text": "By logging in, you accept the terms of use including the privacy policy of MK Gov"
+        },
+        "registration": {
+            "title": "Registration",
+            "account_type": "Account Type",
+            "local_citizen": "Local Resident",
+            "diaspora_citizen": "Diaspora Citizen",
+            "cni_number": "National ID Number",
+            "consular_card": "Consular Card Number",
+            "phone_number": "Phone Number",
+            "email": "Email Address",
+            "password": "Password",
+            "confirm_password": "Confirm Password",
+            "register_button": "Register",
+            "already_have_account": "Already have an account?",
+            "login_link": "Login",
+            "step1": "Account Information",
+            "step2": "Account verification",
+            "step3": "Create your password",
+            "terms_acceptance": "By registering, you accept the terms of use including the privacy policy of MK Gov"
+        },
+        "service_application": {
+            "apply_for": "Who are you applying for?",
+            "self": "Myself",
+            "child": "My child",
+            "other": "Someone else",
+            "apply_button": "Apply",
+            "processing_time": "Processing Time",
+            "cost": "Cost",
+            "provided_by": "Provided by",
+            "required_documents": "Required Documents"
+        }
+    },
+    "requirements": {
+        "passport_form": "Passport Application Form",
+        "passport_form_desc": "Completed passport application form with accurate information",
+        "birth_certificate": "Birth Certificate",
+        "birth_cert_desc": "Certified copy of birth certificate (less than 3 months old)",
+        "national_id": "National Identity Card",
+        "national_id_desc": "Copy of valid national identity card or consular card",
+        "passport_photos": "Passport Photos",
+        "passport_photos_desc": "12 standardized passport photos with white background",
+        "residence_proof": "Proof of Residence",
+        "residence_proof_desc": "Recent utility bill or residence certificate from local administration",
+        "request_form": "Request Form",
+        "request_form_desc": "Completed request form for certified copy",
+        "fiscal_stamp": "Fiscal Stamp",
+        "fiscal_stamp_desc": "Required fiscal stamp",
+        "requester_id": "Requester's ID",
+        "requester_id_desc": "Valid identification document of the requester",
+        "driving_form": "Driving License Application Form",
+        "driving_form_desc": "Completed driving license application form",
+        "medical_certificate": "Medical Certificate",
+        "medical_cert_desc": "Medical fitness certificate from authorized physician",
+        "diploma_original": "Original Diploma",
+        "diploma_original_desc": "Original diploma or certified copy for verification",
+        "business_form": "Business Registration Form",
+        "business_form_desc": "Completed business registration application form"
+    },
+    "buttons": {
+        "submit": "Submit",
+        "cancel": "Cancel",
+        "continue": "Continue",
+        "back": "Back",
+        "close": "Close",
+        "save": "Save",
+        "search": "Search",
+        "apply": "Apply",
+        "download": "Download",
+        "upload": "Upload",
+        "pay": "Pay",
+        "confirm": "Confirm",
+        "next": "Next",
+        "previous": "Previous"
+    },
+     "agencies": {
+        "dgsn": "DGSN - Direction Générale de la Sûreté Nationale",
+        "ministry_justice": "Ministry of Justice",
+        "ministry_transport": "Ministry of Transport", 
+        "ministry_education": "Ministry of Higher Education",
+        "cfce": "CFCE - Business Creation Center",
+        "ministry_public_service": "Ministry of Public Service",
+        "ministry_state_property": "Ministry of State Property",
+        "ministry_external_relations": "Ministry of External Relations",
+        "ministry_public_health": "Ministry of Public Health",
+        "prefecture": "Prefecture Services"
+    },
+    "footer": {
+        "government_agencies": "Government Agencies & Service Providers",
+        "popular_services": "Popular Services",
+        "legal_notice": "Legal Notice",
+        "legal_text": "This platform is an official government portal. All transactions are secured and monitored. For technical issues, contact our support team. Data protection complies with Cameroon's digital governance standards.",
+        "copyright": "Digital Government Portal. All rights reserved.",
+        "ministry_attribution": "Republic of Cameroon - Ministry of Public Service and Administrative Reform",
+        "contact_phone": "+237 2XX XXX XXX",
+        "contact_email": "info@mkgov.cm", 
+        "service_hours": "24/7 Online Services",
+        "badges": {
+            "secure": "Secure",
+            "mobile_ready": "Mobile Ready",
+            "accessible": "Accessible"
+        }
+    },
+    "messages": {
+        "loading": "Loading...",
+        "success": "Success",
+        "error": "Error",
+        "warning": "Warning",
+        "info": "Information",
+        "no_results": "No results found",
+        "coming_soon": "Coming Soon",
+        "service_not_available": "This service is not yet available online. Please visit the relevant office.",
+        "login_required": "Please login to access this service",
+        "payment_simulation": "This is a payment simulation for demonstration purposes. In the actual implementation, real payment processing would be integrated.",
+        "application_submitted": "Your application has been submitted successfully!",
+        "payment_completed": "Payment completed successfully!",
+        "document_uploaded": "Document uploaded successfully!",
+        "invalid_file_type": "Invalid file type. Please upload PDF, JPEG, or PNG files only.",
+        "file_too_large": "File size too large. Please upload files smaller than 5MB.",
+        "form_validation_error": "Please fill in all required fields correctly."
+    },
+    "timeline": {
+        "pending": "Pending",
+        "in_progress": "In Progress",
+        "completed": "Completed",
+        "estimated_duration": "Estimated Duration",
+        "pre_enrollment": "Pre-enrollment",
+        "payment": "Payment",
+        "document_verification": "Document Verification",
+        "biometric_enrollment": "Biometric Enrollment",
+        "processing": "Processing",
+        "ready_for_pickup": "Ready for Pickup",
+        "form_submission": "Form Submission",
+        "certification": "Certification"
+    },
+    "status": {
+        "draft": "Draft",
+        "submitted": "Submitted",
+        "under_review": "Under Review",
+        "payment_pending": "Payment Pending",
+        "processing": "Processing",
+        "ready_for_pickup": "Ready for Pickup",
+        "completed": "Completed",
+        "rejected": "Rejected",
+        "cancelled": "Cancelled"
+    },
+    "payment": {
+        "methods": {
+            "mtn_money": "MTN Mobile Money",
+            "orange_money": "Orange Money",
+            "credit_card": "Credit Card",
+            "bank_transfer": "Bank Transfer",
+            "cash": "Cash Payment"
+        },
+        "status": {
+            "pending": "Pending",
+            "processing": "Processing",
+            "completed": "Completed",
+            "failed": "Failed",
+            "refunded": "Refunded"
+        }
+    },
+    "help": {
+        "contact_support": "Contact Support",
+        "faq": "Frequently Asked Questions",
+        "user_guide": "User Guide",
+        "need_help": "Need Help?",
+        "track_application": "Track Your Application",
+        "support_description": "Contact our support team for assistance with your application.",
+        "track_description": "Already submitted? Track the status of your application using your tracking number."
+    }
+}

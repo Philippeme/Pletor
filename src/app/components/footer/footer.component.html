@@ -1,0 +1,204 @@
+<footer class="footer bg-dark text-light py-5">
+    <div class="container">
+        <div class="row">
+            <!-- Section principale du footer -->
+            <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
+                <div class="d-flex align-items-center mb-3">
+
+                    <span class="h5 mb-0 text-white">{{ 'app.title' | translate }}</span>
+                </div>
+                <p class="text-muted mb-3">
+                    {{ 'app.subtitle' | translate }}
+                </p>
+                <p class="text-muted small">
+                    {{ 'app.description' | translate }}
+                </p>
+            </div>
+
+            <!-- Section Procédures -->
+            <div class="col-lg-2 col-md-6 col-sm-6 mb-4 mb-lg-0">
+                <h6 class="text-white mb-3">{{ 'navigation.procedures' | translate }}</h6>
+                <ul class="list-unstyled">
+                    <li><a routerLink="/procedures/police-justice" class="text-muted footer-link">{{
+                            'categories.police_justice.name' | translate }}</a></li>
+                    <li><a routerLink="/procedures/family" class="text-muted footer-link">{{ 'categories.family.name' |
+                            translate }}</a></li>
+                    <li><a routerLink="/procedures/transport" class="text-muted footer-link">{{
+                            'categories.transport.name' | translate }}</a></li>
+                    <li><a routerLink="/procedures/education" class="text-muted footer-link">{{
+                            'categories.education.name' | translate }}</a></li>
+                    <li><a routerLink="/procedures" class="text-muted footer-link">
+                            <i class="fas fa-arrow-right me-1"></i>{{ 'buttons.view_all' | translate }}
+                        </a></li>
+                </ul>
+            </div>
+
+            <!-- Section Services Populaires -->
+            <div class="col-lg-3 col-md-6 col-sm-6 mb-4 mb-lg-0">
+                <h6 class="text-white mb-3">Popular Services</h6>
+                <ul class="list-unstyled">
+                    <li><a routerLink="/service-detail/passport" class="text-muted footer-link">{{
+                            'services.passport.name' | translate }}</a></li>
+                    <li><a routerLink="/service-detail/birth-certificate-copy" class="text-muted footer-link">{{
+                            'services.birth_certificate_copy.name' | translate }}</a></li>
+                    <li><a routerLink="/service-detail/national-id" class="text-muted footer-link">{{
+                            'services.national_id.name' | translate }}</a></li>
+                    <li><a routerLink="/search-files" class="text-muted footer-link">
+                            <i class="fas fa-search me-1"></i>{{ 'navigation.search_files' | translate }}
+                        </a></li>
+                </ul>
+            </div>
+
+            <!-- Section Support et Contact -->
+            <div class="col-lg-3 col-md-6">
+                <h6 class="text-white mb-3">{{ 'help.contact_support' | translate }}</h6>
+                <ul class="list-unstyled mb-3">
+                    <li><a href="#" class="text-muted footer-link">{{ 'help.faq' | translate }}</a></li>
+                    <li><a href="#" class="text-muted footer-link">{{ 'help.user_guide' | translate }}</a></li>
+                    <li><a href="#" class="text-muted footer-link">Contact Us</a></li>
+                    <li><a href="#" class="text-muted footer-link">Privacy Policy</a></li>
+                    <li><a href="#" class="text-muted footer-link">Terms of Service</a></li>
+                </ul>
+
+                <!-- Informations de contact -->
+                <div class="contact-info">
+                    <div class="contact-item mb-2">
+                        <i class="fas fa-phone text-primary me-2"></i>
+                        <small class="text-muted">+245(0) 245 47 50 51 / +245(6) 70 60 42 15</small>
+                    </div>
+                    <div class="contact-item mb-2">
+                        <i class="fas fa-envelope text-primary me-2"></i>
+                        <small class="text-muted">info@mkgov.cm</small>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-clock text-primary me-2"></i>
+                        <small class="text-muted">24/7 Online Services</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Administrations Fournisseuses -->
+        <div class="separator-line my-4"></div>
+        <div class="row">
+            <div class="col-12">
+                <h6 class="text-white mb-3 text-center">Government Agencies & Service Providers</h6>
+                <div class="row text-center">
+                    <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-3">
+                        <a href="https://www.dgsn.cm" target="_blank" class="agency-link">
+                            <small class="text-muted">DGSN</small>
+                        </a>
+                    </div>
+                    <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-3">
+                        <a href="https://www.minjustice.gov.cm" target="_blank" class="agency-link">
+                            <small class="text-muted">Ministry of Justice</small>
+                        </a>
+                    </div>
+                    <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-3">
+                        <a href="https://www.mintransport.gov.cm" target="_blank" class="agency-link">
+                            <small class="text-muted">Ministry of Transport</small>
+                        </a>
+                    </div>
+                    <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-3">
+                        <a href="https://www.minesup.gov.cm" target="_blank" class="agency-link">
+                            <small class="text-muted">Ministry of Higher Education</small>
+                        </a>
+                    </div>
+                    <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-3">
+                        <a href="https://www.cfce.cm" target="_blank" class="agency-link">
+                            <small class="text-muted">CFCE</small>
+                        </a>
+                    </div>
+                    <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-3">
+                        <a href="https://www.minfopra.gov.cm" target="_blank" class="agency-link">
+                            <small class="text-muted">Ministry of Public Service</small>
+                        </a>
+                    </div>
+                    <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-3">
+                        <a href="https://www.mindcaf.cm" target="_blank" class="agency-link">
+                            <small class="text-muted">Ministry of State Property</small>
+                        </a>
+                    </div>
+                    <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-3">
+                        <a href="https://www.minrex.gov.cm" target="_blank" class="agency-link">
+                            <small class="text-muted">Ministry of External Relations</small>
+                        </a>
+                    </div>
+                    <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-3">
+                        <a href="https://www.minsante.cm" target="_blank" class="agency-link">
+                            <small class="text-muted">Ministry of Public Health</small>
+                        </a>
+                    </div>
+                    <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-3">
+                        <a href="https://www.minat.gov.cm" target="_blank" class="agency-link">
+                            <small class="text-muted">Prefecture Services</small>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ligne de séparation -->
+        <hr class="my-4 border-secondary">
+
+        <!-- Section inférieure -->
+        <div class="row align-items-center">
+            <div class="col-lg-6 col-md-12 mb-3 mb-lg-0">
+                <p class="text-muted mb-0 small">
+                    © {{ currentYear }} MK Gov - Digital Government Portal. All rights reserved.
+                </p>
+                <p class="text-muted mb-0 small">
+                    Republic of Cameroon - Ministry of Public Service and Administrative Reform
+                </p>
+            </div>
+
+            <div class="col-lg-6 col-md-12 text-lg-end">
+                <!-- Réseaux sociaux -->
+                <div class="social-links">
+                    <a href="#" class="text-muted me-2" title="Facebook" aria-label="Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="text-muted me-2" title="Twitter" aria-label="Twitter">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="text-muted me-2" title="LinkedIn" aria-label="LinkedIn">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="#" class="text-muted me-2" title="YouTube" aria-label="YouTube">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                    <a href="#" class="text-muted" title="Instagram" aria-label="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+
+                <!-- Badges de certification -->
+                <div class="certification-badges mt-3">
+                    <span class="badge bg-success me-2">
+                        <i class="fas fa-shield-alt me-1"></i>Secure
+                    </span>
+                    <span class="badge bg-primary me-2">
+                        <i class="fas fa-mobile-alt me-1"></i>Mobile Ready
+                    </span>
+                    <span class="badge bg-info">
+                        <i class="fas fa-universal-access me-1"></i>Accessible
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Informations légales supplémentaires -->
+        <div class="row mt-3">
+            <div class="col-12">
+                <div class="legal-notice p-3 bg-dark border border-secondary rounded">
+                    <small class="text-muted">
+                        <i class="fas fa-info-circle me-2 text-primary"></i>
+                        <strong>Legal Notice:</strong> This platform is an official government portal.
+                        All transactions are secured and monitored. For technical issues, contact our support team.
+                        Data protection complies with Cameroon's digital governance standards.
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>

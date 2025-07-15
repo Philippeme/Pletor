@@ -1,0 +1,243 @@
+<div class="registration-page">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="registration-card">
+
+                    <!-- Header -->
+                    <div class="card-header text-center">
+                       
+                        <h2 class="card-title">{{ 'forms.registration.title' | translate }}</h2>
+
+                        <!-- Progress Steps -->
+                        <div class="progress-steps mb-4">
+                            <div class="step" [class.active]="currentStep >= 1" [class.completed]="currentStep > 1">
+                                <div class="step-circle">1</div>
+                                <span class="step-label">{{ 'forms.registration.step1' | translate }}</span>
+                            </div>
+                            <div class="step-line" [class.completed]="currentStep > 1"></div>
+                            <div class="step" [class.active]="currentStep >= 2">
+                                <div class="step-circle">2</div>
+                                <span class="step-label">{{ 'forms.registration.step3' | translate }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form -->
+                    <div class="card-body">
+
+                        <!-- Success Message -->
+                        <div class="alert alert-success text-center" *ngIf="successMessage" role="alert">
+                            <i class="fas fa-check-circle me-2"></i>
+                            {{ successMessage }}
+                        </div>
+
+                        <!-- Error Message -->
+                        <div class="alert alert-danger" *ngIf="errorMessage" role="alert">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            {{ errorMessage }}
+                        </div>
+
+                        <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+
+                            <!-- Step 1: Basic Information -->
+                            <div *ngIf="currentStep === 1" class="step-content">
+                                <h4 class="step-title mb-4">Account Information</h4>
+
+                                <!-- Account Type -->
+                                <div class="mb-4">
+                                    <label class="form-label">{{ 'forms.registration.account_type' | translate
+                                        }}</label>
+                                    <div class="account-type-selection">
+                                        <div class="form-check form-check-card">
+                                            <input class="form-check-input" type="radio" value="local"
+                                                formControlName="accountType" id="local"
+                                                (change)="onAccountTypeChange()">
+                                            <label class="form-check-label" for="local">
+                                                <div class="card-content">
+                                                    <i class="fas fa-home fa-2x mb-2"></i>
+                                                    <h6>{{ 'forms.registration.local_citizen' | translate }}</h6>
+                                                    <small class="text-muted">Resident in Cameroon</small>
+                                                </div>
+                                            </label>
+                                        </div>
+                                        <div class="form-check form-check-card">
+                                            <input class="form-check-input" type="radio" value="diaspora"
+                                                formControlName="accountType" id="diaspora"
+                                                (change)="onAccountTypeChange()">
+                                            <label class="form-check-label" for="diaspora">
+                                                <div class="card-content">
+                                                    <i class="fas fa-globe fa-2x mb-2"></i>
+                                                    <h6>{{ 'forms.registration.diaspora_citizen' | translate }}</h6>
+                                                    <small class="text-muted">Living abroad</small>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- CNI Number (for local citizens) -->
+                                <div class="mb-3" *ngIf="registrationForm.get('accountType')?.value === 'local'">
+                                    <label class="form-label">{{ 'forms.registration.cni_number' | translate }}</label>
+                                    <input type="text" class="form-control" formControlName="cniNumber"
+                                        [class.is-invalid]="registrationForm.get('cniNumber')?.invalid && registrationForm.get('cniNumber')?.touched">
+                                    <div class="invalid-feedback"
+                                        *ngIf="registrationForm.get('cniNumber')?.invalid && registrationForm.get('cniNumber')?.touched">
+                                        <small *ngIf="registrationForm.get('cniNumber')?.errors?.['required']">CNI
+                                            number is required</small>
+                                        <small *ngIf="registrationForm.get('cniNumber')?.errors?.['pattern']">Invalid
+                                            CNI number format</small>
+                                    </div>
+                                </div>
+
+                                <!-- Consular Card Number (for diaspora citizens) -->
+                                <div class="mb-3" *ngIf="registrationForm.get('accountType')?.value === 'diaspora'">
+                                    <label class="form-label">{{ 'forms.registration.consular_card' | translate
+                                        }}</label>
+                                    <input type="text" class="form-control" formControlName="consularCardNumber"
+                                        [class.is-invalid]="registrationForm.get('consularCardNumber')?.invalid && registrationForm.get('consularCardNumber')?.touched">
+                                    <div class="invalid-feedback"
+                                        *ngIf="registrationForm.get('consularCardNumber')?.invalid && registrationForm.get('consularCardNumber')?.touched">
+                                        <small
+                                            *ngIf="registrationForm.get('consularCardNumber')?.errors?.['required']">Consular
+                                            card number is required</small>
+                                        <small
+                                            *ngIf="registrationForm.get('consularCardNumber')?.errors?.['pattern']">Invalid
+                                            consular card format</small>
+                                    </div>
+                                </div>
+
+                                <!-- Phone Number -->
+                                <div class="mb-3">
+                                    <label class="form-label">{{ 'forms.registration.phone_number' | translate
+                                        }}</label>
+                                    <input type="tel" class="form-control" formControlName="phoneNumber"
+                                        [class.is-invalid]="registrationForm.get('phoneNumber')?.invalid && registrationForm.get('phoneNumber')?.touched">
+                                    <div class="invalid-feedback"
+                                        *ngIf="registrationForm.get('phoneNumber')?.invalid && registrationForm.get('phoneNumber')?.touched">
+                                        <small *ngIf="registrationForm.get('phoneNumber')?.errors?.['required']">Phone
+                                            number is required</small>
+                                        <small *ngIf="registrationForm.get('phoneNumber')?.errors?.['pattern']">Invalid
+                                            phone number format</small>
+                                    </div>
+                                </div>
+
+                                <!-- Email -->
+                                <div class="mb-4">
+                                    <label class="form-label">{{ 'forms.registration.email' | translate }}</label>
+                                    <input type="email" class="form-control" formControlName="email"
+                                        [class.is-invalid]="registrationForm.get('email')?.invalid && registrationForm.get('email')?.touched">
+                                    <div class="invalid-feedback"
+                                        *ngIf="registrationForm.get('email')?.invalid && registrationForm.get('email')?.touched">
+                                        <small *ngIf="registrationForm.get('email')?.errors?.['required']">Email is
+                                            required</small>
+                                        <small *ngIf="registrationForm.get('email')?.errors?.['email']">Invalid email
+                                            format</small>
+                                    </div>
+                                </div>
+
+                                <button type="button" class="btn btn-primary w-100" (click)="nextStep()">
+                                    {{ 'buttons.continue' | translate }}
+                                    <i class="fas fa-arrow-right ms-2"></i>
+                                </button>
+                            </div>
+
+                            <!-- Step 2: Password -->
+                            <div *ngIf="currentStep === 2" class="step-content">
+                                <h4 class="step-title mb-4">Create Password</h4>
+
+                                <!-- Password -->
+                                <div class="mb-3">
+                                    <label class="form-label">{{ 'forms.registration.password' | translate }}</label>
+                                    <div class="input-group">
+                                        <input [type]="showPassword ? 'text' : 'password'" class="form-control"
+                                            formControlName="password"
+                                            [class.is-invalid]="registrationForm.get('password')?.invalid && registrationForm.get('password')?.touched">
+                                        <button type="button" class="btn btn-outline-secondary"
+                                            (click)="togglePasswordVisibility('password')">
+                                            <i class="fas" [class.fa-eye]="!showPassword"
+                                                [class.fa-eye-slash]="showPassword"></i>
+                                        </button>
+                                    </div>
+                                    <div class="invalid-feedback"
+                                        *ngIf="registrationForm.get('password')?.invalid && registrationForm.get('password')?.touched">
+                                        <small *ngIf="registrationForm.get('password')?.errors?.['required']">Password
+                                            is required</small>
+                                        <small *ngIf="registrationForm.get('password')?.errors?.['minlength']">Password
+                                            must be at least 6 characters</small>
+                                    </div>
+                                </div>
+
+                                <!-- Confirm Password -->
+                                <div class="mb-3">
+                                    <label class="form-label">{{ 'forms.registration.confirm_password' | translate
+                                        }}</label>
+                                    <div class="input-group">
+                                        <input [type]="showConfirmPassword ? 'text' : 'password'" class="form-control"
+                                            formControlName="confirmPassword"
+                                            [class.is-invalid]="(registrationForm.get('confirmPassword')?.invalid && registrationForm.get('confirmPassword')?.touched) || registrationForm.errors?.['passwordMismatch']">
+                                        <button type="button" class="btn btn-outline-secondary"
+                                            (click)="togglePasswordVisibility('confirmPassword')">
+                                            <i class="fas" [class.fa-eye]="!showConfirmPassword"
+                                                [class.fa-eye-slash]="showConfirmPassword"></i>
+                                        </button>
+                                    </div>
+                                    <div class="invalid-feedback"
+                                        *ngIf="(registrationForm.get('confirmPassword')?.invalid && registrationForm.get('confirmPassword')?.touched) || registrationForm.errors?.['passwordMismatch']">
+                                        <small
+                                            *ngIf="registrationForm.get('confirmPassword')?.errors?.['required']">Confirm
+                                            password is required</small>
+                                        <small *ngIf="registrationForm.errors?.['passwordMismatch']">Passwords do not
+                                            match</small>
+                                    </div>
+                                </div>
+
+                                <!-- Terms Acceptance -->
+                                <div class="mb-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" formControlName="acceptedTerms"
+                                            id="acceptTerms"
+                                            [class.is-invalid]="registrationForm.get('acceptedTerms')?.invalid && registrationForm.get('acceptedTerms')?.touched">
+                                        <label class="form-check-label" for="acceptTerms">
+                                            {{ 'forms.registration.terms_acceptance' | translate }}
+                                        </label>
+                                        <div class="invalid-feedback"
+                                            *ngIf="registrationForm.get('acceptedTerms')?.invalid && registrationForm.get('acceptedTerms')?.touched">
+                                            You must accept the terms and conditions
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Buttons -->
+                                <div class="row">
+                                    <div class="col-6">
+                                        <button type="button" class="btn btn-outline-secondary w-100"
+                                            (click)="previousStep()">
+                                            <i class="fas fa-arrow-left me-2"></i>
+                                            {{ 'buttons.back' | translate }}
+                                        </button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button type="submit" class="btn btn-primary w-100" [disabled]="isLoading">
+                                            <span *ngIf="isLoading"
+                                                class="spinner-border spinner-border-sm me-2"></span>
+                                            {{ 'forms.registration.register_button' | translate }}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                        <!-- Login Link -->
+                        <div class="text-center mt-4" *ngIf="!successMessage">
+                            <span class="text-muted">{{ 'forms.registration.already_have_account' | translate }}</span>
+                            <a routerLink="/home" class="text-primary text-decoration-none ms-1">
+                                {{ 'forms.registration.login_link' | translate }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

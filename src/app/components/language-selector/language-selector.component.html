@@ -1,0 +1,14 @@
+<div class="language-selector" ngbDropdown>
+    <button class="btn btn-outline-light btn-sm dropdown-toggle" id="languageDropdown" ngbDropdownToggle>
+        <span class="flag-icon me-1">{{ getCurrentLanguage()?.flag }}</span>
+        {{ getCurrentLanguage()?.name }}
+    </button>
+    <div class="dropdown-menu" ngbDropdownMenu>
+        <a class="dropdown-item" *ngFor="let language of availableLanguages" href="#"
+            (click)="changeLanguage(language.code); $event.preventDefault()"
+            [class.active]="language.code === currentLanguage">
+            <span class="flag-icon me-2">{{ language.flag }}</span>
+            {{ language.name }}
+        </a>
+    </div>
+</div>
