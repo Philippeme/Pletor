@@ -9,7 +9,7 @@
                         <i class="fas fa-passport me-3"></i>
                         Passport Application
                     </h1>
-                    <p class="text-muted">Apply for a Cameroonian passport online</p>
+                    <p class="text-muted">Apply for a Bissau-Guinean passport online</p>
                 </div>
                 <div class="col-md-4 text-md-end">
                     <div class="tracking-info" *ngIf="application">
@@ -45,12 +45,12 @@
                 
                 <div class="step" [class.active]="currentStep >= 5" [class.completed]="currentStep > 5">
                     <div class="step-circle">5</div>
-                    <span class="step-label">Confirm Biometric identification</span>
+                    <span class="step-label">Biometric Confirmation</span>
                 </div>
                 <div class="step-line" [class.completed]="currentStep > 6"></div>
                 <div class="step" [class.active]="currentStep >= 6" [class.completed]="currentStep > 6">
                     <div class="step-circle">6</div>
-                    <span class="step-label">Passport collection</span>
+                    <span class="step-label">Passport Collection</span>
                 </div>
             </div>
         </div>
@@ -291,17 +291,312 @@
                                 </div>
                             </div>
 
+                            <!-- Payment Methods with Accordions -->
                             <div class="payment-methods">
                                 <h5 class="mb-3">Select Payment Method</h5>
-                                <div class="payment-options">
-                                    <div class="payment-option" *ngFor="let method of paymentMethods">
-                                        <input type="radio" [id]="'payment-' + method.value"
-                                            [(ngModel)]="selectedPaymentMethod" [value]="method.value"
-                                            [ngModelOptions]="{standalone: true}">
-                                        <label [for]="'payment-' + method.value" class="payment-label">
-                                            <i [class]="method.icon" class="me-3"></i>
-                                            {{ method.label }}
-                                        </label>
+                                
+                                <ngb-accordion #paymentAccordion="ngbAccordion" class="payment-accordion">
+                                    <!-- MTN Mobile Money -->
+                                    <ngb-accordion-item id="mtn-panel" class="payment-method-item">
+                                        <div ngbAccordionButton (click)="selectPaymentMethod('MTN_MONEY')">
+                                            <div class="payment-method-header">
+                                                <i class="fas fa-mobile-alt text-primary me-3"></i>
+                                                <div>
+                                                    <strong>MTN Mobile Money</strong>
+                                                    <br><small class="text-muted">Pay with your MTN MoMo account</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div ngbAccordionBody>
+                                            <ng-template ngbAccordionContent>
+                                                <div class="accordion-body">
+                                                    <div class="payment-form" *ngIf="selectedPaymentMethod === 'MTN_MONEY'">
+                                                        <div class="mb-3">
+                                                            <label class="form-label">MTN Phone Number *</label>
+                                                            <input type="tel" class="form-control" 
+                                                                   [(ngModel)]="mtnPaymentData.phoneNumber"
+                                                                   [ngModelOptions]="{standalone: true}"
+                                                                   placeholder="6xxxxxxxx" maxlength="9">
+                                                            <small class="form-text text-muted">Enter your MTN number without country code</small>
+                                                        </div>
+                                                        
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Merchant Code</label>
+                                                            <input type="text" class="form-control" 
+                                                                   value="MKGOV001" readonly>
+                                                            <small class="form-text text-muted">MK Gov official merchant code</small>
+                                                        </div>
+
+                                                        <!-- Payment Process Steps -->
+                                                        <div class="payment-process mb-4" *ngIf="showMtnProcess">
+                                                            <h6 class="mb-3">Payment Process:</h6>
+                                                            <div class="process-step" 
+                                                                 [class.completed]="mtnStep >= 1" 
+                                                                 [class.active]="mtnStep === 1">
+                                                                <div class="step-number">1</div>
+                                                                <div class="step-content">
+                                                                    <strong>Dial *126# on your MTN phone</strong>
+                                                                    <small class="d-block text-muted">Access MTN Mobile Money menu</small>
+                                                                </div>
+                                                            </div>
+                                                            <div class="process-step" 
+                                                                 [class.completed]="mtnStep >= 2" 
+                                                                 [class.active]="mtnStep === 2">
+                                                                <div class="step-number">2</div>
+                                                                <div class="step-content">
+                                                                    <strong>Select option 3: Pay Bills/Services</strong>
+                                                                    <small class="d-block text-muted">Choose payment option</small>
+                                                                </div>
+                                                            </div>
+                                                            <div class="process-step" 
+                                                                 [class.completed]="mtnStep >= 3" 
+                                                                 [class.active]="mtnStep === 3">
+                                                                <div class="step-number">3</div>
+                                                                <div class="step-content">
+                                                                    <strong>Enter merchant code: MKGOV001</strong>
+                                                                    <small class="d-block text-muted">MK Gov payment gateway</small>
+                                                                </div>
+                                                            </div>
+                                                            <div class="process-step" 
+                                                                 [class.completed]="mtnStep >= 4" 
+                                                                 [class.active]="mtnStep === 4">
+                                                                <div class="step-number">4</div>
+                                                                <div class="step-content">
+                                                                    <strong>Enter amount: 110,000 XAF</strong>
+                                                                    <small class="d-block text-muted">Passport application fee</small>
+                                                                </div>
+                                                            </div>
+                                                            <div class="process-step" 
+                                                                 [class.completed]="mtnStep >= 5" 
+                                                                 [class.active]="mtnStep === 5">
+                                                                <div class="step-number">5</div>
+                                                                <div class="step-content">
+                                                                    <strong>Enter your 5-digit PIN</strong>
+                                                                    <small class="d-block text-muted">Confirm transaction</small>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <button type="button" class="btn btn-primary w-100" 
+                                                                [disabled]="isProcessingPayment || !mtnPaymentData.phoneNumber"
+                                                                (click)="processPayment('MTN_MONEY')">
+                                                            <span *ngIf="isProcessingPayment && selectedPaymentMethod === 'MTN_MONEY'" 
+                                                                  class="spinner-border spinner-border-sm me-2"></span>
+                                                            <i class="fas fa-credit-card me-2" *ngIf="!isProcessingPayment"></i>
+                                                            {{ isProcessingPayment && selectedPaymentMethod === 'MTN_MONEY' ? 'Processing Payment...' : 'Pay Now' }}
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </ng-template>
+                                        </div>
+                                    </ngb-accordion-item>
+
+                                    <!-- Orange Money -->
+                                    <ngb-accordion-item id="orange-panel" class="payment-method-item">
+                                        <div ngbAccordionButton (click)="selectPaymentMethod('ORANGE_MONEY')">
+                                            <div class="payment-method-header">
+                                                <i class="fas fa-mobile-alt text-warning me-3"></i>
+                                                <div>
+                                                    <strong>Orange Money</strong>
+                                                    <br><small class="text-muted">Pay with your Orange Money account</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div ngbAccordionBody>
+                                            <ng-template ngbAccordionContent>
+                                                <div class="accordion-body">
+                                                    <div class="payment-form" *ngIf="selectedPaymentMethod === 'ORANGE_MONEY'">
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Orange Phone Number *</label>
+                                                            <input type="tel" class="form-control" 
+                                                                   [(ngModel)]="orangePaymentData.phoneNumber"
+                                                                   [ngModelOptions]="{standalone: true}"
+                                                                   placeholder="6xxxxxxxx" maxlength="9">
+                                                            <small class="form-text text-muted">Enter your Orange number without country code</small>
+                                                        </div>
+                                                        
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Merchant Code</label>
+                                                            <input type="text" class="form-control" 
+                                                                   value="MKGOV002" readonly>
+                                                            <small class="form-text text-muted">MK Gov Orange Money merchant code</small>
+                                                        </div>
+
+                                                        <!-- Payment Process Steps -->
+                                                        <div class="payment-process mb-4" *ngIf="showOrangeProcess">
+                                                            <h6 class="mb-3">Payment Process:</h6>
+                                                            <div class="process-step" 
+                                                                 [class.completed]="orangeStep >= 1" 
+                                                                 [class.active]="orangeStep === 1">
+                                                                <div class="step-number">1</div>
+                                                                <div class="step-content">
+                                                                    <strong>Dial #150# on your Orange phone</strong>
+                                                                    <small class="d-block text-muted">Access Orange Money menu</small>
+                                                                </div>
+                                                            </div>
+                                                            <div class="process-step" 
+                                                                 [class.completed]="orangeStep >= 2" 
+                                                                 [class.active]="orangeStep === 2">
+                                                                <div class="step-number">2</div>
+                                                                <div class="step-content">
+                                                                    <strong>Select option 3: Pay Bills</strong>
+                                                                    <small class="d-block text-muted">Choose payment option</small>
+                                                                </div>
+                                                            </div>
+                                                            <div class="process-step" 
+                                                                 [class.completed]="orangeStep >= 3" 
+                                                                 [class.active]="orangeStep === 3">
+                                                                <div class="step-number">3</div>
+                                                                <div class="step-content">
+                                                                    <strong>Enter merchant code: MKGOV002</strong>
+                                                                    <small class="d-block text-muted">MK Gov Orange payment gateway</small>
+                                                                </div>
+                                                            </div>
+                                                            <div class="process-step" 
+                                                                 [class.completed]="orangeStep >= 4" 
+                                                                 [class.active]="orangeStep === 4">
+                                                                <div class="step-number">4</div>
+                                                                <div class="step-content">
+                                                                    <strong>Enter amount: 110,000 XAF</strong>
+                                                                    <small class="d-block text-muted">Passport application fee</small>
+                                                                </div>
+                                                            </div>
+                                                            <div class="process-step" 
+                                                                 [class.completed]="orangeStep >= 5" 
+                                                                 [class.active]="orangeStep === 5">
+                                                                <div class="step-number">5</div>
+                                                                <div class="step-content">
+                                                                    <strong>Enter your 4-digit secret code</strong>
+                                                                    <small class="d-block text-muted">Confirm transaction</small>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <button type="button" class="btn btn-warning w-100" 
+                                                                [disabled]="isProcessingPayment || !orangePaymentData.phoneNumber"
+                                                                (click)="processPayment('ORANGE_MONEY')">
+                                                            <span *ngIf="isProcessingPayment && selectedPaymentMethod === 'ORANGE_MONEY'" 
+                                                                  class="spinner-border spinner-border-sm me-2"></span>
+                                                            <i class="fas fa-credit-card me-2" *ngIf="!isProcessingPayment"></i>
+                                                            {{ isProcessingPayment && selectedPaymentMethod === 'ORANGE_MONEY' ? 'Processing Payment...' : 'Pay Now' }}
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </ng-template>
+                                        </div>
+                                    </ngb-accordion-item>
+
+                                    <!-- Credit Card -->
+                                    <ngb-accordion-item id="card-panel" class="payment-method-item">
+                                        <div ngbAccordionButton (click)="selectPaymentMethod('CREDIT_CARD')">
+                                            <div class="payment-method-header">
+                                                <i class="fas fa-credit-card text-success me-3"></i>
+                                                <div>
+                                                    <strong>Credit/Debit Card</strong>
+                                                    <br><small class="text-muted">Pay with Visa, MasterCard or other cards</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div ngbAccordionBody>
+                                            <ng-template ngbAccordionContent>
+                                                <div class="accordion-body">
+                                                    <div class="payment-form" *ngIf="selectedPaymentMethod === 'CREDIT_CARD'">
+                                                        <div class="row mb-3">
+                                                            <div class="col-12">
+                                                                <label class="form-label">Card Number *</label>
+                                                                <input type="text" class="form-control" 
+                                                                       [(ngModel)]="cardPaymentData.cardNumber"
+                                                                       [ngModelOptions]="{standalone: true}"
+                                                                       placeholder="1234 5678 9012 3456" 
+                                                                       maxlength="19"
+                                                                       (input)="formatCardNumber($event)">
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div class="row mb-3">
+                                                            <div class="col-md-6">
+                                                                <label class="form-label">Cardholder Name *</label>
+                                                                <input type="text" class="form-control" 
+                                                                       [(ngModel)]="cardPaymentData.cardholderName"
+                                                                       [ngModelOptions]="{standalone: true}"
+                                                                       placeholder="JOHN DOE">
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label class="form-label">Expiry Date *</label>
+                                                                <input type="text" class="form-control" 
+                                                                       [(ngModel)]="cardPaymentData.expiryDate"
+                                                                       [ngModelOptions]="{standalone: true}"
+                                                                       placeholder="MM/YY" 
+                                                                       maxlength="5"
+                                                                       (input)="formatExpiryDate($event)">
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div class="row mb-4">
+                                                            <div class="col-md-6">
+                                                                <label class="form-label">CVV *</label>
+                                                                <input type="password" class="form-control" 
+                                                                       [(ngModel)]="cardPaymentData.cvv"
+                                                                       [ngModelOptions]="{standalone: true}"
+                                                                       placeholder="123" 
+                                                                       maxlength="4">
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div class="card-icons mt-4">
+                                                                    <i class="fab fa-cc-visa text-primary"></i>
+                                                                    <i class="fab fa-cc-mastercard text-warning"></i>
+                                                                    <i class="fab fa-cc-amex text-info"></i>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="security-info mb-4">
+                                                            <div class="alert alert-info">
+                                                                <i class="fas fa-shield-alt me-2"></i>
+                                                                <strong>Secure Payment:</strong> Your card information is encrypted and secure.
+                                                            </div>
+                                                        </div>
+
+                                                        <button type="button" class="btn btn-success w-100" 
+                                                                [disabled]="isProcessingPayment || !isCardFormValid()"
+                                                                (click)="processPayment('CREDIT_CARD')">
+                                                            <span *ngIf="isProcessingPayment && selectedPaymentMethod === 'CREDIT_CARD'" 
+                                                                  class="spinner-border spinner-border-sm me-2"></span>
+                                                            <i class="fas fa-lock me-2" *ngIf="!isProcessingPayment"></i>
+                                                            {{ isProcessingPayment && selectedPaymentMethod === 'CREDIT_CARD' ? 'Processing Payment...' : 'Pay Securely' }}
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </ng-template>
+                                        </div>
+                                    </ngb-accordion-item>
+                                </ngb-accordion>
+                            </div>
+
+                            <!-- Payment Status Messages -->
+                            <div class="payment-status mt-4" *ngIf="paymentStatus">
+                                <div class="alert" 
+                                     [class.alert-warning]="paymentStatus === 'pending'"
+                                     [class.alert-info]="paymentStatus === 'processing'"
+                                     [class.alert-success]="paymentStatus === 'completed'">
+                                    <div class="d-flex align-items-center">
+                                        <div class="status-icon me-3">
+                                            <i class="fas fa-clock" *ngIf="paymentStatus === 'pending'"></i>
+                                            <i class="fas fa-spinner fa-spin" *ngIf="paymentStatus === 'processing'"></i>
+                                            <i class="fas fa-check-circle" *ngIf="paymentStatus === 'completed'"></i>
+                                        </div>
+                                        <div>
+                                            <strong>Payment Status: {{ paymentStatus | titlecase }}</strong>
+                                            <p class="mb-0 mt-1" *ngIf="paymentStatus === 'pending'">
+                                                Your payment is being initiated. Please wait...
+                                            </p>
+                                            <p class="mb-0 mt-1" *ngIf="paymentStatus === 'processing'">
+                                                Processing payment verification. This may take a few moments...
+                                            </p>
+                                            <p class="mb-0 mt-1" *ngIf="paymentStatus === 'completed'">
+                                                Votre paiement a bien été effectué. Rendez-vous au centre de production de passeport agréé de votre choix pour la capture de vos données biométriques.
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -325,15 +620,26 @@
                     </div>
                 </div>
 
-                <!-- Step 5: Confirmation -->
+                <!-- Step 5: Biometric Confirmation -->
                 <div class="form-step" *ngIf="currentStep === 5">
                     <div class="confirmation-content text-center">
                         <div class="success-icon mb-4">
-                            <i class="fas fa-check-circle fa-4x text-success"></i>
+                            <i class="fas fa-fingerprint fa-4x text-primary"></i>
                         </div>
-                        <h3>Application Submitted Successfully!</h3>
-                        <p class="text-muted mb-4">Your passport application has been submitted and payment processed.
-                        </p>
+                        <h3>Biometric Data Capture Required</h3>
+                        <p class="text-muted mb-4">Your application has been processed successfully. Now you need to visit an authorized center for biometric enrollment.</p>
+
+                        <div class="biometric-info">
+                            <div class="alert alert-info">
+                                <h5>Next Steps:</h5>
+                                <ol class="text-start">
+                                    <li>Visit any authorized DGSN center</li>
+                                    <li>Bring your tracking number: <strong>{{ application?.trackingNumber }}</strong></li>
+                                    <li>Complete fingerprint and photo capture</li>
+                                    <li>Receive your passport collection receipt</li>
+                                </ol>
+                            </div>
+                        </div>
 
                         <div class="confirmation-details">
                             <div class="detail-item">
@@ -344,7 +650,31 @@
                                 <strong>Expected Processing Time:</strong> 48 hours to 3 months
                             </div>
                             <div class="detail-item">
-                                <strong>Next Steps:</strong> Visit DGSN center for biometric enrollment
+                                <strong>Status:</strong> Awaiting Biometric Confirmation
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 6: Passport Collection -->
+                <div class="form-step" *ngIf="currentStep === 6">
+                    <div class="confirmation-content text-center">
+                        <div class="success-icon mb-4">
+                            <i class="fas fa-passport fa-4x text-success"></i>
+                        </div>
+                        <h3>Passport Ready for Collection!</h3>
+                        <p class="text-muted mb-4">Your biometric passport has been produced and is ready for collection.</p>
+
+                        <div class="confirmation-details">
+                            <div class="detail-item">
+                                <strong>Tracking Number:</strong>
+                                <span class="text-primary">{{ application?.trackingNumber }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Collection Center:</strong> DGSN Yaoundé
+                            </div>
+                            <div class="detail-item">
+                                <strong>Collection Hours:</strong> Monday-Friday, 8:00 AM - 4:00 PM
                             </div>
                         </div>
                     </div>
@@ -373,13 +703,25 @@
                             Submit Application
                         </button>
 
-                        <button type="button" class="btn btn-warning" *ngIf="currentStep === 4" [disabled]="isLoading"
-                            (click)="onPayment()">
-                            <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
-                            Pay Now
+                        <button type="button" class="btn btn-primary" *ngIf="currentStep === 4 && paymentStatus === 'completed'"
+                            (click)="confirmBiometricStep()">
+                            <i class="fas fa-fingerprint me-2"></i>
+                            Confirm Biometric Identification
+                        </button>
+
+                        <button type="button" class="btn btn-primary" *ngIf="currentStep === 4 && !paymentStatus"
+                            disabled>
+                            <i class="fas fa-credit-card me-2"></i>
+                            Select Payment Method
                         </button>
 
                         <button type="button" class="btn btn-primary" *ngIf="currentStep === 5"
+                            (click)="currentStep = 6">
+                            <i class="fas fa-check me-2"></i>
+                            Complete Process
+                        </button>
+
+                        <button type="button" class="btn btn-primary" *ngIf="currentStep === 6"
                             (click)="goToTracking()">
                             <i class="fas fa-search me-2"></i>
                             Track Application

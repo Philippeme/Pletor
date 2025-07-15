@@ -8,6 +8,23 @@ import {Application, ApplicationStatus, PaymentMethod, PaymentStatus} from '../.
 import {ApplicantType} from '../../models/service.model';
 import {ApiService} from "../../services/api.service";
 
+interface MTNPaymentData {
+  phoneNumber: string;
+  merchantCode: string;
+}
+
+interface OrangePaymentData {
+  phoneNumber: string;
+  merchantCode: string;
+}
+
+interface CardPaymentData {
+  cardNumber: string;
+  cardholderName: string;
+  expiryDate: string;
+  cvv: string;
+}
+
 @Component({
   selector: 'app-passport-application',
   templateUrl: './passport-application.component.html',
@@ -18,11 +35,40 @@ export class PassportApplicationComponent implements OnInit {
   passportForm: FormGroup;
   request: any;
   currentStep = 1;
-  totalSteps = 5;
+  totalSteps = 6;
   isLoading = false;
   isSubmitting = false;
   errorMessage = '';
   successMessage = '';
+
+  // Payment processing properties
+  isProcessingPayment = false;
+  selectedPaymentMethod: string = '';
+  paymentStatus: 'pending' | 'processing' | 'completed' | null = null;
+
+  // Payment method data
+  mtnPaymentData: MTNPaymentData = {
+    phoneNumber: '',
+    merchantCode: 'MKGOV001'
+  };
+
+  orangePaymentData: OrangePaymentData = {
+    phoneNumber: '',
+    merchantCode: 'MKGOV002'
+  };
+
+  cardPaymentData: CardPaymentData = {
+    cardNumber: '',
+    cardholderName: '',
+    expiryDate: '',
+    cvv: ''
+  };
+
+  // Payment process tracking
+  mtnStep = 0;
+  orangeStep = 0;
+  showMtnProcess = false;
+  showOrangeProcess = false;
 
   // File upload properties
   uploadedFiles: { [key: string]: File } = {};
@@ -32,15 +78,6 @@ export class PassportApplicationComponent implements OnInit {
     {id: 'passport_photos', name: '12 Passport Photos', required: true},
     {id: 'residence_proof', name: 'Proof of Residence', required: true},
     {id: 'marriage_certificate', name: 'Marriage Certificate (if married)', required: false}
-  ];
-
-  // Payment properties
-  selectedPaymentMethod: PaymentMethod = PaymentMethod.MTN_MONEY;
-  paymentMethods = [
-    {value: PaymentMethod.MTN_MONEY, label: 'MTN Mobile Money', icon: 'fas fa-mobile-alt'},
-    {value: PaymentMethod.ORANGE_MONEY, label: 'Orange Money', icon: 'fas fa-mobile-alt'},
-    {value: PaymentMethod.CREDIT_CARD, label: 'Credit Card', icon: 'fas fa-credit-card'},
-    {value: PaymentMethod.BANK_TRANSFER, label: 'Bank Transfer', icon: 'fas fa-university'}
   ];
 
   constructor(
@@ -59,7 +96,7 @@ export class PassportApplicationComponent implements OnInit {
       middleName: [''],
       dateOfBirth: ['', Validators.required],
       placeOfBirth: ['', Validators.required],
-      nationality: [' Bissau-Guinean', Validators.required],
+      nationality: ['Bissau-Guinean', Validators.required],
       gender: ['', Validators.required],
       maritalStatus: ['', Validators.required],
 
@@ -208,7 +245,6 @@ export class PassportApplicationComponent implements OnInit {
     return isValid;
   }
 
-  // Rendre cette méthode publique pour l'utiliser dans le template
   validateDocumentUploads(): boolean {
     const requiredDocs = this.requiredDocuments.filter(doc => doc.required);
     const uploadedRequiredDocs = requiredDocs.filter(doc => this.uploadedFiles[doc.id]);
@@ -244,34 +280,30 @@ export class PassportApplicationComponent implements OnInit {
     if (this.passportForm.valid && this.application) {
       this.isSubmitting = true;
       this.errorMessage = '';
-      const body: any = this.passportForm.value
-      //procedure_id most be the value of current procedure
+      const body: any = this.passportForm.value;
+      
       this.apiService.post<any>('/requests', {...body, procedure_id: 1}).subscribe({
         next: (data: any) => {
-          this.isLoading = false;
+          this.isSubmitting = false;
           this.request = data;
-          const requestId = data.id; // ← récupération de l'ID
-          const formData:any = new FormData();
+          const requestId = data.id;
+          const formData: any = new FormData();
           Object.keys(this.uploadedFiles).forEach(key => {
             formData.append(key, this.uploadedFiles[key]);
           });
           this.apiService.post(`/requests/${requestId}/upload`, formData).subscribe({
-            next: () => alert('Files uploaded successfully'),
+            next: () => {
+              this.successMessage = 'Application submitted successfully!';
+              this.currentStep = 4; // Move to payment step
+            },
             error: err => console.error('Upload failed', err)
           });
         },
         error: err => {
-          this.isLoading = false;
+          this.isSubmitting = false;
           console.error('Request creation failed', err);
         }
       });
-      // Simulate form submission
-      setTimeout(() => {
-        this.application!.status = ApplicationStatus.SUBMITTED;
-        this.isSubmitting = false;
-        this.successMessage = 'Application submitted successfully!';
-        this.currentStep = 4; // Move to payment step
-      }, 2000);
     } else {
       this.markFormGroupTouched();
     }
@@ -286,34 +318,184 @@ export class PassportApplicationComponent implements OnInit {
     });
   }
 
-  onPayment(): void {
-    if (this.application) {
-      this.isLoading = true;
-      this.errorMessage = '';
+  // Payment Methods
+  selectPaymentMethod(method: string): void {
+    this.selectedPaymentMethod = method;
+    this.resetPaymentSteps();
+    
+    // Show payment process steps based on selected method
+    if (method === 'MTN_MONEY') {
+      this.showMtnProcess = true;
+      this.showOrangeProcess = false;
+    } else if (method === 'ORANGE_MONEY') {
+      this.showOrangeProcess = true;
+      this.showMtnProcess = false;
+    } else {
+      this.showMtnProcess = false;
+      this.showOrangeProcess = false;
+    }
+  }
 
-      this.applicationService.simulatePayment(
-        this.application.id,
-        110000, // Passport fee in XAF
-        this.selectedPaymentMethod
-      ).subscribe({
-        next: (payment) => {
-          //paidAmount
-          //Most be the value of the total cost of the current procedure
+  private resetPaymentSteps(): void {
+    this.mtnStep = 0;
+    this.orangeStep = 0;
+  }
 
-          this.isLoading = false;
-          this.apiService.patch(`/requests/${this.request.id}/status`, {paymentStatus:PaymentStatus.COMPLETED,status:PaymentStatus.COMPLETED,paidAmount:110000}).subscribe({
-            next: () => {
-              this.successMessage = 'Payment completed successfully!';
-              this.currentStep = 5; // Move to confirmation step
-            },
-            error: (error:any) => {
-              this.isLoading = false;
-              this.errorMessage = 'Payment failed. Please try again.';
-            }
-          });
+  processPayment(method: string): void {
+    if (!this.validatePaymentData(method)) {
+      this.errorMessage = 'Please fill in all required payment information.';
+      return;
+    }
+
+    this.isProcessingPayment = true;
+    this.errorMessage = '';
+    this.paymentStatus = 'pending';
+
+    // Simulate payment process steps
+    if (method === 'MTN_MONEY') {
+      this.simulateMTNPayment();
+    } else if (method === 'ORANGE_MONEY') {
+      this.simulateOrangePayment();
+    } else if (method === 'CREDIT_CARD') {
+      this.simulateCardPayment();
+    }
+  }
+
+  private validatePaymentData(method: string): boolean {
+    switch (method) {
+      case 'MTN_MONEY':
+        return this.mtnPaymentData.phoneNumber.length >= 8;
+      case 'ORANGE_MONEY':
+        return this.orangePaymentData.phoneNumber.length >= 8;
+      case 'CREDIT_CARD':
+        return this.isCardFormValid();
+      default:
+        return false;
+    }
+  }
+
+  isCardFormValid(): boolean {
+    return this.cardPaymentData.cardNumber.length >= 16 &&
+           this.cardPaymentData.cardholderName.length > 0 &&
+           this.cardPaymentData.expiryDate.length === 5 &&
+           this.cardPaymentData.cvv.length >= 3;
+  }
+
+  private simulateMTNPayment(): void {
+    // Step 1: Dial *126#
+    setTimeout(() => {
+      this.mtnStep = 1;
+    }, 1000);
+
+    // Step 2: Select option 3
+    setTimeout(() => {
+      this.mtnStep = 2;
+    }, 2000);
+
+    // Step 3: Enter merchant code
+    setTimeout(() => {
+      this.mtnStep = 3;
+    }, 3000);
+
+    // Step 4: Enter amount
+    setTimeout(() => {
+      this.mtnStep = 4;
+    }, 4000);
+
+    // Step 5: Enter PIN and complete
+    setTimeout(() => {
+      this.mtnStep = 5;
+      this.completePayment();
+    }, 6000);
+  }
+
+  private simulateOrangePayment(): void {
+    // Step 1: Dial #150#
+    setTimeout(() => {
+      this.orangeStep = 1;
+    }, 1000);
+
+    // Step 2: Select option 3
+    setTimeout(() => {
+      this.orangeStep = 2;
+    }, 2000);
+
+    // Step 3: Enter merchant code
+    setTimeout(() => {
+      this.orangeStep = 3;
+    }, 3000);
+
+    // Step 4: Enter amount
+    setTimeout(() => {
+      this.orangeStep = 4;
+    }, 4000);
+
+    // Step 5: Enter secret code and complete
+    setTimeout(() => {
+      this.orangeStep = 5;
+      this.completePayment();
+    }, 6000);
+  }
+
+  private simulateCardPayment(): void {
+    // Simulate card payment processing
+    setTimeout(() => {
+      this.completePayment();
+    }, 5000);
+  }
+
+  private completePayment(): void {
+    // 10-second loading simulation as requested
+    setTimeout(() => {
+      this.paymentStatus = 'processing';
+      
+      // Update payment status to Processing after 30s
+      setTimeout(() => {
+        this.paymentStatus = 'processing';
+        this.updateBackendPaymentStatus('processing');
+        
+        // Update payment status to Completed after 50s
+        setTimeout(() => {
+          this.paymentStatus = 'completed';
+          this.isProcessingPayment = false;
+          this.updateBackendPaymentStatus('completed');
+          this.successMessage = 'Votre paiement a bien été effectué. Rendez-vous au centre de production de passeport agréé de votre choix pour la capture de vos données biométriques.';
+        }, 20000); // Additional 20s (total 50s)
+        
+      }, 30000); // 30s for processing
+      
+    }, 10000); // Initial 10s loading
+  }
+
+  private updateBackendPaymentStatus(status: string): void {
+    if (this.request) {
+      const paymentData = {
+        paymentStatus: status,
+        status: status,
+        paidAmount: 110000,
+        paymentMethod: this.selectedPaymentMethod,
+        paymentReference: this.generatePaymentReference()
+      };
+
+      this.apiService.patch(`/requests/${this.request.id}/status`, paymentData).subscribe({
+        next: (response) => {
+          console.log('Payment status updated:', response);
         },
+        error: (error) => {
+          console.error('Failed to update payment status:', error);
+        }
       });
     }
+  }
+
+  private generatePaymentReference(): string {
+    const prefix = this.selectedPaymentMethod === 'MTN_MONEY' ? 'MTN' : 
+                   this.selectedPaymentMethod === 'ORANGE_MONEY' ? 'OM' : 'CC';
+    return `${prefix}${Date.now()}${Math.random().toString(36).substr(2, 4).toUpperCase()}`;
+  }
+
+  confirmBiometricStep(): void {
+    this.currentStep = 5;
   }
 
   goToTracking(): void {
@@ -334,5 +516,20 @@ export class PassportApplicationComponent implements OnInit {
       age--;
     }
     return age;
+  }
+
+  // Card formatting methods
+  formatCardNumber(event: any): void {
+    let value = event.target.value.replace(/\D/g, '');
+    value = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+    this.cardPaymentData.cardNumber = value;
+  }
+
+  formatExpiryDate(event: any): void {
+    let value = event.target.value.replace(/\D/g, '');
+    if (value.length >= 2) {
+      value = value.substring(0, 2) + '/' + value.substring(2, 4);
+    }
+    this.cardPaymentData.expiryDate = value;
   }
 }
