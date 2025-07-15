@@ -162,221 +162,6 @@
             }
         }
 
-        // Payment Methods Styles
-        .payment-methods {
-            .accordion {
-                border-radius: 12px;
-                overflow: hidden;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-
-                .payment-method-item {
-                    border: none;
-                    margin-bottom: 0;
-
-                    .accordion-header {
-                        .accordion-button {
-                            padding: 1.5rem;
-                            font-weight: 500;
-                            background-color: #f8f9fa;
-                            border: none;
-                            border-bottom: 1px solid #dee2e6;
-
-                            &:not(.collapsed) {
-                                background-color: var(--primary-color);
-                                color: white;
-                                box-shadow: none;
-
-                                i {
-                                    color: white !important;
-                                }
-                            }
-
-                            &:focus {
-                                box-shadow: none;
-                                border-color: transparent;
-                            }
-
-                            i {
-                                font-size: 1.5rem;
-                            }
-                        }
-                    }
-
-                    .accordion-body {
-                        padding: 2rem;
-                        background-color: white;
-
-                        .payment-form {
-                            .form-label {
-                                font-weight: 600;
-                                color: var(--dark-color);
-                                margin-bottom: 0.5rem;
-                            }
-
-                            .form-control {
-                                border: 2px solid #e9ecef;
-                                border-radius: 8px;
-                                padding: 0.75rem 1rem;
-                                font-size: 1rem;
-
-                                &:focus {
-                                    border-color: var(--primary-color);
-                                    box-shadow: 0 0 0 0.2rem rgba(26, 115, 232, 0.1);
-                                }
-                            }
-
-                            // Card icons styling
-                            .card-icons {
-                                display: flex;
-                                gap: 0.5rem;
-                                align-items: center;
-
-                                i {
-                                    font-size: 2rem;
-                                }
-                            }
-
-                            // Security info styling
-                            .security-info {
-                                .alert {
-                                    border: none;
-                                    background-color: rgba(26, 115, 232, 0.1);
-                                    color: var(--primary-color);
-                                    font-size: 0.9rem;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            // Payment Process Steps Styling
-            .payment-process {
-                background: #f8f9fa;
-                padding: 1.5rem;
-                border-radius: 12px;
-                border-left: 4px solid var(--primary-color);
-
-                .process-step {
-                    display: flex;
-                    align-items: flex-start;
-                    margin-bottom: 1rem;
-                    padding: 1rem;
-                    border-radius: 8px;
-                    background: white;
-                    transition: all 0.3s ease;
-
-                    &.active {
-                        background-color: rgba(26, 115, 232, 0.1);
-                        border-left: 3px solid var(--primary-color);
-
-                        .step-number {
-                            background-color: var(--primary-color);
-                            color: white;
-                            animation: pulse 1.5s infinite;
-                        }
-                    }
-
-                    &.completed {
-                        background-color: rgba(34, 168, 83, 0.1);
-                        border-left: 3px solid var(--success-color);
-
-                        .step-number {
-                            background-color: var(--success-color);
-                            color: white;
-
-                            &:after {
-                                content: '✓';
-                                position: absolute;
-                                font-size: 0.8rem;
-                            }
-                        }
-                    }
-
-                    .step-number {
-                        width: 32px;
-                        height: 32px;
-                        border-radius: 50%;
-                        background-color: #dee2e6;
-                        color: #666;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        font-weight: bold;
-                        font-size: 0.9rem;
-                        margin-right: 1rem;
-                        flex-shrink: 0;
-                        position: relative;
-                        transition: all 0.3s ease;
-                    }
-
-                    .step-content {
-                        flex: 1;
-
-                        strong {
-                            display: block;
-                            margin-bottom: 0.25rem;
-                            color: var(--dark-color);
-                        }
-
-                        small {
-                            color: #666;
-                        }
-                    }
-                }
-            }
-        }
-
-        // Payment Status Styling
-        .payment-status {
-            .alert {
-                border-radius: 12px;
-                border: none;
-                padding: 1.5rem;
-
-                .status-icon {
-                    width: 40px;
-                    height: 40px;
-                    border-radius: 50%;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-size: 1.2rem;
-
-                    i {
-                        color: inherit;
-                    }
-                }
-
-                &.alert-warning {
-                    background-color: rgba(255, 193, 7, 0.1);
-                    color: #856404;
-
-                    .status-icon {
-                        background-color: rgba(255, 193, 7, 0.2);
-                    }
-                }
-
-                &.alert-info {
-                    background-color: rgba(13, 202, 240, 0.1);
-                    color: #055160;
-
-                    .status-icon {
-                        background-color: rgba(13, 202, 240, 0.2);
-                    }
-                }
-
-                &.alert-success {
-                    background-color: rgba(25, 135, 84, 0.1);
-                    color: #0f5132;
-
-                    .status-icon {
-                        background-color: rgba(25, 135, 84, 0.2);
-                    }
-                }
-            }
-        }
-
         .payment-summary {
             background: #f8f9fa;
             padding: 1.5rem;
@@ -388,6 +173,35 @@
 
             .total-amount {
                 font-size: 1.1rem;
+            }
+        }
+
+        .payment-options {
+            .payment-option {
+                margin-bottom: 1rem;
+
+                input[type="radio"] {
+                    display: none;
+
+                    &:checked+.payment-label {
+                        background-color: rgba(26, 115, 232, 0.1);
+                        border-color: var(--primary-color);
+                        color: var(--primary-color);
+                    }
+                }
+
+                .payment-label {
+                    display: block;
+                    padding: 1rem 1.5rem;
+                    border: 2px solid #dee2e6;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+
+                    &:hover {
+                        border-color: var(--primary-color);
+                    }
+                }
             }
         }
 
@@ -413,8 +227,7 @@
                 animation: bounceIn 0.8s ease;
             }
 
-            .confirmation-details,
-            .biometric-info {
+            .confirmation-details {
                 background: #f8f9fa;
                 padding: 2rem;
                 border-radius: 12px;
@@ -440,7 +253,6 @@
     }
 }
 
-// Animations
 @keyframes bounceIn {
     0% {
         opacity: 0;
@@ -462,19 +274,6 @@
     }
 }
 
-@keyframes pulse {
-    0% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.1);
-    }
-    100% {
-        transform: scale(1);
-    }
-}
-
-// Responsive Design
 @media (max-width: 768px) {
     .passport-application-page {
         .progress-steps {
@@ -489,35 +288,6 @@
 
         .documents-grid {
             grid-template-columns: 1fr;
-        }
-
-        .payment-methods {
-            .accordion {
-                .accordion-button {
-                    padding: 1rem;
-                    font-size: 0.9rem;
-
-                    i {
-                        font-size: 1.2rem;
-                    }
-                }
-
-                .accordion-body {
-                    padding: 1.5rem;
-                }
-            }
-
-            .payment-process {
-                .process-step {
-                    padding: 0.75rem;
-
-                    .step-number {
-                        width: 28px;
-                        height: 28px;
-                        font-size: 0.8rem;
-                    }
-                }
-            }
         }
     }
 }
