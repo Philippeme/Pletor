@@ -13,7 +13,16 @@
                 </div>
                 <div class="col-md-4 text-md-end">
                     <div class="tracking-info" *ngIf="application">
-                        <strong>Tracking #:</strong> {{ application.trackingNumber }}
+                        <div class="tracking-display d-inline-flex align-items-center">
+                            <span class="tracking-text">
+                                <strong>Tracking #:</strong> {{ application.trackingNumber }}
+                            </span>
+                            <button class="btn btn-sm btn-outline-primary ms-2" 
+                                (click)="copyTrackingNumber()" 
+                                title="Copy tracking number">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -29,17 +38,12 @@
                 <div class="step-line" [class.completed]="currentStep > 1"></div>
                 <div class="step" [class.active]="currentStep >= 2" [class.completed]="currentStep > 2">
                     <div class="step-circle">2</div>
-                    <span class="step-label">Requester Info</span>
-                </div>
-                <div class="step-line" [class.completed]="currentStep > 2"></div>
-                <div class="step" [class.active]="currentStep >= 3" [class.completed]="currentStep > 3">
-                    <div class="step-circle">3</div>
                     <span class="step-label">Payment</span>
                 </div>
-                <div class="step-line" [class.completed]="currentStep > 3"></div>
-                <div class="step" [class.active]="currentStep >= 4">
-                    <div class="step-circle">4</div>
-                    <span class="step-label">Confirmation</span>
+                <div class="step-line" [class.completed]="currentStep > 2"></div>
+                <div class="step" [class.active]="currentStep >= 3">
+                    <div class="step-circle">3</div>
+                    <span class="step-label">CRVS Feedback</span>
                 </div>
             </div>
         </div>
@@ -64,8 +68,7 @@
                 <div class="form-step" *ngIf="currentStep === 1">
                     <div class="step-header mb-4">
                         <h3>Birth Certificate Information</h3>
-                        <p class="text-muted">Provide details of the person whose birth certificate is being requested
-                        </p>
+                        <p class="text-muted">Provide details of the person whose birth certificate is being requested</p>
                     </div>
 
                     <!-- Request Type -->
@@ -143,174 +146,49 @@
                         </div>
                     </div>
 
-                    <!-- Parents Information -->
-                    <h5 class="mb-3 mt-4">Parents Information</h5>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Father's First Name *</label>
-                            <input type="text" class="form-control" formControlName="fatherFirstName"
-                                [class.is-invalid]="certificateForm.get('fatherFirstName')?.invalid && certificateForm.get('fatherFirstName')?.touched">
-                            <div class="invalid-feedback">Father's first name is required</div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Father's Last Name *</label>
-                            <input type="text" class="form-control" formControlName="fatherLastName"
-                                [class.is-invalid]="certificateForm.get('fatherLastName')?.invalid && certificateForm.get('fatherLastName')?.touched">
-                            <div class="invalid-feedback">Father's last name is required</div>
-                        </div>
-                    </div>
-
+                    <!-- Request Inputs -->
+                    <h5 class="mb-3 mt-4">Request Inputs</h5>
                     <div class="row">
                         <div class="col-md-4 mb-3">
-                            <label class="form-label">Mother's First Name *</label>
-                            <input type="text" class="form-control" formControlName="motherFirstName"
-                                [class.is-invalid]="certificateForm.get('motherFirstName')?.invalid && certificateForm.get('motherFirstName')?.touched">
-                            <div class="invalid-feedback">Mother's first name is required</div>
+                            <label class="form-label">User Identification Number *</label>
+                            <input type="text" class="form-control" formControlName="userIdentificationNumber"
+                                placeholder="Enter your ID number"
+                                [class.is-invalid]="certificateForm.get('userIdentificationNumber')?.invalid && certificateForm.get('userIdentificationNumber')?.touched">
+                            <div class="invalid-feedback">
+                                <small *ngIf="certificateForm.get('userIdentificationNumber')?.errors?.['required']">
+                                    User identification number is required
+                                </small>
+                                <small *ngIf="certificateForm.get('userIdentificationNumber')?.errors?.['pattern']">
+                                    Please enter a valid ID number (8-12 digits)
+                                </small>
+                            </div>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label class="form-label">Mother's Last Name *</label>
-                            <input type="text" class="form-control" formControlName="motherLastName"
-                                [class.is-invalid]="certificateForm.get('motherLastName')?.invalid && certificateForm.get('motherLastName')?.touched">
-                            <div class="invalid-feedback">Mother's last name is required</div>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label">Mother's Maiden Name</label>
-                            <input type="text" class="form-control" formControlName="motherMaidenName">
-                            <small class="form-text text-muted">If different from last name</small>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Step 2: Requester Information -->
-                <div class="form-step" *ngIf="currentStep === 2">
-                    <div class="step-header mb-4">
-                        <h3>Requester Information</h3>
-                        <p class="text-muted" *ngIf="certificateForm.get('requestType')?.value === 'self'">
-                            Confirm your contact information
-                        </p>
-                        <p class="text-muted" *ngIf="certificateForm.get('requestType')?.value === 'other'">
-                            Provide your information as the person requesting this certificate
-                        </p>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Your First Name *</label>
-                            <input type="text" class="form-control" formControlName="requesterFirstName"
-                                [class.is-invalid]="certificateForm.get('requesterFirstName')?.invalid && certificateForm.get('requesterFirstName')?.touched">
-                            <div class="invalid-feedback">First name is required</div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Your Last Name *</label>
-                            <input type="text" class="form-control" formControlName="requesterLastName"
-                                [class.is-invalid]="certificateForm.get('requesterLastName')?.invalid && certificateForm.get('requesterLastName')?.touched">
-                            <div class="invalid-feedback">Last name is required</div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Phone Number *</label>
-                            <input type="tel" class="form-control" formControlName="requesterPhoneNumber"
-                                [class.is-invalid]="certificateForm.get('requesterPhoneNumber')?.invalid && certificateForm.get('requesterPhoneNumber')?.touched">
-                            <div class="invalid-feedback">Phone number is required</div>
-                        </div>
-                        <div class="col-md-6 mb-3">
                             <label class="form-label">Email Address *</label>
-                            <input type="email" class="form-control" formControlName="requesterEmail"
-                                [class.is-invalid]="certificateForm.get('requesterEmail')?.invalid && certificateForm.get('requesterEmail')?.touched">
-                            <div class="invalid-feedback">Valid email is required</div>
-                        </div>
-                    </div>
-
-                    <!-- Additional fields for requests on behalf of others -->
-                    <div *ngIf="certificateForm.get('requestType')?.value === 'other'">
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Your ID Number *</label>
-                                <input type="text" class="form-control" formControlName="requesterIdNumber"
-                                    [class.is-invalid]="certificateForm.get('requesterIdNumber')?.invalid && certificateForm.get('requesterIdNumber')?.touched">
-                                <div class="invalid-feedback">ID number is required</div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Relationship to Person *</label>
-                                <select class="form-select" formControlName="relationshipToPerson"
-                                    [class.is-invalid]="certificateForm.get('relationshipToPerson')?.invalid && certificateForm.get('relationshipToPerson')?.touched">
-                                    <option value="">Select Relationship</option>
-                                    <option value="Parent">Parent</option>
-                                    <option value="Child">Child</option>
-                                    <option value="Spouse">Spouse</option>
-                                    <option value="Sibling">Sibling</option>
-                                    <option value="Legal Guardian">Legal Guardian</option>
-                                    <option value="Legal Representative">Legal Representative</option>
-                                    <option value="Other">Other</option>
-                                </select>
-                                <div class="invalid-feedback">Relationship is required</div>
+                            <input type="email" class="form-control" formControlName="emailAddress"
+                                placeholder="Enter your email address"
+                                [class.is-invalid]="certificateForm.get('emailAddress')?.invalid && certificateForm.get('emailAddress')?.touched">
+                            <div class="invalid-feedback">
+                                <small *ngIf="certificateForm.get('emailAddress')?.errors?.['required']">
+                                    Email address is required
+                                </small>
+                                <small *ngIf="certificateForm.get('emailAddress')?.errors?.['email']">
+                                    Please enter a valid email address
+                                </small>
                             </div>
                         </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Your Address *</label>
-                            <textarea class="form-control" rows="3" formControlName="requesterAddress"
-                                [class.is-invalid]="certificateForm.get('requesterAddress')?.invalid && certificateForm.get('requesterAddress')?.touched"></textarea>
-                            <div class="invalid-feedback">Address is required</div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Reason for Request *</label>
-                            <textarea class="form-control" rows="2" formControlName="reasonForRequest"
-                                placeholder="e.g., School enrollment, passport application, legal proceedings"
-                                [class.is-invalid]="certificateForm.get('reasonForRequest')?.invalid && certificateForm.get('reasonForRequest')?.touched"></textarea>
-                            <div class="invalid-feedback">Reason for request is required</div>
-                        </div>
-                    </div>
-
-                    <!-- Collection Method -->
-                    <h5 class="mb-3 mt-4">Collection Information</h5>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Collection Method *</label>
-                            <select class="form-select" formControlName="collectionMethod">
-                                <option value="pickup">Pickup at Registry Office</option>
-                                <option value="mail">Mail Delivery</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Registry Office *</label>
-                            <select class="form-select" formControlName="collectionLocation"
-                                [class.is-invalid]="certificateForm.get('collectionLocation')?.invalid && certificateForm.get('collectionLocation')?.touched">
-                                <option value="">Select Registry Office</option>
-                                <option value="Yaoundé Central Registry">Yaoundé Central Registry</option>
-                                <option value="Douala Registry Office">Douala Registry Office</option>
-                                <option value="Bamenda Registry Office">Bamenda Registry Office</option>
-                                <option value="Bafoussam Registry Office">Bafoussam Registry Office</option>
-                                <option value="Garoua Registry Office">Garoua Registry Office</option>
-                            </select>
-                            <div class="invalid-feedback">Registry office selection is required</div>
-                        </div>
-                    </div>
-
-                    <!-- Urgent Request Option -->
-                    <div class="mb-3">
-                        <div class="form-check form-check-premium">
-                            <input class="form-check-input" type="checkbox" formControlName="urgentRequest"
-                                id="urgentRequest">
-                            <label class="form-check-label" for="urgentRequest">
-                                <div class="premium-option">
-                                    <div class="premium-header">
-                                        <i class="fas fa-bolt text-warning me-2"></i>
-                                        <strong>Urgent Processing</strong>
-                                        <span class="badge bg-warning text-dark ms-2">+500 XAF</span>
-                                    </div>
-                                    <small class="text-muted">Same-day processing (within 4 hours)</small>
-                                </div>
-                            </label>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Request Reason *</label>
+                            <input type="text" class="form-control" formControlName="requestReason"
+                                placeholder="Enter reason for request"
+                                [class.is-invalid]="certificateForm.get('requestReason')?.invalid && certificateForm.get('requestReason')?.touched">
+                            <div class="invalid-feedback">Request reason is required</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Step 3: Payment -->
-                <div class="form-step" *ngIf="currentStep === 3">
+                <!-- Step 2: Payment -->
+                <div class="form-step" *ngIf="currentStep === 2">
                     <div class="step-header mb-4">
                         <h3>Payment</h3>
                         <p class="text-muted">Complete your payment to process your certificate request</p>
@@ -326,12 +204,6 @@
                                         <span>200 XAF</span>
                                     </div>
                                 </div>
-                                <div class="fee-item" *ngIf="certificateForm.get('urgentRequest')?.value">
-                                    <div class="d-flex justify-content-between">
-                                        <span>Urgent Processing Fee</span>
-                                        <span>500 XAF</span>
-                                    </div>
-                                </div>
                                 <hr>
                                 <div class="total-amount">
                                     <div class="d-flex justify-content-between">
@@ -341,26 +213,255 @@
                                 </div>
                             </div>
 
+                            <!-- Payment Methods with Accordions -->
                             <div class="payment-methods">
                                 <h5 class="mb-3">Select Payment Method</h5>
-                                <div class="payment-options">
-                                    <div class="payment-option" *ngFor="let method of paymentMethods">
-                                        <input type="radio" [id]="'payment-' + method.value"
-                                            [(ngModel)]="selectedPaymentMethod" [value]="method.value"
-                                            [ngModelOptions]="{standalone: true}">
-                                        <label [for]="'payment-' + method.value" class="payment-label">
-                                            <i [class]="method.icon" class="me-3"></i>
-                                            {{ method.label }}
-                                        </label>
+                                
+                                <!-- MTN Mobile Money -->
+                                <div class="payment-accordion mb-3">
+                                    <div class="accordion-header" (click)="togglePaymentAccordion('mtn')">
+                                        <div class="payment-method-option">
+                                            <input type="radio" name="paymentMethod" value="mtn" 
+                                                [checked]="activePaymentMethod === 'mtn'">
+                                            <i class="fas fa-mobile-alt me-3"></i>
+                                            <span>MTN Mobile Money</span>
+                                            <i class="fas fa-chevron-down ms-auto" 
+                                                [class.rotated]="showMtnAccordion"></i>
+                                        </div>
+                                    </div>
+                                    <div class="accordion-content" [class.show]="showMtnAccordion">
+                                        <!-- MTN Payment Instructions -->
+                                        <div class="payment-instructions mb-3">
+                                            <h6 class="text-primary">
+                                                <i class="fas fa-info-circle me-2"></i>
+                                                MTN Mobile Money Payment Process
+                                            </h6>
+                                            <div class="instruction-steps">
+                                                <div class="step-item">
+                                                    <strong>Step 1:</strong> Dial <code>*126#</code> on your MTN line
+                                                </div>
+                                                <div class="step-item">
+                                                    <strong>Step 2:</strong> Select "2" for Bill Payment
+                                                </div>
+                                                <div class="step-item">
+                                                    <strong>Step 3:</strong> Enter the 6-digit merchant code
+                                                </div>
+                                                <div class="step-item">
+                                                    <strong>Step 4:</strong> Enter payment amount: <strong>{{ calculateTotalAmount() }} XAF</strong>
+                                                </div>
+                                                <div class="step-item">
+                                                    <strong>Step 5:</strong> Find the transaction ID that was sent to you by SMS and enter it in the Transaction ID field
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <form [formGroup]="mtnForm">
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">MTN Phone Number *</label>
+                                                    <input type="tel" class="form-control" formControlName="phoneNumber"
+                                                        placeholder="6XXXXXXXX"
+                                                        [class.is-invalid]="mtnForm.get('phoneNumber')?.invalid && mtnForm.get('phoneNumber')?.touched">
+                                                    <div class="invalid-feedback">
+                                                        <small *ngIf="mtnForm.get('phoneNumber')?.errors?.['required']">
+                                                            MTN phone number is required
+                                                        </small>
+                                                        <small *ngIf="mtnForm.get('phoneNumber')?.errors?.['pattern']">
+                                                            Please enter a valid MTN number (6XXXXXXXX)
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Merchant Code</label>
+                                                    <input type="text" class="form-control" formControlName="merchantCode"
+                                                        readonly>
+                                                    <small class="form-text text-muted">Fixed merchant code for MK Gov services</small>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Amount</label>
+                                                    <input type="text" class="form-control" formControlName="amount"
+                                                        readonly>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Transaction ID *</label>
+                                                    <input type="text" class="form-control" formControlName="transactionId"
+                                                        placeholder="e.g., MTN123456789A"
+                                                        [class.is-invalid]="mtnForm.get('transactionId')?.invalid && mtnForm.get('transactionId')?.touched">
+                                                    <div class="invalid-feedback">
+                                                        <small *ngIf="mtnForm.get('transactionId')?.errors?.['required']">
+                                                            Transaction ID is required
+                                                        </small>
+                                                        <small *ngIf="mtnForm.get('transactionId')?.errors?.['pattern']">
+                                                            Transaction ID must be 8-12 alphanumeric characters
+                                                        </small>
+                                                    </div>
+                                                    <small class="form-text text-muted">Enter the transaction ID from MTN confirmation SMS</small>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Payment Steps Display -->
+                                            <div class="payment-steps" *ngIf="showPaymentSteps && activePaymentMethod === 'mtn'">
+                                                <h6 class="mb-3">Payment Progress</h6>
+                                                <div class="step-progress">
+                                                    <div class="progress-item" *ngFor="let step of mtnPaymentSteps" 
+                                                        [class]="step.status">
+                                                        <div class="progress-icon">
+                                                            <i class="fas fa-check" *ngIf="step.status === 'completed'"></i>
+                                                            <i class="fas fa-spinner fa-spin" *ngIf="step.status === 'processing'"></i>
+                                                            <span *ngIf="step.status === 'pending'">{{ step.step }}</span>
+                                                        </div>
+                                                        <div class="progress-text">
+                                                            <strong>{{ step.title }}</strong>
+                                                            <small>{{ step.description }}</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <button type="button" class="btn btn-warning" 
+                                                [disabled]="isProcessingPayment || mtnForm.invalid"
+                                                (click)="processMtnPayment()">
+                                                <span *ngIf="isProcessingPayment && activePaymentMethod === 'mtn'" 
+                                                    class="spinner-border spinner-border-sm me-2"></span>
+                                                <span *ngIf="isProcessingPayment && activePaymentMethod === 'mtn'">
+                                                    Verifying Payment... (Please wait 10 seconds)
+                                                </span>
+                                                <span *ngIf="!isProcessingPayment || activePaymentMethod !== 'mtn'">
+                                                    Pay Now
+                                                </span>
+                                            </button>
+                                        </form>
                                     </div>
                                 </div>
+
+                                <!-- Orange Money -->
+                                <div class="payment-accordion mb-3">
+                                    <div class="accordion-header" (click)="togglePaymentAccordion('orange')">
+                                        <div class="payment-method-option">
+                                            <input type="radio" name="paymentMethod" value="orange" 
+                                                [checked]="activePaymentMethod === 'orange'">
+                                            <i class="fas fa-mobile-alt me-3"></i>
+                                            <span>Orange Money</span>
+                                            <i class="fas fa-chevron-down ms-auto" 
+                                                [class.rotated]="showOrangeAccordion"></i>
+                                        </div>
+                                    </div>
+                                    <div class="accordion-content" [class.show]="showOrangeAccordion">
+                                        <!-- Orange Payment Instructions -->
+                                        <div class="payment-instructions mb-3">
+                                            <h6 class="text-primary">
+                                                <i class="fas fa-info-circle me-2"></i>
+                                                Orange Money Payment Process
+                                            </h6>
+                                            <div class="instruction-steps">
+                                                <div class="step-item">
+                                                    <strong>Step 1:</strong> Dial <code>#150*47#</code> on your Orange line
+                                                </div>
+                                                <div class="step-item">
+                                                    <strong>Step 2:</strong> Enter the merchant code when prompted
+                                                </div>
+                                                <div class="step-item">
+                                                    <strong>Step 3:</strong> Enter payment amount: <strong>{{ calculateTotalAmount() }} XAF</strong>
+                                                </div>
+                                                <div class="step-item">
+                                                    <strong>Step 4:</strong> Find the transaction ID that was sent to you by SMS and enter it in the Transaction ID field
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <form [formGroup]="orangeForm">
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Orange Phone Number *</label>
+                                                    <input type="tel" class="form-control" formControlName="phoneNumber"
+                                                        placeholder="6XXXXXXXX"
+                                                        [class.is-invalid]="orangeForm.get('phoneNumber')?.invalid && orangeForm.get('phoneNumber')?.touched">
+                                                    <div class="invalid-feedback">
+                                                        <small *ngIf="orangeForm.get('phoneNumber')?.errors?.['required']">
+                                                            Orange phone number is required
+                                                        </small>
+                                                        <small *ngIf="orangeForm.get('phoneNumber')?.errors?.['pattern']">
+                                                            Please enter a valid Orange number (6XXXXXXXX)
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Merchant Code</label>
+                                                    <input type="text" class="form-control" formControlName="merchantCode"
+                                                        readonly>
+                                                    <small class="form-text text-muted">Fixed merchant code for MK Gov services</small>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Amount</label>
+                                                    <input type="text" class="form-control" formControlName="amount"
+                                                        readonly>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Transaction ID *</label>
+                                                    <input type="text" class="form-control" formControlName="transactionId"
+                                                        placeholder="e.g., OM12345678"
+                                                        [class.is-invalid]="orangeForm.get('transactionId')?.invalid && orangeForm.get('transactionId')?.touched">
+                                                    <div class="invalid-feedback">
+                                                        <small *ngIf="orangeForm.get('transactionId')?.errors?.['required']">
+                                                            Transaction ID is required
+                                                        </small>
+                                                        <small *ngIf="orangeForm.get('transactionId')?.errors?.['pattern']">
+                                                            Transaction ID must be 6-10 alphanumeric characters
+                                                        </small>
+                                                    </div>
+                                                    <small class="form-text text-muted">Enter the transaction ID from Orange confirmation SMS</small>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Payment Steps Display -->
+                                            <div class="payment-steps" *ngIf="showPaymentSteps && activePaymentMethod === 'orange'">
+                                                <h6 class="mb-3">Payment Progress</h6>
+                                                <div class="step-progress">
+                                                    <div class="progress-item" *ngFor="let step of orangePaymentSteps" 
+                                                        [class]="step.status">
+                                                        <div class="progress-icon">
+                                                            <i class="fas fa-check" *ngIf="step.status === 'completed'"></i>
+                                                            <i class="fas fa-spinner fa-spin" *ngIf="step.status === 'processing'"></i>
+                                                            <span *ngIf="step.status === 'pending'">{{ step.step }}</span>
+                                                        </div>
+                                                        <div class="progress-text">
+                                                            <strong>{{ step.title }}</strong>
+                                                            <small>{{ step.description }}</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <button type="button" class="btn btn-warning" 
+                                                [disabled]="isProcessingPayment || orangeForm.invalid"
+                                                (click)="processOrangePayment()">
+                                                <span *ngIf="isProcessingPayment && activePaymentMethod === 'orange'" 
+                                                    class="spinner-border spinner-border-sm me-2"></span>
+                                                <span *ngIf="isProcessingPayment && activePaymentMethod === 'orange'">
+                                                    Verifying Payment... (Please wait 10 seconds)
+                                                </span>
+                                                <span *ngIf="!isProcessingPayment || activePaymentMethod !== 'orange'">
+                                                    Pay Now
+                                                </span>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                
                             </div>
 
-                            <div class="alert alert-info mt-3">
-                                <i class="fas fa-info-circle me-2"></i>
-                                {{ 'messages.payment_simulation' | translate }}
+                            <!-- Payment Status Messages -->
+                            <div class="alert alert-info mt-3" *ngIf="paymentStatusPending">
+                                <i class="fas fa-clock me-2"></i>
+                                Payment Status: <strong>Pending</strong> - Your payment is being processed...
                             </div>
                         </div>
+                        
                         <div class="col-md-4">
                             <div class="delivery-info-card">
                                 <h6>Delivery Information</h6>
@@ -369,13 +470,6 @@
                                     <strong>Expected Delivery:</strong>
                                     <br>
                                     <span class="text-muted">{{ getExpectedDeliveryTime() }}</span>
-                                </div>
-                                <div class="info-item">
-                                    <i class="fas fa-map-marker-alt text-primary me-2"></i>
-                                    <strong>Collection Point:</strong>
-                                    <br>
-                                    <span class="text-muted">{{ certificateForm.get('collectionLocation')?.value
-                                        }}</span>
                                 </div>
                                 <div class="info-item">
                                     <i class="fas fa-shield-alt text-success me-2"></i>
@@ -388,15 +482,14 @@
                     </div>
                 </div>
 
-                <!-- Step 4: Confirmation -->
-                <div class="form-step" *ngIf="currentStep === 4">
+                <!-- Step 3: Confirmation -->
+                <div class="form-step" *ngIf="currentStep === 3">
                     <div class="confirmation-content text-center">
                         <div class="success-icon mb-4">
                             <i class="fas fa-check-circle fa-4x text-success"></i>
                         </div>
                         <h3>Request Submitted Successfully!</h3>
-                        <p class="text-muted mb-4">Your birth certificate request has been submitted and payment
-                            processed.</p>
+                        <p class="text-muted mb-4">Your birth certificate request has been submitted and payment processed.</p>
 
                         <div class="confirmation-details">
                             <div class="detail-item">
@@ -405,10 +498,6 @@
                             </div>
                             <div class="detail-item">
                                 <strong>Expected Completion:</strong> {{ getExpectedDeliveryTime() }}
-                            </div>
-                            <div class="detail-item">
-                                <strong>Collection Point:</strong> {{ certificateForm.get('collectionLocation')?.value
-                                }}
                             </div>
                             <div class="detail-item">
                                 <strong>Total Paid:</strong> {{ calculateTotalAmount() }} XAF
@@ -422,31 +511,27 @@
             <!-- Navigation Buttons -->
             <div class="form-navigation mt-4">
                 <div class="d-flex justify-content-between">
-                    <button type="button" class="btn btn-outline-secondary" *ngIf="currentStep > 1 && currentStep < 4"
+                    <button type="button" class="btn btn-outline-secondary" *ngIf="currentStep > 1 && currentStep < 3"
                         (click)="previousStep()">
                         <i class="fas fa-arrow-left me-2"></i>
                         Previous
                     </button>
 
                     <div class="ms-auto">
-                        <button type="button" class="btn btn-primary" *ngIf="currentStep < 2" (click)="nextStep()">
-                            Next
-                            <i class="fas fa-arrow-right ms-2"></i>
-                        </button>
-
-                        <button type="button" class="btn btn-success" *ngIf="currentStep === 2"
+                        <button type="button" class="btn btn-success" *ngIf="currentStep === 1"
                             [disabled]="isSubmitting" (click)="onSubmitApplication()">
                             <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
                             Submit Request
                         </button>
 
-                        <button type="button" class="btn btn-warning" *ngIf="currentStep === 3" [disabled]="isLoading"
-                            (click)="onPayment()">
-                            <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
-                            Pay Now
+                        <button type="button" class="btn btn-primary" *ngIf="currentStep === 2"
+                            [disabled]="!paymentVerificationComplete"
+                            (click)="proceedToConfirmation()">
+                            Next
+                            <i class="fas fa-arrow-right ms-2"></i>
                         </button>
 
-                        <button type="button" class="btn btn-primary" *ngIf="currentStep === 4"
+                        <button type="button" class="btn btn-primary" *ngIf="currentStep === 3"
                             (click)="goToTracking()">
                             <i class="fas fa-search me-2"></i>
                             Track Request

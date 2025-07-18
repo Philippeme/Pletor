@@ -10,11 +10,29 @@
         }
 
         .tracking-info {
-            background: var(--success-color);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
+            .tracking-display {
+                background: var(--success-color);
+                color: white;
+                padding: 0.5rem 1rem;
+                border-radius: 20px;
+                font-size: 0.9rem;
+                white-space: nowrap;
+                
+                .tracking-text {
+                    margin-right: 0.5rem;
+                }
+                
+                .btn {
+                    border-color: rgba(255, 255, 255, 0.3);
+                    color: white;
+                    
+                    &:hover {
+                        background-color: rgba(255, 255, 255, 0.1);
+                        border-color: white;
+                        color: white;
+                    }
+                }
+            }
         }
     }
 
@@ -182,31 +200,119 @@
             }
         }
 
-        .payment-options {
-            .payment-option {
-                margin-bottom: 1rem;
+        // Payment accordion styles
+        .payment-accordion {
+            border: 2px solid #dee2e6;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
 
-                input[type="radio"] {
-                    display: none;
+            &:hover {
+                border-color: var(--success-color);
+            }
 
-                    &:checked+.payment-label {
-                        background-color: rgba(52, 168, 83, 0.1);
+            .accordion-header {
+                background: #f8f9fa;
+                padding: 1rem 1.5rem;
+                cursor: pointer;
+                transition: all 0.3s ease;
+
+                &:hover {
+                    background: #e9ecef;
+                }
+
+                .payment-method-option {
+                    display: flex;
+                    align-items: center;
+                    font-weight: 500;
+
+                    input[type="radio"] {
+                        margin-right: 0.5rem;
+                    }
+
+                    .fa-chevron-down {
+                        transition: transform 0.3s ease;
+
+                        &.rotated {
+                            transform: rotate(180deg);
+                        }
+                    }
+                }
+            }
+
+            .accordion-content {
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease;
+                background: white;
+                padding: 0 1.5rem;
+
+                &.show {
+                    max-height: 500px;
+                    padding: 1.5rem;
+                    overflow-y: auto;
+                    overflow-x: hidden;
+                }
+
+                .form-control {
+                    border-radius: 8px;
+                    border: 1px solid #dee2e6;
+                    padding: 0.75rem 1rem;
+
+                    &:focus {
                         border-color: var(--success-color);
-                        color: var(--success-color);
+                        box-shadow: 0 0 0 0.2rem rgba(52, 168, 83, 0.25);
                     }
                 }
 
-                .payment-label {
-                    display: block;
-                    padding: 1rem 1.5rem;
-                    border: 2px solid #dee2e6;
+                .btn-warning {
+                    background-color: #ffc107;
+                    border-color: #ffc107;
+                    color: #212529;
+                    font-weight: 500;
+                    padding: 0.75rem 2rem;
                     border-radius: 8px;
-                    cursor: pointer;
                     transition: all 0.3s ease;
 
                     &:hover {
-                        border-color: var(--success-color);
+                        background-color: #e0a800;
+                        border-color: #d39e00;
+                        transform: translateY(-1px);
                     }
+
+                    &:disabled {
+                        opacity: 0.6;
+                        cursor: not-allowed;
+                    }
+                }
+            }
+        }
+
+        .payment-option {
+            border: 2px solid #dee2e6;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+
+            input[type="radio"] {
+                display: none;
+
+                &:checked+.payment-label {
+                    background-color: rgba(52, 168, 83, 0.1);
+                    border-color: var(--success-color);
+                    color: var(--success-color);
+                }
+            }
+
+            .payment-label {
+                display: block;
+                padding: 1rem 1.5rem;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                margin: 0;
+
+                &:hover {
+                    border-color: var(--success-color);
+                    background-color: rgba(52, 168, 83, 0.05);
                 }
             }
         }
@@ -263,6 +369,24 @@
     }
 }
 
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+    70% {
+        transform: scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
 @media (max-width: 768px) {
     .birth-certificate-page {
         .request-type-selection {
@@ -276,6 +400,14 @@
 
             .step-line {
                 width: 40px;
+            }
+        }
+
+        .payment-accordion {
+            .accordion-content {
+                &.show {
+                    max-height: 500px;
+                }
             }
         }
     }
