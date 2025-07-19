@@ -2,7 +2,6 @@
     <div class="container">
         <!-- Brand -->
         <a class="navbar-brand d-flex align-items-center" routerLink="/home">
-        
             <span class="brand-text">{{ 'app.title' | translate }}</span>
         </a>
 
@@ -30,6 +29,14 @@
                     <a class="nav-link" routerLink="/search-files" routerLinkActive="active"
                         (click)="navigateTo('/search-files')">
                         {{ 'navigation.search_files' | translate }}
+                    </a>
+                </li>
+                <!-- NOUVEAU MENU CLAIM -->
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/claim" routerLinkActive="active"
+                        (click)="navigateTo('/claim')">
+                        <i class="fas fa-exclamation-triangle me-1"></i>
+                        Claim
                     </a>
                 </li>
             </ul>

@@ -9,6 +9,7 @@ import { SearchFilesComponent } from './pages/search-files/search-files.componen
 import { PassportApplicationComponent } from './pages/passport-application/passport-application.component';
 import { BirthCertificateComponent } from './pages/birth-certificate/birth-certificate.component';
 import { ServiceDetailComponent } from './pages/service-detail/service-detail.component';
+import { ClaimComponent } from './pages/claim/claim.component';
 
 // Guards
 import { AuthGuard } from './guards/auth.guard';
@@ -21,6 +22,10 @@ const routes: Routes = [
   { path: 'service-detail/:serviceId', component: ServiceDetailComponent },
   { path: 'registration', component: RegistrationComponent },
   { path: 'search-files', component: SearchFilesComponent },
+  { 
+    path: 'claim', 
+    component: ClaimComponent
+  },
   { 
     path: 'passport-application', 
     component: PassportApplicationComponent,

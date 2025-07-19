@@ -364,57 +364,99 @@ export class PassportApplicationComponent implements OnInit {
   }
 
   onSubmitApplication(): void {
-    if (this.passportForm.valid && this.application) {
-      this.isSubmitting = true;
-      this.errorMessage = '';
-      const body: any = this.passportForm.value;
-      
-      this.apiService.post<any>('/requests', { ...body, procedure_id: 1 }).subscribe({
-        next: (data: any) => {
-          this.isLoading = false;
-          this.request = data;
-          const requestId = data.id;
-          const formData: any = new FormData();
-          Object.keys(this.uploadedFiles).forEach(key => {
-            formData.append(key, this.uploadedFiles[key]);
-          });
-          this.apiService.post(`/requests/${requestId}/upload`, formData).subscribe({
-            next: () => {
-              this.isSubmitting = false;
-              this.successMessage = 'Application submitted successfully!';
-              this.currentStep = 4; // Move to payment step
-            },
-            error: err => {
-              this.isSubmitting = false;
-              console.error('Upload failed', err);
-            }
-          });
-        },
-        error: err => {
-          this.isLoading = false;
-          this.isSubmitting = false;
-          console.error('Request creation failed', err);
-        }
-      });
-    } else {
-      this.markFormGroupTouched();
+    // Validate form and documents
+    if (!this.passportForm.valid) {
+      this.markFormGroupTouched(this.passportForm);
+      this.errorMessage = 'Please complete all required fields.';
+      return;
     }
-  }
 
-  private markFormGroupTouched(): void {
-    Object.keys(this.passportForm.controls).forEach(key => {
-      const control = this.passportForm.get(key);
-      if (control) {
-        control.markAsTouched();
+    if (!this.validateDocumentUploads()) {
+      this.errorMessage = 'Please upload all required documents before submitting.';
+      return;
+    }
+
+    if (!this.application) {
+      this.errorMessage = 'Application not found. Please try again.';
+      return;
+    }
+
+    this.isSubmitting = true;
+    this.errorMessage = '';
+    
+    // Simulate API call for demo purposes
+    setTimeout(() => {
+      try {
+        // Update application status
+        this.application!.status = ApplicationStatus.PAYMENT_PENDING;
+        
+        // Create mock request data
+        this.request = {
+          id: 'req-' + Date.now(),
+          procedure_id: 1,
+          data: this.passportForm.value,
+          documents: Object.keys(this.uploadedFiles),
+          status: 'submitted'
+        };
+
+        this.isSubmitting = false;
+        this.successMessage = 'Application submitted successfully!';
+        
+        // Move to payment step
+        this.currentStep = 4;
+        this.updatePaymentAmounts();
+        
+        // Clear success message after 3 seconds
+        setTimeout(() => {
+          this.successMessage = '';
+        }, 3000);
+        
+      } catch (error) {
+        this.isSubmitting = false;
+        this.errorMessage = 'Failed to submit application. Please try again.';
+        console.error('Submission error:', error);
+      }
+    }, 1500);
+
+    /* Original API implementation (commented for demo):
+    const body: any = this.passportForm.value;
+    
+    this.apiService.post<any>('/requests', { ...body, procedure_id: 1 }).subscribe({
+      next: (data: any) => {
+        this.request = data;
+        const requestId = data.id;
+        const formData: any = new FormData();
+        Object.keys(this.uploadedFiles).forEach(key => {
+          formData.append(key, this.uploadedFiles[key]);
+        });
+        this.apiService.post(`/requests/${requestId}/upload`, formData).subscribe({
+          next: () => {
+            this.isSubmitting = false;
+            this.successMessage = 'Application submitted successfully!';
+            this.currentStep = 4;
+            this.updatePaymentAmounts();
+          },
+          error: err => {
+            this.isSubmitting = false;
+            this.errorMessage = 'Upload failed. Please try again.';
+            console.error('Upload failed', err);
+          }
+        });
+      },
+      error: err => {
+        this.isSubmitting = false;
+        this.errorMessage = 'Request creation failed. Please try again.';
+        console.error('Request creation failed', err);
       }
     });
+    */
   }
 
   // Copy tracking number to clipboard
   copyTrackingNumber(): void {
     if (this.application?.trackingNumber) {
       navigator.clipboard.writeText(this.application.trackingNumber).then(() => {
-        this.successMessage = 'Tracking number copied to clipboard!';
+     
         setTimeout(() => {
           this.successMessage = '';
         }, 2000);
@@ -425,7 +467,7 @@ export class PassportApplicationComponent implements OnInit {
         textArea.select();
         document.execCommand('copy');
         document.body.removeChild(textArea);
-        this.successMessage = 'Tracking number copied to clipboard!';
+      
         setTimeout(() => {
           this.successMessage = '';
         }, 2000);
@@ -565,6 +607,7 @@ export class PassportApplicationComponent implements OnInit {
     });
   }
 
+  // Unified markFormGroupTouched method - FIXED VERSION
   private markFormGroupTouched(formGroup: FormGroup): void {
     Object.keys(formGroup.controls).forEach(key => {
       const control = formGroup.get(key);

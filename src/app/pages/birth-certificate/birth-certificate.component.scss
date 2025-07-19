@@ -60,19 +60,20 @@
                 }
 
                 &.completed .step-circle {
-                    background-color: var(--primary-color); // Changed from success-color to primary-color
+                    background-color: var(--success-color);
                 }
 
                 .step-circle {
-                    width: 45px;
-                    height: 45px;
+                    width: 50px;
+                    height: 50px;
                     border-radius: 50%;
-                    background-color: var(--primary-color); // Changed from success-color to primary-color
+                    background-color: var(--primary-color);
                     color: white;
                     display: flex;
                     align-items: center;
                     justify-content: center;
                     font-weight: bold;
+                    font-size: 1.1rem;
                     margin-bottom: 0.5rem;
                 }
 
@@ -90,7 +91,7 @@
                 margin: 0 1rem;
 
                 &.completed {
-                    background-color: var(--primary-color); // Changed from success-color to primary-color
+                    background-color: var(--success-color);
                 }
             }
         }

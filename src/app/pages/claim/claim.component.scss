@@ -1,0 +1,388 @@
+.claim-page {
+    background: #f8f9fa;
+    min-height: 100vh;
+
+    .page-header {
+        .page-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+
+        .help-links {
+            .btn {
+                border-radius: 20px;
+                font-weight: 500;
+            }
+        }
+    }
+
+    .progress-container {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+        .progress-steps {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            .step {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                opacity: 0.5;
+                transition: all 0.3s ease;
+
+                &.active,
+                &.completed {
+                    opacity: 1;
+                }
+
+                &.completed .step-circle {
+                    background-color: var(--success-color);
+                }
+
+                .step-circle {
+                    width: 45px;
+                    height: 45px;
+                    border-radius: 50%;
+                    background-color: var(--primary-color);
+                    color: white;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: bold;
+                    margin-bottom: 0.5rem;
+                }
+
+                .step-label {
+                    font-size: 0.85rem;
+                    text-align: center;
+                    font-weight: 500;
+                }
+            }
+
+            .step-line {
+                width: 80px;
+                height: 3px;
+                background-color: #dee2e6;
+                margin: 0 1rem;
+
+                &.completed {
+                    background-color: var(--success-color);
+                }
+            }
+        }
+    }
+
+    .claim-form {
+        background: white;
+        padding: 2.5rem;
+        border-radius: 15px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+        .form-step {
+            .step-header {
+                h3 {
+                    color: var(--primary-color);
+                    font-weight: 600;
+                    margin-bottom: 0.5rem;
+                }
+            }
+        }
+
+        .category-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+
+            .form-check-card {
+                margin: 0;
+
+                .form-check-input {
+                    display: none;
+
+                    &:checked+.form-check-label {
+                        border-color: var(--primary-color);
+                        background-color: rgba(26, 115, 232, 0.05);
+
+                        .card-content {
+                            color: var(--primary-color);
+                        }
+                    }
+                }
+
+                .form-check-label {
+                    border: 2px solid #dee2e6;
+                    border-radius: 12px;
+                    padding: 1.5rem;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    display: block;
+                    text-align: center;
+
+                    &:hover {
+                        border-color: var(--primary-color);
+                        transform: translateY(-2px);
+                    }
+
+                    .card-content {
+                        h6 {
+                            margin-bottom: 0.5rem;
+                            font-weight: 600;
+                        }
+                    }
+                }
+            }
+        }
+
+        .type-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+
+            .form-check-type {
+                margin: 0;
+
+                .form-check-input {
+                    display: none;
+
+                    &:checked+.form-check-label {
+                        background-color: var(--primary-color);
+                        color: white;
+                        transform: scale(1.05);
+                    }
+                }
+
+                .form-check-label {
+                    background: #f8f9fa;
+                    border: 2px solid #dee2e6;
+                    border-radius: 8px;
+                    padding: 1rem;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    display: block;
+                    text-align: center;
+
+                    &:hover {
+                        border-color: var(--primary-color);
+                        background-color: rgba(26, 115, 232, 0.1);
+                    }
+
+                    .type-content {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        gap: 0.5rem;
+
+                        i {
+                            font-size: 1.5rem;
+                        }
+
+                        span {
+                            font-size: 0.9rem;
+                            font-weight: 500;
+                        }
+                    }
+                }
+            }
+        }
+
+        .file-upload-section {
+            .upload-area {
+                border: 2px dashed #dee2e6;
+                border-radius: 12px;
+                padding: 2rem;
+                text-align: center;
+                transition: all 0.3s ease;
+                cursor: pointer;
+
+                &:hover {
+                    border-color: var(--primary-color);
+                    background-color: rgba(26, 115, 232, 0.05);
+                }
+
+                .upload-label {
+                    display: block;
+                    cursor: pointer;
+                    margin: 0;
+                    color: #666;
+                    transition: all 0.3s ease;
+
+                    &:hover {
+                        color: var(--primary-color);
+                    }
+                }
+            }
+
+            .uploaded-files {
+                margin-top: 1rem;
+
+                .file-item {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    background: #f8f9fa;
+                    padding: 0.75rem 1rem;
+                    border-radius: 8px;
+                    margin-bottom: 0.5rem;
+
+                    .file-info {
+                        display: flex;
+                        align-items: center;
+                        gap: 0.5rem;
+
+                        i {
+                            color: var(--primary-color);
+                        }
+                    }
+                }
+            }
+        }
+
+        .confirmation-content {
+            padding: 3rem 2rem;
+
+            .success-icon {
+                animation: bounceIn 0.8s ease;
+            }
+
+            .claim-summary {
+                background: #f8f9fa;
+                padding: 2rem;
+                border-radius: 12px;
+                margin: 2rem 0;
+
+                .summary-item {
+                    margin-bottom: 1rem;
+                    padding: 0.75rem;
+                    background: white;
+                    border-radius: 8px;
+                    border-left: 4px solid var(--primary-color);
+
+                    &:last-child {
+                        margin-bottom: 0;
+                    }
+
+                    strong {
+                        color: var(--primary-color);
+                    }
+                }
+            }
+
+            .action-buttons {
+                .btn {
+                    border-radius: 25px;
+                    font-weight: 500;
+                    padding: 0.75rem 2rem;
+                }
+            }
+        }
+    }
+
+    .form-navigation {
+        background: white;
+        padding: 1.5rem 2.5rem;
+        border-radius: 0 0 15px 15px;
+        margin-top: -1px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+}
+
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+    70% {
+        transform: scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@media (max-width: 768px) {
+    .claim-page {
+        .category-selection {
+            grid-template-columns: 1fr;
+        }
+
+        .type-selection {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .progress-steps {
+            .step-label {
+                font-size: 0.7rem;
+            }
+
+            .step-line {
+                width: 40px;
+            }
+        }
+
+        .confirmation-content {
+            padding: 2rem 1rem;
+
+            .action-buttons {
+                .btn {
+                    display: block;
+                    width: 100%;
+                    margin: 0.5rem 0;
+                }
+            }
+        }
+    }
+}
+
+.claim-page {
+    .form-control,
+    .form-select {
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        border: 1px solid #dee2e6;
+
+        &:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(26, 115, 232, 0.25);
+        }
+    }
+
+    .btn-primary {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+        border-radius: 8px;
+        font-weight: 500;
+        padding: 0.75rem 1.5rem;
+        transition: all 0.3s ease;
+
+        &:hover {
+            background-color: var(--primary-color-dark);
+            border-color: var(--primary-color-dark);
+            transform: translateY(-1px);
+        }
+    }
+
+    .btn-success {
+        background-color: var(--success-color);
+        border-color: var(--success-color);
+        border-radius: 8px;
+        font-weight: 500;
+        padding: 0.75rem 1.5rem;
+        transition: all 0.3s ease;
+
+        &:hover {
+            background-color: #218838;
+            border-color: #218838;
+            transform: translateY(-1px);
+        }
+    }
+}

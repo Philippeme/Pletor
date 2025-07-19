@@ -32,12 +32,14 @@ import { SearchFilesComponent } from './pages/search-files/search-files.componen
 import { PassportApplicationComponent } from './pages/passport-application/passport-application.component';
 import { BirthCertificateComponent } from './pages/birth-certificate/birth-certificate.component';
 import { ServiceDetailComponent } from './pages/service-detail/service-detail.component';
+import { ClaimComponent } from './pages/claim/claim.component';
 
 // Services
 import { TranslationService } from './services/translation.service';
 import { AuthService } from './services/auth.service';
 import { ServicesDataService } from './services/services-data.service';
 import { ApplicationService } from './services/application.service';
+import { ClaimService } from './services/claim.service';
 
 // Interceptors
 import { HttpErrorInterceptor } from './interceptors/http.interceptor';
@@ -63,9 +65,10 @@ export function HttpLoaderFactory(http: HttpClient) {
     ProceduresComponent,
     RegistrationComponent,
     SearchFilesComponent,
+    ClaimComponent,
     PassportApplicationComponent,
     BirthCertificateComponent,
-    ServiceDetailComponent
+    ServiceDetailComponent,
   ],
   imports: [
     BrowserModule,
@@ -90,6 +93,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     AuthService,
     ServicesDataService,
     ApplicationService,
+    ClaimService,
     AuthGuard,
     {
       provide: HTTP_INTERCEPTORS,
