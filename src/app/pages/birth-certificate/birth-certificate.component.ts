@@ -28,24 +28,30 @@ export class BirthCertificateComponent implements OnInit {
   paymentStatusPending = false;
   showPaymentSteps = false;
   currentPaymentStep = 1;
+  hasPaymentCompleted = false; 
+  showRefreshButton = false; 
+  paymentProcessingStartTime = 0; // 
   
   // Accordion states
   activePaymentMethod = '';
   showMtnAccordion = false;
   showOrangeAccordion = false;
+  showVisaAccordion = false; 
 
   // Payment properties
   selectedPaymentMethod: PaymentMethod = PaymentMethod.MTN_MONEY;
   paymentMethods = [
     { value: PaymentMethod.MTN_MONEY, label: 'MTN Mobile Money', icon: 'fas fa-mobile-alt' },
     { value: PaymentMethod.ORANGE_MONEY, label: 'Orange Money', icon: 'fas fa-mobile-alt' },
-    { value: PaymentMethod.CASH, label: 'Pay at Registry', icon: 'fas fa-money-bill-wave' }
+    { value: PaymentMethod.CREDIT_CARD, label: 'Visa Credit Card', icon: 'fas fa-credit-card' } // Updated label
   ];
 
   // MTN Mobile Money form
   mtnForm: FormGroup;
   // Orange Money form
   orangeForm: FormGroup;
+  // Visa Credit Card form
+  visaForm: FormGroup; // New form for Visa
   
   // Payment step tracking
   mtnPaymentSteps = [
@@ -61,6 +67,13 @@ export class BirthCertificateComponent implements OnInit {
     { step: 2, title: 'Enter Merchant Code', description: 'Enter the merchant code when prompted', status: 'pending' },
     { step: 3, title: 'Enter Amount', description: 'Enter the payment amount', status: 'pending' },
     { step: 4, title: 'Confirm Payment', description: 'Confirm with your 4-digit secret code', status: 'pending' }
+  ];
+
+  visaPaymentSteps = [
+    { step: 1, title: 'Enter Card Details', description: 'Enter your Visa card information', status: 'pending' },
+    { step: 2, title: 'Verify Transaction', description: 'Confirm transaction details', status: 'pending' },
+    { step: 3, title: 'Processing Payment', description: 'Processing your card payment', status: 'pending' },
+    { step: 4, title: 'Payment Confirmation', description: 'Receiving confirmation from bank', status: 'pending' }
   ];
 
   constructor(
@@ -89,19 +102,28 @@ export class BirthCertificateComponent implements OnInit {
       requestReason: ['', Validators.required]
     });
 
-    // MTN Mobile Money form - based on real MTN process
+    // MTN Mobile Money form - updated pattern for new format
     this.mtnForm = this.fb.group({
       phoneNumber: ['', [Validators.required, Validators.pattern(/^(237)?6[0-9]{8}$/)]],
-      merchantCode: [{ value: '634826', disabled: true }], // Static merchant code
-      transactionId: ['', [Validators.required, Validators.pattern(/^[A-Z0-9]{8,12}$/)]],
+      merchantCode: [{ value: '634826', disabled: true }],
+      transactionId: ['', [Validators.required, Validators.pattern(/^[0-9]{11}$/)]],
       amount: [{ value: '', disabled: true }, Validators.required]
     });
 
-    // Orange Money form - based on real Orange process
+    // Orange Money form - updated pattern for new format
     this.orangeForm = this.fb.group({
       phoneNumber: ['', [Validators.required, Validators.pattern(/^(237)?6[0-9]{8}$/)]],
-      merchantCode: [{ value: '78945', disabled: true }], // Static merchant code
-      transactionId: ['', [Validators.required, Validators.pattern(/^[A-Z0-9]{6,10}$/)]],
+      merchantCode: [{ value: '78945', disabled: true }],
+      transactionId: ['', [Validators.required, Validators.pattern(/^[A-Z]{2}[0-9]{6}\.[0-9]{4}\.[A-Z][0-9]{5}$/)]],
+      amount: [{ value: '', disabled: true }, Validators.required]
+    });
+
+    // New Visa Credit Card form
+    this.visaForm = this.fb.group({
+      cardNumber: ['', [Validators.required, this.creditCardValidator]],
+      expiryDate: ['', [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/[0-9]{2}$/)]],
+      cvv: ['', [Validators.required, Validators.pattern(/^[0-9]{3}$/)]],
+      cardholderName: ['', Validators.required],
       amount: [{ value: '', disabled: true }, Validators.required]
     });
   }
@@ -124,6 +146,7 @@ export class BirthCertificateComponent implements OnInit {
     const amount = this.calculateTotalAmount();
     this.mtnForm.patchValue({ amount: amount });
     this.orangeForm.patchValue({ amount: amount });
+    this.visaForm.patchValue({ amount: amount });
   }
 
   private loadApplication(applicationId: string): void {
@@ -168,6 +191,11 @@ export class BirthCertificateComponent implements OnInit {
         emailAddress: currentUser.email,
         personFirstName: currentUser.firstName || '',
         personLastName: currentUser.lastName || ''
+      });
+
+      // Prefill cardholder name for Visa form
+      this.visaForm.patchValue({
+        cardholderName: `${currentUser.firstName || ''} ${currentUser.lastName || ''}`.trim()
       });
     }
   }
@@ -297,16 +325,29 @@ export class BirthCertificateComponent implements OnInit {
 
   // Payment accordion methods
   togglePaymentAccordion(method: string): void {
+    // Prevent opening if payment is already completed
+    if (this.hasPaymentCompleted) {
+      return;
+    }
+
     if (method === 'mtn') {
       this.showMtnAccordion = !this.showMtnAccordion;
       this.showOrangeAccordion = false;
+      this.showVisaAccordion = false;
       this.showPaymentSteps = false;
       this.activePaymentMethod = this.showMtnAccordion ? 'mtn' : '';
     } else if (method === 'orange') {
       this.showOrangeAccordion = !this.showOrangeAccordion;
       this.showMtnAccordion = false;
+      this.showVisaAccordion = false;
       this.showPaymentSteps = false;
       this.activePaymentMethod = this.showOrangeAccordion ? 'orange' : '';
+    } else if (method === 'visa') {
+      this.showVisaAccordion = !this.showVisaAccordion;
+      this.showMtnAccordion = false;
+      this.showOrangeAccordion = false;
+      this.showPaymentSteps = false;
+      this.activePaymentMethod = this.showVisaAccordion ? 'visa' : '';
     }
   }
 
@@ -314,12 +355,11 @@ export class BirthCertificateComponent implements OnInit {
   copyTrackingNumber(): void {
     if (this.application?.trackingNumber) {
       navigator.clipboard.writeText(this.application.trackingNumber).then(() => {
-        this.successMessage = 'Tracking number copied to clipboard!';
+        
         setTimeout(() => {
           this.successMessage = '';
         }, 2000);
       }).catch(() => {
-        // Fallback for older browsers
         const textArea = document.createElement('textarea');
         textArea.value = this.application!.trackingNumber;
         document.body.appendChild(textArea);
@@ -327,11 +367,19 @@ export class BirthCertificateComponent implements OnInit {
         document.execCommand('copy');
         document.body.removeChild(textArea);
         
-        this.successMessage = 'Tracking number copied to clipboard!';
         setTimeout(() => {
           this.successMessage = '';
         }, 2000);
       });
+
+      const button = document.querySelector('.tracking-info .btn i') as HTMLElement;
+        if (button) {
+          button.className = 'fas fa-check';
+          // Reset icon after 2 seconds
+          setTimeout(() => {
+            button.className = 'fas fa-copy';
+          }, 2000);
+        }
     }
   }
 
@@ -343,51 +391,7 @@ export class BirthCertificateComponent implements OnInit {
     }
 
     this.selectedPaymentMethod = PaymentMethod.MTN_MONEY;
-    this.showPaymentSteps = true;
-    this.currentPaymentStep = 1;
-    this.errorMessage = '';
-
-    // Simulate MTN payment steps
-    this.simulateMtnPaymentSteps();
-  }
-
-  private simulateMtnPaymentSteps(): void {
-    const steps = this.mtnPaymentSteps;
-    let currentStep = 0;
-
-    const processStep = () => {
-      if (currentStep < steps.length) {
-        steps[currentStep].status = 'processing';
-        
-        setTimeout(() => {
-          steps[currentStep].status = 'completed';
-          currentStep++;
-          
-          if (currentStep < steps.length) {
-            processStep();
-          } else {
-            this.finalizeMtnPayment();
-          }
-        }, 2000);
-      }
-    };
-
-    processStep();
-  }
-
-  private finalizeMtnPayment(): void {
-    this.isProcessingPayment = true;
-    
-    // 10s verification process
-    setTimeout(() => {
-      this.isProcessingPayment = false;
-      this.paymentVerificationComplete = true;
-      this.successMessage = 'Your payment has been processed successfully';
-      this.paymentStatusPending = true;
-      this.showPaymentSteps = false;
-
-      this.completePaymentProcess();
-    }, 10000);
+    this.initiatePaymentProcess();
   }
 
   // Orange Money payment process
@@ -398,51 +402,51 @@ export class BirthCertificateComponent implements OnInit {
     }
 
     this.selectedPaymentMethod = PaymentMethod.ORANGE_MONEY;
-    this.showPaymentSteps = true;
-    this.currentPaymentStep = 1;
-    this.errorMessage = '';
-
-    // Simulate Orange payment steps
-    this.simulateOrangePaymentSteps();
+    this.initiatePaymentProcess();
   }
 
-  private simulateOrangePaymentSteps(): void {
-    const steps = this.orangePaymentSteps;
-    let currentStep = 0;
+  // Visa Credit Card payment process
+  processVisaPayment(): void {
+    if (this.visaForm.invalid) {
+      this.markFormGroupTouched(this.visaForm);
+      return;
+    }
 
-    const processStep = () => {
-      if (currentStep < steps.length) {
-        steps[currentStep].status = 'processing';
-        
-        setTimeout(() => {
-          steps[currentStep].status = 'completed';
-          currentStep++;
-          
-          if (currentStep < steps.length) {
-            processStep();
-          } else {
-            this.finalizeOrangePayment();
-          }
-        }, 2000);
-      }
-    };
-
-    processStep();
+    this.selectedPaymentMethod = PaymentMethod.CREDIT_CARD;
+    this.initiatePaymentProcess();
   }
 
-  private finalizeOrangePayment(): void {
+  // New unified payment initiation method
+  private initiatePaymentProcess(): void {
     this.isProcessingPayment = true;
-    
-    // 10s verification process
-    setTimeout(() => {
-      this.isProcessingPayment = false;
-      this.paymentVerificationComplete = true;
-      this.successMessage = 'Your payment has been processed successfully';
-      this.paymentStatusPending = true;
-      this.showPaymentSteps = false;
+    this.showRefreshButton = true;
+    this.paymentProcessingStartTime = Date.now();
+    this.errorMessage = '';
+    this.successMessage = 'Payment processing initiated. Please wait...';
+  }
 
+  // New refresh payment method
+  refreshPaymentStatus(): void {
+    const elapsedTime = Date.now() - this.paymentProcessingStartTime;
+    
+    if (elapsedTime >= 40000) { // 40 seconds have passed
+      this.isProcessingPayment = false;
+      this.showRefreshButton = false;
+      this.hasPaymentCompleted = true;
+      this.paymentVerificationComplete = true;
+      this.paymentStatusPending = false;
+      
+      // Close all accordions
+      this.showMtnAccordion = false;
+      this.showOrangeAccordion = false;
+      this.showVisaAccordion = false;
+      this.activePaymentMethod = '';
+      
       this.completePaymentProcess();
-    }, 10000);
+    } else {
+      const remainingTime = Math.ceil((40000 - elapsedTime) / 1000);
+      this.successMessage = `Payment is still processing. Please wait ${remainingTime} more seconds before refreshing.`;
+    }
   }
 
   private completePaymentProcess(): void {
@@ -456,19 +460,8 @@ export class BirthCertificateComponent implements OnInit {
       this.selectedPaymentMethod
     ).subscribe({
       next: (payment) => {
-        payment.status = PaymentStatus.PENDING;
-        
-        // After 70s, mark as completed
-        setTimeout(() => {
-          payment.status = PaymentStatus.COMPLETED;
-          this.application!.status = ApplicationStatus.COMPLETED;
-          this.paymentStatusPending = false;
-          this.successMessage = 'Payment completed successfully!';
-          
-          setTimeout(() => {
-            this.successMessage = '';
-          }, 3000);
-        }, 70000);
+        payment.status = PaymentStatus.COMPLETED;
+        this.application!.status = ApplicationStatus.PROCESSING;
       },
       error: (error) => {
         this.isProcessingPayment = false;
@@ -523,14 +516,155 @@ export class BirthCertificateComponent implements OnInit {
   resetPaymentStates(): void {
     this.mtnPaymentSteps.forEach(step => step.status = 'pending');
     this.orangePaymentSteps.forEach(step => step.status = 'pending');
+    this.visaPaymentSteps.forEach(step => step.status = 'pending');
     this.showPaymentSteps = false;
     this.isProcessingPayment = false;
     this.paymentVerificationComplete = false;
     this.paymentStatusPending = false;
+    this.showRefreshButton = false;
+    this.hasPaymentCompleted = false;
   }
 
   // Get current payment steps based on selected method
   getCurrentPaymentSteps() {
-    return this.activePaymentMethod === 'mtn' ? this.mtnPaymentSteps : this.orangePaymentSteps;
+    switch (this.activePaymentMethod) {
+      case 'mtn': return this.mtnPaymentSteps;
+      case 'orange': return this.orangePaymentSteps;
+      case 'visa': return this.visaPaymentSteps;
+      default: return [];
+    }
+  }
+
+  // Method to check if payment methods should be disabled
+  arePaymentMethodsDisabled(): boolean {
+    return this.hasPaymentCompleted;
+  }
+
+  // Auto-format Visa card number with spaces
+  onCardNumberInput(event: any): void {
+    let value = event.target.value.replace(/\D/g, ''); // Remove non-digits
+    
+    // Limit to 16 digits
+    if (value.length > 16) {
+      value = value.substring(0, 16);
+    }
+    
+    // Add spaces every 4 digits
+    const formattedValue = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+    
+    // Update form control with the raw value (without spaces) for validation
+    this.visaForm.patchValue({ cardNumber: value });
+    
+    // Update the input display value with spaces
+    event.target.value = formattedValue;
+  }
+
+  // Custom validator for credit card (any 16 digits)
+  creditCardValidator(control: any) {
+    const value = control.value;
+    if (!value) return null;
+    
+    // Remove spaces and check if it's exactly 16 digits
+    const cleanValue = value.replace(/\s/g, '');
+    const isValid = /^[0-9]{16}$/.test(cleanValue);
+    
+    return isValid ? null : { creditCard: true };
+  }
+
+  // Handle keypress for card number (only digits)
+  onCardNumberKeypress(event: KeyboardEvent): boolean {
+    const charCode = event.which ? event.which : event.keyCode;
+    // Allow backspace, delete, tab, escape, enter
+    if ([8, 9, 27, 13, 46].indexOf(charCode) !== -1 ||
+        // Allow Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+        (charCode === 65 && event.ctrlKey) ||
+        (charCode === 67 && event.ctrlKey) ||
+        (charCode === 86 && event.ctrlKey) ||
+        (charCode === 88 && event.ctrlKey)) {
+      return true;
+    }
+    // Ensure that it is a number and stop the keypress
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+      return false;
+    }
+    return true;
+  }
+
+  // Auto-format expiry date with slash
+  onExpiryDateInput(event: any): void {
+    let value = event.target.value.replace(/\D/g, ''); // Remove non-digits
+    
+    // Limit to 4 digits (MMYY)
+    if (value.length > 4) {
+      value = value.substring(0, 4);
+    }
+    
+    // Add slash after month if we have at least 2 digits
+    if (value.length >= 2) {
+      const month = parseInt(value.substring(0, 2), 10);
+      // Validate month (01-12)
+      if (month >= 1 && month <= 12) {
+        value = value.substring(0, 2) + '/' + value.substring(2);
+      } else {
+        // Invalid month, truncate to 1 digit
+        value = value.substring(0, 1);
+      }
+    }
+    
+    // Update form control
+    this.visaForm.patchValue({ expiryDate: value });
+    
+    // Update the input value
+    event.target.value = value;
+  }
+
+  // Handle keypress for expiry date (only digits)
+  onExpiryDateKeypress(event: KeyboardEvent): boolean {
+    const charCode = event.which ? event.which : event.keyCode;
+    // Allow backspace, delete, tab, escape, enter
+    if ([8, 9, 27, 13, 46].indexOf(charCode) !== -1 ||
+        // Allow Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+        (charCode === 65 && event.ctrlKey) ||
+        (charCode === 67 && event.ctrlKey) ||
+        (charCode === 86 && event.ctrlKey) ||
+        (charCode === 88 && event.ctrlKey)) {
+      return true;
+    }
+    // Ensure that it is a number and stop the keypress
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+      return false;
+    }
+    return true;
+  }
+
+  // Handle keypress for CVV (only digits, max 3)
+  onCvvKeypress(event: KeyboardEvent): boolean {
+    const input = event.target as HTMLInputElement;
+    const charCode = event.which ? event.which : event.keyCode;
+    
+    // Allow backspace, delete, tab, escape, enter
+    if ([8, 9, 27, 13, 46].indexOf(charCode) !== -1 ||
+        // Allow Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+        (charCode === 65 && event.ctrlKey) ||
+        (charCode === 67 && event.ctrlKey) ||
+        (charCode === 86 && event.ctrlKey) ||
+        (charCode === 88 && event.ctrlKey)) {
+      return true;
+    }
+    
+    // Prevent input if already 3 digits
+    if (input.value.length >= 3) {
+      event.preventDefault();
+      return false;
+    }
+    
+    // Ensure that it is a number
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+      return false;
+    }
+    return true;
   }
 }

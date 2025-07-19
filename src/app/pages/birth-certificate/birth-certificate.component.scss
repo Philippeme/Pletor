@@ -11,7 +11,7 @@
 
         .tracking-info {
             .tracking-display {
-                background: var(--success-color);
+                background: var(--primary-color); // Changed from success-color to primary-color
                 color: white;
                 padding: 0.5rem 1rem;
                 border-radius: 20px;
@@ -60,14 +60,14 @@
                 }
 
                 &.completed .step-circle {
-                    background-color: var(--success-color);
+                    background-color: var(--primary-color); // Changed from success-color to primary-color
                 }
 
                 .step-circle {
                     width: 45px;
                     height: 45px;
                     border-radius: 50%;
-                    background-color: var(--success-color);
+                    background-color: var(--primary-color); // Changed from success-color to primary-color
                     color: white;
                     display: flex;
                     align-items: center;
@@ -90,7 +90,7 @@
                 margin: 0 1rem;
 
                 &.completed {
-                    background-color: var(--success-color);
+                    background-color: var(--primary-color); // Changed from success-color to primary-color
                 }
             }
         }
@@ -105,7 +105,7 @@
         .form-step {
             .step-header {
                 h3 {
-                    color: var(--success-color);
+                    color: var(--primary-color); // Changed from success-color to primary-color
                     font-weight: 600;
                     margin-bottom: 0.5rem;
                 }
@@ -124,11 +124,11 @@
                     display: none;
 
                     &:checked+.form-check-label {
-                        border-color: var(--success-color);
-                        background-color: rgba(52, 168, 83, 0.05);
+                        border-color: var(--primary-color); // Changed from success-color to primary-color
+                        background-color: rgba(26, 115, 232, 0.05); // Use primary color with opacity
 
                         .card-content {
-                            color: var(--success-color);
+                            color: var(--primary-color); // Changed from success-color to primary-color
                         }
                     }
                 }
@@ -143,7 +143,7 @@
                     text-align: center;
 
                     &:hover {
-                        border-color: var(--success-color);
+                        border-color: var(--primary-color); // Changed from success-color to primary-color
                         transform: translateY(-2px);
                     }
 
@@ -182,7 +182,7 @@
 
             .form-check-input:checked+.form-check-label .premium-option {
                 background: #e8f5e8;
-                border-color: var(--success-color);
+                border-color: var(--primary-color); // Changed from success-color to primary-color
             }
         }
 
@@ -200,7 +200,34 @@
             }
         }
 
-        // Payment accordion styles
+        // Payment processing card styles
+        .payment-processing-card {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border: 2px solid #ffc107;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+
+            h6 {
+                color: var(--primary-color);
+                font-weight: 600;
+                margin-bottom: 1rem;
+            }
+
+            .btn-outline-primary {
+                border-color: var(--primary-color);
+                color: var(--primary-color);
+                font-weight: 500;
+
+                &:hover {
+                    background-color: var(--primary-color);
+                    color: white;
+                    transform: translateY(-1px);
+                }
+            }
+        }
+
+        // Payment accordion styles with enhanced scrollbars
         .payment-accordion {
             border: 2px solid #dee2e6;
             border-radius: 12px;
@@ -208,7 +235,13 @@
             transition: all 0.3s ease;
 
             &:hover {
-                border-color: var(--success-color);
+                border-color: var(--primary-color); // Changed from success-color to primary-color
+            }
+
+            &.disabled {
+                opacity: 0.6;
+                pointer-events: none;
+                background-color: #f8f9fa;
             }
 
             .accordion-header {
@@ -248,20 +281,45 @@
                 padding: 0 1.5rem;
 
                 &.show {
-                    max-height: 500px;
+                    max-height: 600px; // Increased for better content accommodation
                     padding: 1.5rem;
                     overflow-y: auto;
                     overflow-x: hidden;
+
+                    // Enhanced scrollbar styling
+                    &::-webkit-scrollbar {
+                        width: 8px;
+                    }
+
+                    &::-webkit-scrollbar-track {
+                        background: #f1f1f1;
+                        border-radius: 10px;
+                    }
+
+                    &::-webkit-scrollbar-thumb {
+                        background: linear-gradient(180deg, var(--primary-color), var(--secondary-color));
+                        border-radius: 10px;
+                        border: 2px solid #f1f1f1;
+                    }
+
+                    &::-webkit-scrollbar-thumb:hover {
+                        background: linear-gradient(180deg, var(--primary-color-dark), var(--primary-color));
+                    }
+
+                    // For Firefox
+                    scrollbar-width: thin;
+                    scrollbar-color: var(--primary-color) #f1f1f1;
                 }
 
-                .form-control {
+                .form-control,
+                .form-select {
                     border-radius: 8px;
                     border: 1px solid #dee2e6;
                     padding: 0.75rem 1rem;
 
                     &:focus {
-                        border-color: var(--success-color);
-                        box-shadow: 0 0 0 0.2rem rgba(52, 168, 83, 0.25);
+                        border-color: var(--primary-color); // Changed from success-color to primary-color
+                        box-shadow: 0 0 0 0.2rem rgba(26, 115, 232, 0.25); // Use primary color
                     }
                 }
 
@@ -285,6 +343,49 @@
                         cursor: not-allowed;
                     }
                 }
+
+                // Payment instructions styling
+                .payment-instructions {
+                    background: rgba(26, 115, 232, 0.05); // Use primary color
+                    border-left: 4px solid var(--primary-color); // Changed from success-color to primary-color
+                    padding: 1rem;
+                    border-radius: 8px;
+                    margin-bottom: 1.5rem;
+
+                    h6 {
+                        color: var(--primary-color); // Changed from success-color to primary-color
+                        font-weight: 600;
+                        margin-bottom: 1rem;
+                    }
+
+                    .instruction-steps {
+                        .step-item {
+                            margin-bottom: 0.75rem;
+                            padding-left: 1rem;
+                            position: relative;
+
+                            &:before {
+                                content: '•';
+                                color: var(--primary-color); // Changed from success-color to primary-color
+                                position: absolute;
+                                left: 0;
+                                font-weight: bold;
+                            }
+
+                            strong {
+                                color: var(--primary-color); // Changed from success-color to primary-color
+                            }
+
+                            code {
+                                background-color: rgba(26, 115, 232, 0.1); // Use primary color
+                                color: var(--primary-color); // Changed from success-color to primary-color
+                                padding: 0.2rem 0.4rem;
+                                border-radius: 4px;
+                                font-weight: 600;
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -297,9 +398,9 @@
                 display: none;
 
                 &:checked+.payment-label {
-                    background-color: rgba(52, 168, 83, 0.1);
-                    border-color: var(--success-color);
-                    color: var(--success-color);
+                    background-color: rgba(26, 115, 232, 0.1); // Use primary color
+                    border-color: var(--primary-color); // Changed from success-color to primary-color
+                    color: var(--primary-color); // Changed from success-color to primary-color
                 }
             }
 
@@ -311,8 +412,8 @@
                 margin: 0;
 
                 &:hover {
-                    border-color: var(--success-color);
-                    background-color: rgba(52, 168, 83, 0.05);
+                    border-color: var(--primary-color); // Changed from success-color to primary-color
+                    background-color: rgba(26, 115, 232, 0.05); // Use primary color
                 }
             }
         }
@@ -351,9 +452,17 @@
 
                 .detail-item {
                     margin-bottom: 1rem;
+                    padding: 0.75rem;
+                    background: white;
+                    border-radius: 8px;
+                    border-left: 4px solid var(--primary-color); // Changed from success-color to primary-color
 
                     &:last-child {
                         margin-bottom: 0;
+                    }
+
+                    strong {
+                        color: var(--primary-color); // Changed from success-color to primary-color
                     }
                 }
             }
@@ -407,8 +516,66 @@
             .accordion-content {
                 &.show {
                     max-height: 500px;
+                    
+                    // Mobile scrollbar adjustments
+                    &::-webkit-scrollbar {
+                        width: 6px;
+                    }
                 }
             }
+        }
+
+        .payment-processing-card {
+            margin-bottom: 1rem;
+        }
+
+        .delivery-info-card {
+            margin-top: 1rem;
+        }
+    }
+}
+
+// Global form styling consistency with passport application
+.birth-certificate-page {
+    .form-control,
+    .form-select {
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        border: 1px solid #dee2e6;
+
+        &:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(26, 115, 232, 0.25);
+        }
+    }
+
+    .btn-primary {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+        border-radius: 8px;
+        font-weight: 500;
+        padding: 0.75rem 1.5rem;
+        transition: all 0.3s ease;
+
+        &:hover {
+            background-color: var(--primary-color-dark);
+            border-color: var(--primary-color-dark);
+            transform: translateY(-1px);
+        }
+    }
+
+    .btn-success {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+        border-radius: 8px;
+        font-weight: 500;
+        padding: 0.75rem 1.5rem;
+        transition: all 0.3s ease;
+
+        &:hover {
+            background-color: var(--primary-color-dark);
+            border-color: var(--primary-color-dark);
+            transform: translateY(-1px);
         }
     }
 }

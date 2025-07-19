@@ -213,16 +213,27 @@
                                 </div>
                             </div>
 
+                            <!-- Payment Already Completed Message -->
+                            <div class="alert alert-info mb-4" *ngIf="hasPaymentCompleted">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-check-circle fa-2x text-success me-3"></i>
+                                    <div>
+                                        <h6 class="mb-1">Payment Completed Successfully!</h6>
+                                        <p class="mb-0">Your payment has been processed. Please proceed to the next step to finalize your request.</p>
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- Payment Methods with Accordions -->
-                            <div class="payment-methods">
+                            <div class="payment-methods" *ngIf="!hasPaymentCompleted">
                                 <h5 class="mb-3">Select Payment Method</h5>
                                 
                                 <!-- MTN Mobile Money -->
-                                <div class="payment-accordion mb-3">
+                                <div class="payment-accordion mb-3" [class.disabled]="arePaymentMethodsDisabled()">
                                     <div class="accordion-header" (click)="togglePaymentAccordion('mtn')">
                                         <div class="payment-method-option">
                                             <input type="radio" name="paymentMethod" value="mtn" 
-                                                [checked]="activePaymentMethod === 'mtn'">
+                                                [checked]="activePaymentMethod === 'mtn'" [disabled]="arePaymentMethodsDisabled()">
                                             <i class="fas fa-mobile-alt me-3"></i>
                                             <span>MTN Mobile Money</span>
                                             <i class="fas fa-chevron-down ms-auto" 
@@ -287,36 +298,17 @@
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label">Transaction ID *</label>
                                                     <input type="text" class="form-control" formControlName="transactionId"
-                                                        placeholder="e.g., MTN123456789A"
+                                                        placeholder="e.g., 11104326398"
                                                         [class.is-invalid]="mtnForm.get('transactionId')?.invalid && mtnForm.get('transactionId')?.touched">
                                                     <div class="invalid-feedback">
                                                         <small *ngIf="mtnForm.get('transactionId')?.errors?.['required']">
                                                             Transaction ID is required
                                                         </small>
                                                         <small *ngIf="mtnForm.get('transactionId')?.errors?.['pattern']">
-                                                            Transaction ID must be 8-12 alphanumeric characters
+                                                            Transaction ID must be 11 digits (e.g., 11104326398)
                                                         </small>
                                                     </div>
-                                                    <small class="form-text text-muted">Enter the transaction ID from MTN confirmation SMS</small>
-                                                </div>
-                                            </div>
-                                            
-                                            <!-- Payment Steps Display -->
-                                            <div class="payment-steps" *ngIf="showPaymentSteps && activePaymentMethod === 'mtn'">
-                                                <h6 class="mb-3">Payment Progress</h6>
-                                                <div class="step-progress">
-                                                    <div class="progress-item" *ngFor="let step of mtnPaymentSteps" 
-                                                        [class]="step.status">
-                                                        <div class="progress-icon">
-                                                            <i class="fas fa-check" *ngIf="step.status === 'completed'"></i>
-                                                            <i class="fas fa-spinner fa-spin" *ngIf="step.status === 'processing'"></i>
-                                                            <span *ngIf="step.status === 'pending'">{{ step.step }}</span>
-                                                        </div>
-                                                        <div class="progress-text">
-                                                            <strong>{{ step.title }}</strong>
-                                                            <small>{{ step.description }}</small>
-                                                        </div>
-                                                    </div>
+                                                    <small class="form-text text-muted">Enter the 11-digit transaction ID from MTN confirmation SMS</small>
                                                 </div>
                                             </div>
 
@@ -325,23 +317,18 @@
                                                 (click)="processMtnPayment()">
                                                 <span *ngIf="isProcessingPayment && activePaymentMethod === 'mtn'" 
                                                     class="spinner-border spinner-border-sm me-2"></span>
-                                                <span *ngIf="isProcessingPayment && activePaymentMethod === 'mtn'">
-                                                    Verifying Payment... (Please wait 10 seconds)
-                                                </span>
-                                                <span *ngIf="!isProcessingPayment || activePaymentMethod !== 'mtn'">
-                                                    Pay Now
-                                                </span>
+                                                Pay Now
                                             </button>
                                         </form>
                                     </div>
                                 </div>
 
                                 <!-- Orange Money -->
-                                <div class="payment-accordion mb-3">
+                                <div class="payment-accordion mb-3" [class.disabled]="arePaymentMethodsDisabled()">
                                     <div class="accordion-header" (click)="togglePaymentAccordion('orange')">
                                         <div class="payment-method-option">
                                             <input type="radio" name="paymentMethod" value="orange" 
-                                                [checked]="activePaymentMethod === 'orange'">
+                                                [checked]="activePaymentMethod === 'orange'" [disabled]="arePaymentMethodsDisabled()">
                                             <i class="fas fa-mobile-alt me-3"></i>
                                             <span>Orange Money</span>
                                             <i class="fas fa-chevron-down ms-auto" 
@@ -403,36 +390,17 @@
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label">Transaction ID *</label>
                                                     <input type="text" class="form-control" formControlName="transactionId"
-                                                        placeholder="e.g., OM12345678"
+                                                        placeholder="e.g., AB123456.1234.X12345"
                                                         [class.is-invalid]="orangeForm.get('transactionId')?.invalid && orangeForm.get('transactionId')?.touched">
                                                     <div class="invalid-feedback">
                                                         <small *ngIf="orangeForm.get('transactionId')?.errors?.['required']">
                                                             Transaction ID is required
                                                         </small>
                                                         <small *ngIf="orangeForm.get('transactionId')?.errors?.['pattern']">
-                                                            Transaction ID must be 6-10 alphanumeric characters
+                                                            Transaction ID format: AB123456.1234.X12345
                                                         </small>
                                                     </div>
-                                                    <small class="form-text text-muted">Enter the transaction ID from Orange confirmation SMS</small>
-                                                </div>
-                                            </div>
-                                            
-                                            <!-- Payment Steps Display -->
-                                            <div class="payment-steps" *ngIf="showPaymentSteps && activePaymentMethod === 'orange'">
-                                                <h6 class="mb-3">Payment Progress</h6>
-                                                <div class="step-progress">
-                                                    <div class="progress-item" *ngFor="let step of orangePaymentSteps" 
-                                                        [class]="step.status">
-                                                        <div class="progress-icon">
-                                                            <i class="fas fa-check" *ngIf="step.status === 'completed'"></i>
-                                                            <i class="fas fa-spinner fa-spin" *ngIf="step.status === 'processing'"></i>
-                                                            <span *ngIf="step.status === 'pending'">{{ step.step }}</span>
-                                                        </div>
-                                                        <div class="progress-text">
-                                                            <strong>{{ step.title }}</strong>
-                                                            <small>{{ step.description }}</small>
-                                                        </div>
-                                                    </div>
+                                                    <small class="form-text text-muted">Enter the transaction ID from Orange confirmation SMS (Format: AB123456.1234.X12345)</small>
                                                 </div>
                                             </div>
 
@@ -441,18 +409,127 @@
                                                 (click)="processOrangePayment()">
                                                 <span *ngIf="isProcessingPayment && activePaymentMethod === 'orange'" 
                                                     class="spinner-border spinner-border-sm me-2"></span>
-                                                <span *ngIf="isProcessingPayment && activePaymentMethod === 'orange'">
-                                                    Verifying Payment... (Please wait 10 seconds)
-                                                </span>
-                                                <span *ngIf="!isProcessingPayment || activePaymentMethod !== 'orange'">
-                                                    Pay Now
-                                                </span>
+                                                Pay Now
                                             </button>
                                         </form>
                                     </div>
                                 </div>
 
-                                
+                                <!-- Visa Credit Card -->
+                                <div class="payment-accordion mb-3" [class.disabled]="arePaymentMethodsDisabled()">
+                                    <div class="accordion-header" (click)="togglePaymentAccordion('visa')">
+                                        <div class="payment-method-option">
+                                            <input type="radio" name="paymentMethod" value="visa" 
+                                                [checked]="activePaymentMethod === 'visa'" [disabled]="arePaymentMethodsDisabled()">
+                                            <i class="fas fa-credit-card me-3"></i>
+                                            <span>Visa Credit Card</span>
+                                            <i class="fas fa-chevron-down ms-auto" 
+                                                [class.rotated]="showVisaAccordion"></i>
+                                        </div>
+                                    </div>
+                                    <div class="accordion-content" [class.show]="showVisaAccordion">
+                                        <!-- Visa Payment Instructions -->
+                                        <div class="payment-instructions mb-3">
+                                            <h6 class="text-primary">
+                                                <i class="fas fa-info-circle me-2"></i>
+                                                Visa Credit Card Payment Process
+                                            </h6>
+                                            <div class="instruction-steps">
+                                                <div class="step-item">
+                                                    <strong>Step 1:</strong> Enter your Visa card details below
+                                                </div>
+                                                <div class="step-item">
+                                                    <strong>Step 2:</strong> Verify all information is correct
+                                                </div>
+                                                <div class="step-item">
+                                                    <strong>Step 3:</strong> Click "Pay Now" to process payment
+                                                </div>
+                                                <div class="step-item">
+                                                    <strong>Step 4:</strong> Your payment will be processed securely through our payment gateway
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <form [formGroup]="visaForm">
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Card Number *</label>
+                                                    <input type="text" class="form-control" formControlName="cardNumber"
+                                                        placeholder="4*** **** **** ****"
+                                                        maxlength="19"
+                                                        (input)="onCardNumberInput($event)"
+                                                        (keypress)="onCardNumberKeypress($event)"
+                                                        [class.is-invalid]="visaForm.get('cardNumber')?.invalid && visaForm.get('cardNumber')?.touched">
+                                                    <div class="invalid-feedback">
+                                                        <small *ngIf="visaForm.get('cardNumber')?.errors?.['required']">
+                                                            Card number is required
+                                                        </small>
+                                                        <small *ngIf="visaForm.get('cardNumber')?.errors?.['creditCard']">
+                                                            Please enter a valid 16-digit card number
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 mb-3">
+                                                    <label class="form-label">Expiry Date *</label>
+                                                    <input type="text" class="form-control" formControlName="expiryDate"
+                                                        placeholder="MM/YY"
+                                                        maxlength="5"
+                                                        (input)="onExpiryDateInput($event)"
+                                                        (keypress)="onExpiryDateKeypress($event)"
+                                                        [class.is-invalid]="visaForm.get('expiryDate')?.invalid && visaForm.get('expiryDate')?.touched">
+                                                    <div class="invalid-feedback">
+                                                        <small *ngIf="visaForm.get('expiryDate')?.errors?.['required']">
+                                                            Expiry date is required
+                                                        </small>
+                                                        <small *ngIf="visaForm.get('expiryDate')?.errors?.['pattern']">
+                                                            Format: MM/YY
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 mb-3">
+                                                    <label class="form-label">CVV *</label>
+                                                    <input type="text" class="form-control" formControlName="cvv"
+                                                        placeholder="123"
+                                                        maxlength="3"
+                                                        (keypress)="onCvvKeypress($event)"
+                                                        [class.is-invalid]="visaForm.get('cvv')?.invalid && visaForm.get('cvv')?.touched">
+                                                    <div class="invalid-feedback">
+                                                        <small *ngIf="visaForm.get('cvv')?.errors?.['required']">
+                                                            CVV is required
+                                                        </small>
+                                                        <small *ngIf="visaForm.get('cvv')?.errors?.['pattern']">
+                                                            CVV must be 3 digits
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Cardholder Name *</label>
+                                                    <input type="text" class="form-control" formControlName="cardholderName"
+                                                        placeholder="John Doe"
+                                                        [class.is-invalid]="visaForm.get('cardholderName')?.invalid && visaForm.get('cardholderName')?.touched">
+                                                    <div class="invalid-feedback">
+                                                        Cardholder name is required
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Amount</label>
+                                                    <input type="text" class="form-control" formControlName="amount"
+                                                        readonly>
+                                                </div>
+                                            </div>
+
+                                            <button type="button" class="btn btn-warning" 
+                                                [disabled]="isProcessingPayment || visaForm.invalid"
+                                                (click)="processVisaPayment()">
+                                                <span *ngIf="isProcessingPayment && activePaymentMethod === 'visa'" 
+                                                    class="spinner-border spinner-border-sm me-2"></span>
+                                                Pay Now
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- Payment Status Messages -->
@@ -478,6 +555,19 @@
                                     <span class="text-muted">Official government seal and signature</span>
                                 </div>
                             </div>
+
+                            <!-- Payment Processing Section -->
+                            <div class="payment-processing-card mb-3" *ngIf="showRefreshButton">
+                                <h6 class="text-primary">
+                                    <i class="fas fa-credit-card me-2"></i>
+                                    Payment Under Process
+                                </h6>
+                                <p class="text-muted mb-3">Your payment is being processed. Please wait 40 seconds before refreshing.</p>
+                                <button class="btn btn-outline-primary w-100" (click)="refreshPaymentStatus()">
+                                    <i class="fas fa-sync-alt me-2"></i>
+                                    Refresh Status
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -502,6 +592,14 @@
                             <div class="detail-item">
                                 <strong>Total Paid:</strong> {{ calculateTotalAmount() }} XAF
                             </div>
+                            <div class="detail-item">
+                                <strong>Document Delivery:</strong> The certified birth certificate copy has been sent to your email address
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info mt-4">
+                            <i class="fas fa-envelope me-2"></i>
+                            <strong>Email Confirmation:</strong> Your certified birth certificate copy has been sent to your registered email address. Please check your inbox and spam folder.
                         </div>
                     </div>
                 </div>
