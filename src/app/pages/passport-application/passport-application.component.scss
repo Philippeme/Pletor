@@ -11,7 +11,7 @@
 
         .tracking-info {
             .tracking-display {
-                background: var(--primary-color); 
+                background: var(--primary-color);
                 color: white;
                 padding: 0.5rem 1rem;
                 border-radius: 20px;
@@ -60,12 +60,12 @@
                 }
 
                 &.completed .step-circle {
-                    background-color: var(--success-color);
+                    background-color: var(--primary-color);
                 }
 
                 .step-circle {
-                    width: 50px;
-                    height: 50px;
+                    width: 45px;
+                    height: 45px;
                     border-radius: 50%;
                     background-color: var(--primary-color);
                     color: white;
@@ -73,7 +73,6 @@
                     align-items: center;
                     justify-content: center;
                     font-weight: bold;
-                    font-size: 1.1rem;
                     margin-bottom: 0.5rem;
                 }
 
@@ -91,7 +90,7 @@
                 margin: 0 1rem;
 
                 &.completed {
-                    background-color: var(--success-color);
+                    background-color: var(--primary-color);
                 }
             }
         }
@@ -109,6 +108,52 @@
                     color: var(--primary-color);
                     font-weight: 600;
                     margin-bottom: 0.5rem;
+                }
+            }
+        }
+
+        // Request type selection (adapted from birth certificate)
+        .request-type-selection {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+
+            .form-check-card {
+                margin: 0;
+
+                .form-check-input {
+                    display: none;
+
+                    &:checked+.form-check-label {
+                        border-color: var(--primary-color);
+                        background-color: rgba(26, 115, 232, 0.05);
+
+                        .card-content {
+                            color: var(--primary-color);
+                        }
+                    }
+                }
+
+                .form-check-label {
+                    border: 2px solid #dee2e6;
+                    border-radius: 12px;
+                    padding: 1.5rem;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    display: block;
+                    text-align: center;
+
+                    &:hover {
+                        border-color: var(--primary-color);
+                        transform: translateY(-2px);
+                    }
+
+                    .card-content {
+                        h6 {
+                            margin-bottom: 0.5rem;
+                            font-weight: 600;
+                        }
+                    }
                 }
             }
         }
@@ -194,36 +239,195 @@
             }
         }
 
-        .payment-options {
-            .payment-option {
+        // Payment processing card styles
+        .payment-processing-card {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border: 2px solid #ffc107;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+
+            h6 {
+                color: var(--primary-color);
+                font-weight: 600;
                 margin-bottom: 1rem;
+            }
 
-                input[type="radio"] {
-                    display: none;
+            .btn-outline-primary {
+                border-color: var(--primary-color);
+                color: var(--primary-color);
+                font-weight: 500;
 
-                    &:checked+.payment-label {
-                        background-color: rgba(26, 115, 232, 0.1);
+                &:hover {
+                    background-color: var(--primary-color);
+                    color: white;
+                    transform: translateY(-1px);
+                }
+            }
+        }
+
+        // Payment accordion styles (adapted from birth certificate)
+        .payment-accordion {
+            border: 2px solid #dee2e6;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+
+            &:hover {
+                border-color: var(--primary-color);
+            }
+
+            &.disabled {
+                opacity: 0.6;
+                pointer-events: none;
+                background-color: #f8f9fa;
+            }
+
+            .accordion-header {
+                background: #f8f9fa;
+                padding: 1rem 1.5rem;
+                cursor: pointer;
+                transition: all 0.3s ease;
+
+                &:hover {
+                    background: #e9ecef;
+                }
+
+                .payment-method-option {
+                    display: flex;
+                    align-items: center;
+                    font-weight: 500;
+
+                    input[type="radio"] {
+                        margin-right: 0.5rem;
+                    }
+
+                    .fa-chevron-down {
+                        transition: transform 0.3s ease;
+
+                        &.rotated {
+                            transform: rotate(180deg);
+                        }
+                    }
+                }
+            }
+
+            .accordion-content {
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease;
+                background: white;
+                padding: 0 1.5rem;
+
+                &.show {
+                    max-height: 600px;
+                    padding: 1.5rem;
+                    overflow-y: auto;
+                    overflow-x: hidden;
+
+                    // Enhanced scrollbar styling
+                    &::-webkit-scrollbar {
+                        width: 8px;
+                    }
+
+                    &::-webkit-scrollbar-track {
+                        background: #f1f1f1;
+                        border-radius: 10px;
+                    }
+
+                    &::-webkit-scrollbar-thumb {
+                        background: linear-gradient(180deg, var(--primary-color), var(--secondary-color));
+                        border-radius: 10px;
+                        border: 2px solid #f1f1f1;
+                    }
+
+                    &::-webkit-scrollbar-thumb:hover {
+                        background: linear-gradient(180deg, var(--primary-color-dark), var(--primary-color));
+                    }
+
+                    scrollbar-width: thin;
+                    scrollbar-color: var(--primary-color) #f1f1f1;
+                }
+
+                .form-control,
+                .form-select {
+                    border-radius: 8px;
+                    border: 1px solid #dee2e6;
+                    padding: 0.75rem 1rem;
+
+                    &:focus {
                         border-color: var(--primary-color);
-                        color: var(--primary-color);
+                        box-shadow: 0 0 0 0.2rem rgba(26, 115, 232, 0.25);
                     }
                 }
 
-                .payment-label {
-                    display: block;
-                    padding: 1rem 1.5rem;
-                    border: 2px solid #dee2e6;
+                .btn-warning {
+                    background-color: #ffc107;
+                    border-color: #ffc107;
+                    color: #212529;
+                    font-weight: 500;
+                    padding: 0.75rem 2rem;
                     border-radius: 8px;
-                    cursor: pointer;
                     transition: all 0.3s ease;
 
                     &:hover {
-                        border-color: var(--primary-color);
+                        background-color: #e0a800;
+                        border-color: #d39e00;
+                        transform: translateY(-1px);
+                    }
+
+                    &:disabled {
+                        opacity: 0.6;
+                        cursor: not-allowed;
+                    }
+                }
+
+                // Payment instructions styling
+                .payment-instructions {
+                    background: rgba(26, 115, 232, 0.05);
+                    border-left: 4px solid var(--primary-color);
+                    padding: 1rem;
+                    border-radius: 8px;
+                    margin-bottom: 1.5rem;
+
+                    h6 {
+                        color: var(--primary-color);
+                        font-weight: 600;
+                        margin-bottom: 1rem;
+                    }
+
+                    .instruction-steps {
+                        .step-item {
+                            margin-bottom: 0.75rem;
+                            padding-left: 1rem;
+                            position: relative;
+
+                            &:before {
+                                content: '•';
+                                color: var(--primary-color);
+                                position: absolute;
+                                left: 0;
+                                font-weight: bold;
+                            }
+
+                            strong {
+                                color: var(--primary-color);
+                            }
+
+                            code {
+                                background-color: rgba(26, 115, 232, 0.1);
+                                color: var(--primary-color);
+                                padding: 0.2rem 0.4rem;
+                                border-radius: 4px;
+                                font-weight: 600;
+                            }
+                        }
                     }
                 }
             }
         }
 
-        .payment-info-card {
+        .delivery-info-card {
             background: #f8f9fa;
             padding: 1.5rem;
             border-radius: 12px;
@@ -233,11 +437,157 @@
                 margin-bottom: 1rem;
             }
 
-            li {
-                margin-bottom: 0.5rem;
+            .info-item {
+                margin-bottom: 1.5rem;
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
             }
         }
 
+        // Biometric appointment section
+        .appointment-section {
+            .appointment-card {
+                border: none;
+                border-radius: 12px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+                .card-header {
+                    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+                    color: white;
+                    border-radius: 12px 12px 0 0;
+                    padding: 1.5rem;
+
+                    h5 {
+                        margin: 0;
+                        font-weight: 600;
+                    }
+                }
+
+                .card-body {
+                    padding: 2rem;
+
+                    .appointment-detail {
+                        margin-bottom: 1rem;
+                        display: flex;
+                        align-items: center;
+                        padding: 0.5rem 0;
+
+                        i {
+                            width: 20px;
+                        }
+
+                        strong {
+                            color: var(--primary-color);
+                            margin-left: 0.5rem;
+                            margin-right: 0.5rem;
+                        }
+                    }
+                }
+            }
+        }
+
+        .biometric-process-info {
+            .process-steps {
+                .process-step {
+                    display: flex;
+                    align-items: flex-start;
+                    margin-bottom: 1.5rem;
+                    padding: 1rem;
+                    background: #f8f9fa;
+                    border-radius: 8px;
+                    transition: all 0.3s ease;
+
+                    &:hover {
+                        background: rgba(26, 115, 232, 0.05);
+                        transform: translateX(5px);
+                    }
+
+                    .step-number {
+                        width: 30px;
+                        height: 30px;
+                        background: var(--primary-color);
+                        color: white;
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-weight: bold;
+                        margin-right: 1rem;
+                        flex-shrink: 0;
+                        font-size: 0.9rem;
+                    }
+
+                    .step-content {
+                        flex: 1;
+
+                        h6 {
+                            color: var(--primary-color);
+                            font-weight: 600;
+                            margin-bottom: 0.5rem;
+                        }
+
+                        p {
+                            color: #666;
+                            margin: 0;
+                            font-size: 0.9rem;
+                        }
+                    }
+                }
+            }
+        }
+
+        .required-docs-card,
+        .contact-info-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary-color);
+
+            h6 {
+                font-weight: 600;
+                margin-bottom: 1rem;
+                color: var(--primary-color);
+            }
+
+            .docs-checklist {
+                list-style: none;
+                padding: 0;
+
+                li {
+                    margin-bottom: 0.75rem;
+                    display: flex;
+                    align-items: center;
+                    font-size: 0.9rem;
+
+                    i {
+                        margin-right: 0.5rem;
+                        width: 16px;
+                    }
+                }
+            }
+
+            .contact-item {
+                margin-bottom: 1rem;
+                padding-bottom: 1rem;
+                border-bottom: 1px solid #dee2e6;
+
+                &:last-child {
+                    margin-bottom: 0;
+                    padding-bottom: 0;
+                    border-bottom: none;
+                }
+
+                strong {
+                    color: var(--primary-color);
+                    display: block;
+                    margin-bottom: 0.25rem;
+                }
+            }
+        }
+
+        // Confirmation content (adapted from birth certificate style)
         .confirmation-content {
             padding: 3rem 2rem;
 
@@ -253,9 +603,48 @@
 
                 .detail-item {
                     margin-bottom: 1rem;
+                    padding: 0.75rem;
+                    background: white;
+                    border-radius: 8px;
+                    border-left: 4px solid var(--primary-color);
 
                     &:last-child {
                         margin-bottom: 0;
+                    }
+
+                    strong {
+                        color: var(--primary-color);
+                    }
+                }
+            }
+
+            .collection-section {
+                .collection-card {
+                    background: white;
+                    border: 2px solid var(--primary-color);
+                    border-radius: 12px;
+                    padding: 2rem;
+                    text-align: center;
+                    margin: 1rem 0;
+
+                    .collection-header {
+                        margin-bottom: 1rem;
+
+                        h6 {
+                            color: var(--primary-color);
+                            font-weight: 600;
+                            margin-top: 0.5rem;
+                        }
+                    }
+
+                    .collection-details {
+                        p {
+                            margin-bottom: 0.5rem;
+
+                            strong {
+                                color: var(--primary-color);
+                            }
+                        }
                     }
                 }
             }
@@ -276,16 +665,13 @@
         opacity: 0;
         transform: scale(0.3);
     }
-
     50% {
         opacity: 1;
         transform: scale(1.05);
     }
-
     70% {
         transform: scale(0.9);
     }
-
     100% {
         opacity: 1;
         transform: scale(1);
@@ -294,6 +680,10 @@
 
 @media (max-width: 768px) {
     .passport-application-page {
+        .request-type-selection {
+            grid-template-columns: 1fr;
+        }
+
         .progress-steps {
             .step-label {
                 font-size: 0.7rem;
@@ -306,6 +696,76 @@
 
         .documents-grid {
             grid-template-columns: 1fr;
+        }
+
+        .payment-accordion {
+            .accordion-content {
+                &.show {
+                    max-height: 500px;
+                    
+                    &::-webkit-scrollbar {
+                        width: 6px;
+                    }
+                }
+            }
+        }
+
+        .payment-processing-card {
+            margin-bottom: 1rem;
+        }
+
+        .delivery-info-card {
+            margin-top: 1rem;
+        }
+
+        .process-steps {
+            .process-step {
+                flex-direction: column;
+                text-align: center;
+
+                .step-number {
+                    margin-right: 0;
+                    margin-bottom: 1rem;
+                }
+            }
+        }
+
+        .required-docs-card,
+        .contact-info-card {
+            margin-top: 1rem;
+        }
+    }
+}
+
+// Global form styling consistency
+.passport-application-page {
+    .btn-primary {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+        border-radius: 8px;
+        font-weight: 500;
+        padding: 0.75rem 1.5rem;
+        transition: all 0.3s ease;
+
+        &:hover {
+            background-color: var(--primary-color-dark);
+            border-color: var(--primary-color-dark);
+            transform: translateY(-1px);
+        }
+    }
+
+    .btn-success {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+        border-radius: 8px;
+        font-weight: 500;
+        padding: 0.75rem 1.5rem;
+        transition: all 0.3s ease;
+
+        &:hover {
+            background-color: var(--primary-color-dark);
+            border-color: var(--primary-color-dark);
+            transform: translateY(-1px);
         }
     }
 }

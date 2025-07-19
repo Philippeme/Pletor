@@ -1,12 +1,20 @@
-import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {ActivatedRoute, Router} from '@angular/router';
-import {TranslateService} from '@ngx-translate/core';
-import {ApplicationService} from '../../services/application.service';
-import {AuthService} from '../../services/auth.service';
-import {Application, ApplicationStatus, PaymentMethod, PaymentStatus} from '../../models/application.model';
-import {ApplicantType} from '../../models/service.model';
-import {ApiService} from "../../services/api.service";
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import { ApplicationService } from '../../services/application.service';
+import { AuthService } from '../../services/auth.service';
+import { Application, ApplicationStatus, PaymentMethod, PaymentStatus } from '../../models/application.model';
+import { ApplicantType } from '../../models/service.model';
+import { ApiService } from "../../services/api.service";
+
+interface BiometricAppointment {
+  center: string;
+  date: Date;
+  time: string;
+  reference: string;
+  phone: string;
+}
 
 @Component({
   selector: 'app-passport-application',
@@ -16,9 +24,10 @@ import {ApiService} from "../../services/api.service";
 export class PassportApplicationComponent implements OnInit {
   application: Application | null = null;
   passportForm: FormGroup;
+  biometricForm: FormGroup;
   request: any;
   currentStep = 1;
-  totalSteps = 5;
+  totalSteps = 6;
   isLoading = false;
   isSubmitting = false;
   errorMessage = '';
@@ -27,20 +36,43 @@ export class PassportApplicationComponent implements OnInit {
   // File upload properties
   uploadedFiles: { [key: string]: File } = {};
   requiredDocuments = [
-    {id: 'birth_certificate', name: 'Certified Copy of Birth Certificate', required: true},
-    {id: 'national_id', name: 'National Identity Card Copy', required: true},
-    {id: 'passport_photos', name: '12 Passport Photos', required: true},
-    {id: 'residence_proof', name: 'Proof of Residence', required: true},
-    {id: 'marriage_certificate', name: 'Marriage Certificate (if married)', required: false}
+    { id: 'birth_certificate', name: 'Certified Copy of Birth Certificate', required: true },
+    { id: 'national_id', name: 'National Identity Card Copy', required: true },
+    { id: 'passport_photos', name: '12 Passport Photos', required: true },
+    { id: 'residence_proof', name: 'Proof of Residence', required: true },
+    { id: 'marriage_certificate', name: 'Marriage Certificate (if married)', required: false }
   ];
+
+  // Payment processing states
+  isProcessingPayment = false;
+  paymentVerificationComplete = false;
+  paymentStatusPending = false;
+  hasPaymentCompleted = false;
+  showRefreshButton = false;
+  paymentProcessingStartTime = 0;
+
+  // Accordion states
+  activePaymentMethod = '';
+  showMtnAccordion = false;
+  showOrangeAccordion = false;
+  showVisaAccordion = false;
 
   // Payment properties
   selectedPaymentMethod: PaymentMethod = PaymentMethod.MTN_MONEY;
   paymentMethods = [
-    {value: PaymentMethod.MTN_MONEY, label: 'MTN Mobile Money', icon: 'fas fa-mobile-alt'},
-    {value: PaymentMethod.ORANGE_MONEY, label: 'Orange Money', icon: 'fas fa-mobile-alt'},
-    {value: PaymentMethod.CREDIT_CARD, label: 'Credit Card', icon: 'fas fa-credit-card'},
+    { value: PaymentMethod.MTN_MONEY, label: 'MTN Mobile Money', icon: 'fas fa-mobile-alt' },
+    { value: PaymentMethod.ORANGE_MONEY, label: 'Orange Money', icon: 'fas fa-mobile-alt' },
+    { value: PaymentMethod.CREDIT_CARD, label: 'Visa Credit Card', icon: 'fas fa-credit-card' }
   ];
+
+  // Payment forms
+  mtnForm: FormGroup;
+  orangeForm: FormGroup;
+  visaForm: FormGroup;
+
+  // Biometric appointment
+  biometricAppointment: BiometricAppointment | null = null;
+  isBookingAppointment = false;
 
   constructor(
     private fb: FormBuilder,
@@ -52,13 +84,18 @@ export class PassportApplicationComponent implements OnInit {
     private translate: TranslateService
   ) {
     this.passportForm = this.fb.group({
+      // Request type (new)
+      requestType: ['self', Validators.required],
+      relationshipToApplicant: [''],
+      guardianPhone: [''],
+
       // Personal Information
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       middleName: [''],
       dateOfBirth: ['', Validators.required],
       placeOfBirth: ['', Validators.required],
-      nationality: [' Bissau-Guinean', Validators.required],
+      nationality: ['Bissau-Guinean', Validators.required],
       gender: ['', Validators.required],
       maritalStatus: ['', Validators.required],
 
@@ -83,6 +120,39 @@ export class PassportApplicationComponent implements OnInit {
       collectionMethod: ['pickup', Validators.required],
       collectionAddress: ['']
     });
+
+    // MTN Mobile Money form
+    this.mtnForm = this.fb.group({
+      phoneNumber: ['', [Validators.required, Validators.pattern(/^(237)?6[0-9]{8}$/)]],
+      merchantCode: [{ value: '634826', disabled: true }],
+      transactionId: ['', [Validators.required, Validators.pattern(/^[0-9]{11}$/)]],
+      amount: [{ value: '', disabled: true }, Validators.required]
+    });
+
+    // Orange Money form
+    this.orangeForm = this.fb.group({
+      phoneNumber: ['', [Validators.required, Validators.pattern(/^(237)?6[0-9]{8}$/)]],
+      merchantCode: [{ value: '78945', disabled: true }],
+      transactionId: ['', [Validators.required, Validators.pattern(/^[A-Z]{2}[0-9]{6}\.[0-9]{4}\.[A-Z][0-9]{5}$/)]],
+      amount: [{ value: '', disabled: true }, Validators.required]
+    });
+
+    // Visa Credit Card form
+    this.visaForm = this.fb.group({
+      cardNumber: ['', [Validators.required, this.creditCardValidator]],
+      expiryDate: ['', [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/[0-9]{2}$/)]],
+      cvv: ['', [Validators.required, Validators.pattern(/^[0-9]{3}$/)]],
+      cardholderName: ['', Validators.required],
+      amount: [{ value: '', disabled: true }, Validators.required]
+    });
+
+    // Biometric appointment form
+    this.biometricForm = this.fb.group({
+      enrollmentCenter: ['', Validators.required],
+      appointmentDate: ['', Validators.required],
+      appointmentTime: ['', Validators.required],
+      contactPhone: ['', Validators.required]
+    });
   }
 
   ngOnInit(): void {
@@ -95,6 +165,15 @@ export class PassportApplicationComponent implements OnInit {
     });
 
     this.prefillUserData();
+    this.onRequestTypeChange();
+    this.updatePaymentAmounts();
+  }
+
+  private updatePaymentAmounts(): void {
+    const amount = this.calculateTotalAmount();
+    this.mtnForm.patchValue({ amount: amount });
+    this.orangeForm.patchValue({ amount: amount });
+    this.visaForm.patchValue({ amount: amount });
   }
 
   private loadApplication(applicationId: string): void {
@@ -116,7 +195,7 @@ export class PassportApplicationComponent implements OnInit {
     const currentUser = this.authService.getCurrentUser();
     if (currentUser) {
       this.applicationService.createApplication(
-        1, // passport service ID (numeric)
+        1,
         'Passport Application',
         ApplicantType.SELF,
         currentUser.id!
@@ -140,6 +219,16 @@ export class PassportApplicationComponent implements OnInit {
         email: currentUser.email,
         firstName: currentUser.firstName || '',
         lastName: currentUser.lastName || ''
+      });
+
+      // Prefill contact phone for biometric form
+      this.biometricForm.patchValue({
+        contactPhone: currentUser.phoneNumber
+      });
+
+      // Prefill cardholder name for Visa form
+      this.visaForm.patchValue({
+        cardholderName: `${currentUser.firstName || ''} ${currentUser.lastName || ''}`.trim()
       });
     }
   }
@@ -165,6 +254,39 @@ export class PassportApplicationComponent implements OnInit {
     }
   }
 
+  // Request type change handler
+  onRequestTypeChange(): void {
+    const requestType = this.passportForm.get('requestType')?.value;
+    const currentUser = this.authService.getCurrentUser();
+
+    if (requestType === 'self' && currentUser) {
+      this.passportForm.patchValue({
+        firstName: currentUser.firstName || '',
+        lastName: currentUser.lastName || '',
+        email: currentUser.email
+      });
+      
+      // Clear child-specific fields
+      this.passportForm.patchValue({
+        relationshipToApplicant: '',
+        guardianPhone: ''
+      });
+    } else if (requestType === 'child') {
+      // Set validation for child-specific fields
+      this.passportForm.get('relationshipToApplicant')?.setValidators([Validators.required]);
+      this.passportForm.get('guardianPhone')?.setValidators([Validators.required]);
+    }
+    
+    this.passportForm.get('relationshipToApplicant')?.updateValueAndValidity();
+    this.passportForm.get('guardianPhone')?.updateValueAndValidity();
+  }
+
+  // Get section title based on request type
+  getPersonSectionTitle(): string {
+    const requestType = this.passportForm.get('requestType')?.value;
+    return requestType === 'self' ? 'Your Information' : 'Child\'s Information';
+  }
+
   nextStep(): void {
     if (this.currentStep < this.totalSteps) {
       if (this.validateCurrentStep()) {
@@ -182,7 +304,10 @@ export class PassportApplicationComponent implements OnInit {
   private validateCurrentStep(): boolean {
     switch (this.currentStep) {
       case 1: // Personal Information
-        const personalFields = ['firstName', 'lastName', 'dateOfBirth', 'placeOfBirth', 'gender', 'maritalStatus'];
+        const personalFields = ['requestType', 'firstName', 'lastName', 'dateOfBirth', 'placeOfBirth', 'gender', 'maritalStatus'];
+        if (this.passportForm.get('requestType')?.value === 'child') {
+          personalFields.push('relationshipToApplicant', 'guardianPhone');
+        }
         return this.validateFields(personalFields);
       case 2: // Contact & Emergency Information
         const contactFields = ['phoneNumber', 'email', 'currentAddress', 'permanentAddress',
@@ -207,7 +332,6 @@ export class PassportApplicationComponent implements OnInit {
     return isValid;
   }
 
-  // Rendre cette méthode publique pour l'utiliser dans le template
   validateDocumentUploads(): boolean {
     const requiredDocs = this.requiredDocuments.filter(doc => doc.required);
     const uploadedRequiredDocs = requiredDocs.filter(doc => this.uploadedFiles[doc.id]);
@@ -243,34 +367,35 @@ export class PassportApplicationComponent implements OnInit {
     if (this.passportForm.valid && this.application) {
       this.isSubmitting = true;
       this.errorMessage = '';
-      const body: any = this.passportForm.value
-      //procedure_id most be the value of current procedure
-      this.apiService.post<any>('/requests', {...body, procedure_id: 1}).subscribe({
+      const body: any = this.passportForm.value;
+      
+      this.apiService.post<any>('/requests', { ...body, procedure_id: 1 }).subscribe({
         next: (data: any) => {
           this.isLoading = false;
           this.request = data;
-          const requestId = data.id; // ← récupération de l'ID
-          const formData:any = new FormData();
+          const requestId = data.id;
+          const formData: any = new FormData();
           Object.keys(this.uploadedFiles).forEach(key => {
             formData.append(key, this.uploadedFiles[key]);
           });
           this.apiService.post(`/requests/${requestId}/upload`, formData).subscribe({
-            next: () => alert('Files uploaded successfully'),
-            error: err => console.error('Upload failed', err)
+            next: () => {
+              this.isSubmitting = false;
+              this.successMessage = 'Application submitted successfully!';
+              this.currentStep = 4; // Move to payment step
+            },
+            error: err => {
+              this.isSubmitting = false;
+              console.error('Upload failed', err);
+            }
           });
         },
         error: err => {
           this.isLoading = false;
+          this.isSubmitting = false;
           console.error('Request creation failed', err);
         }
       });
-      // Simulate form submission
-      setTimeout(() => {
-        this.application!.status = ApplicationStatus.SUBMITTED;
-        this.isSubmitting = false;
-        this.successMessage = 'Application submitted successfully!';
-        this.currentStep = 4; // Move to payment step
-      }, 2000);
     } else {
       this.markFormGroupTouched();
     }
@@ -289,7 +414,7 @@ export class PassportApplicationComponent implements OnInit {
   copyTrackingNumber(): void {
     if (this.application?.trackingNumber) {
       navigator.clipboard.writeText(this.application.trackingNumber).then(() => {
-        
+        this.successMessage = 'Tracking number copied to clipboard!';
         setTimeout(() => {
           this.successMessage = '';
         }, 2000);
@@ -300,57 +425,231 @@ export class PassportApplicationComponent implements OnInit {
         textArea.select();
         document.execCommand('copy');
         document.body.removeChild(textArea);
-        
+        this.successMessage = 'Tracking number copied to clipboard!';
         setTimeout(() => {
           this.successMessage = '';
         }, 2000);
       });
 
       const button = document.querySelector('.tracking-info .btn i') as HTMLElement;
-        if (button) {
-          button.className = 'fas fa-check';
-          // Reset icon after 2 seconds
-          setTimeout(() => {
-            button.className = 'fas fa-copy';
-          }, 2000);
-        }
+      if (button) {
+        button.className = 'fas fa-check';
+        setTimeout(() => {
+          button.className = 'fas fa-copy';
+        }, 2000);
+      }
     }
   }
 
-  onPayment(): void {
-    if (this.application) {
-      this.isLoading = true;
+  // Payment accordion methods
+  togglePaymentAccordion(method: string): void {
+    if (this.hasPaymentCompleted) {
+      return;
+    }
+
+    if (method === 'mtn') {
+      this.showMtnAccordion = !this.showMtnAccordion;
+      this.showOrangeAccordion = false;
+      this.showVisaAccordion = false;
+      this.activePaymentMethod = this.showMtnAccordion ? 'mtn' : '';
+    } else if (method === 'orange') {
+      this.showOrangeAccordion = !this.showOrangeAccordion;
+      this.showMtnAccordion = false;
+      this.showVisaAccordion = false;
+      this.activePaymentMethod = this.showOrangeAccordion ? 'orange' : '';
+    } else if (method === 'visa') {
+      this.showVisaAccordion = !this.showVisaAccordion;
+      this.showMtnAccordion = false;
+      this.showOrangeAccordion = false;
+      this.activePaymentMethod = this.showVisaAccordion ? 'visa' : '';
+    }
+  }
+
+  // MTN Mobile Money payment process
+  processMtnPayment(): void {
+    if (this.mtnForm.invalid) {
+      this.markFormGroupTouched(this.mtnForm);
+      return;
+    }
+
+    this.selectedPaymentMethod = PaymentMethod.MTN_MONEY;
+    this.initiatePaymentProcess();
+  }
+
+  // Orange Money payment process
+  processOrangePayment(): void {
+    if (this.orangeForm.invalid) {
+      this.markFormGroupTouched(this.orangeForm);
+      return;
+    }
+
+    this.selectedPaymentMethod = PaymentMethod.ORANGE_MONEY;
+    this.initiatePaymentProcess();
+  }
+
+  // Visa Credit Card payment process
+  processVisaPayment(): void {
+    if (this.visaForm.invalid) {
+      this.markFormGroupTouched(this.visaForm);
+      return;
+    }
+
+    this.selectedPaymentMethod = PaymentMethod.CREDIT_CARD;
+    this.initiatePaymentProcess();
+  }
+
+  private initiatePaymentProcess(): void {
+    this.isProcessingPayment = true;
+    this.showRefreshButton = true;
+    this.paymentProcessingStartTime = Date.now();
+    this.errorMessage = '';
+    this.successMessage = 'Payment processing initiated. Please wait...';
+  }
+
+  refreshPaymentStatus(): void {
+    const elapsedTime = Date.now() - this.paymentProcessingStartTime;
+    
+    if (elapsedTime >= 40000) { // 40 seconds have passed
+      this.isProcessingPayment = false;
+      this.showRefreshButton = false;
+      this.hasPaymentCompleted = true;
+      this.paymentVerificationComplete = true;
+      this.paymentStatusPending = false;
+      
+      // Close all accordions
+      this.showMtnAccordion = false;
+      this.showOrangeAccordion = false;
+      this.showVisaAccordion = false;
+      this.activePaymentMethod = '';
+      
+      this.completePaymentProcess();
+    } else {
+      const remainingTime = Math.ceil((40000 - elapsedTime) / 1000);
+      this.successMessage = `Payment is still processing. Please wait ${remainingTime} more seconds before refreshing.`;
+    }
+  }
+
+  private completePaymentProcess(): void {
+    if (!this.application) return;
+
+    const totalAmount = this.calculateTotalAmount();
+
+    this.applicationService.simulatePayment(
+      this.application.id,
+      totalAmount,
+      this.selectedPaymentMethod
+    ).subscribe({
+      next: (payment) => {
+        payment.status = PaymentStatus.COMPLETED;
+        this.application!.status = ApplicationStatus.PROCESSING;
+        
+        // Also update via API
+        this.apiService.patch(`/requests/${this.request.id}/status`, {
+          paymentStatus: PaymentStatus.COMPLETED,
+          status: PaymentStatus.COMPLETED,
+          paidAmount: totalAmount
+        }).subscribe({
+          next: () => {
+            this.successMessage = 'Payment completed successfully!';
+          },
+          error: (error: any) => {
+            console.error('Payment status update failed:', error);
+          }
+        });
+      },
+      error: (error) => {
+        this.isProcessingPayment = false;
+        this.errorMessage = 'Payment processing failed. Please try again.';
+        console.error('Payment error:', error);
+      }
+    });
+  }
+
+  private markFormGroupTouched(formGroup: FormGroup): void {
+    Object.keys(formGroup.controls).forEach(key => {
+      const control = formGroup.get(key);
+      if (control) {
+        control.markAsTouched();
+      }
+    });
+  }
+
+  // Move to biometric step after payment
+  proceedToBiometric(): void {
+    if (this.paymentVerificationComplete) {
+      this.currentStep = 5;
+    }
+  }
+
+  // Biometric appointment methods
+  getMinAppointmentDate(): string {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    return tomorrow.toISOString().split('T')[0];
+  }
+
+  bookBiometricAppointment(): void {
+    if (this.biometricForm.valid) {
+      this.isBookingAppointment = true;
       this.errorMessage = '';
 
-      this.applicationService.simulatePayment(
-        this.application.id,
-        110000, // Passport fee in XAF
-        this.selectedPaymentMethod
-      ).subscribe({
-        next: (payment) => {
-          //paidAmount
-          //Most be the value of the total cost of the current procedure
+      // Simulate appointment booking
+      setTimeout(() => {
+        this.biometricAppointment = {
+          center: this.biometricForm.get('enrollmentCenter')?.value,
+          date: new Date(this.biometricForm.get('appointmentDate')?.value),
+          time: this.biometricForm.get('appointmentTime')?.value,
+          reference: 'DGSN-' + Date.now().toString().slice(-8),
+          phone: this.biometricForm.get('contactPhone')?.value
+        };
+        
+        this.isBookingAppointment = false;
+        this.successMessage = 'Biometric appointment booked successfully!';
+        
+        setTimeout(() => {
+          this.successMessage = '';
+        }, 3000);
+      }, 2000);
+    } else {
+      this.markFormGroupTouched(this.biometricForm);
+    }
+  }
 
-          this.isLoading = false;
-          this.apiService.patch(`/requests/${this.request.id}/status`, {paymentStatus:PaymentStatus.COMPLETED,status:PaymentStatus.COMPLETED,paidAmount:110000}).subscribe({
-            next: () => {
-              this.successMessage = 'Payment completed successfully!';
-              this.currentStep = 5; // Move to confirmation step
-            },
-            error: (error:any) => {
-              this.isLoading = false;
-              this.errorMessage = 'Payment failed. Please try again.';
-            }
-          });
-        },
-      });
+  changeAppointment(): void {
+    this.biometricAppointment = null;
+    this.biometricForm.reset();
+  }
+
+  getEnrollmentCenterName(centerCode: string): string {
+    const centers: { [key: string]: string } = {
+      'bissau-central': 'DGSN Bissau - Central Office',
+      'bissau-airport': 'DGSN Bissau - Airport Office',
+      'bafata': 'DGSN Bafatá Regional Office',
+      'gabu': 'DGSN Gabú Regional Office',
+      'cacheu': 'DGSN Cacheu Regional Office'
+    };
+    return centers[centerCode] || centerCode;
+  }
+
+  formatAppointmentDate(date: Date): string {
+    return date.toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  }
+
+  proceedToCollection(): void {
+    if (this.biometricAppointment) {
+      this.currentStep = 6;
     }
   }
 
   goToTracking(): void {
     if (this.application) {
       this.router.navigate(['/search-files'], {
-        queryParams: {trackingNumber: this.application.trackingNumber}
+        queryParams: { trackingNumber: this.application.trackingNumber }
       });
     }
   }
@@ -365,5 +664,115 @@ export class PassportApplicationComponent implements OnInit {
       age--;
     }
     return age;
+  }
+
+  calculateTotalAmount(): number {
+    return 110000; // Passport fee in XAF
+  }
+
+  // Payment method helpers
+  arePaymentMethodsDisabled(): boolean {
+    return this.hasPaymentCompleted;
+  }
+
+  // Custom validator for credit card
+  creditCardValidator(control: any) {
+    const value = control.value;
+    if (!value) return null;
+    
+    const cleanValue = value.replace(/\s/g, '');
+    const isValid = /^[0-9]{16}$/.test(cleanValue);
+    
+    return isValid ? null : { creditCard: true };
+  }
+
+  // Auto-format Visa card number with spaces
+  onCardNumberInput(event: any): void {
+    let value = event.target.value.replace(/\D/g, '');
+    
+    if (value.length > 16) {
+      value = value.substring(0, 16);
+    }
+    
+    const formattedValue = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+    
+    this.visaForm.patchValue({ cardNumber: value });
+    event.target.value = formattedValue;
+  }
+
+  onCardNumberKeypress(event: KeyboardEvent): boolean {
+    const charCode = event.which ? event.which : event.keyCode;
+    if ([8, 9, 27, 13, 46].indexOf(charCode) !== -1 ||
+        (charCode === 65 && event.ctrlKey) ||
+        (charCode === 67 && event.ctrlKey) ||
+        (charCode === 86 && event.ctrlKey) ||
+        (charCode === 88 && event.ctrlKey)) {
+      return true;
+    }
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+      return false;
+    }
+    return true;
+  }
+
+  onExpiryDateInput(event: any): void {
+    let value = event.target.value.replace(/\D/g, '');
+    
+    if (value.length > 4) {
+      value = value.substring(0, 4);
+    }
+    
+    if (value.length >= 2) {
+      const month = parseInt(value.substring(0, 2), 10);
+      if (month >= 1 && month <= 12) {
+        value = value.substring(0, 2) + '/' + value.substring(2);
+      } else {
+        value = value.substring(0, 1);
+      }
+    }
+    
+    this.visaForm.patchValue({ expiryDate: value });
+    event.target.value = value;
+  }
+
+  onExpiryDateKeypress(event: KeyboardEvent): boolean {
+    const charCode = event.which ? event.which : event.keyCode;
+    if ([8, 9, 27, 13, 46].indexOf(charCode) !== -1 ||
+        (charCode === 65 && event.ctrlKey) ||
+        (charCode === 67 && event.ctrlKey) ||
+        (charCode === 86 && event.ctrlKey) ||
+        (charCode === 88 && event.ctrlKey)) {
+      return true;
+    }
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+      return false;
+    }
+    return true;
+  }
+
+  onCvvKeypress(event: KeyboardEvent): boolean {
+    const input = event.target as HTMLInputElement;
+    const charCode = event.which ? event.which : event.keyCode;
+    
+    if ([8, 9, 27, 13, 46].indexOf(charCode) !== -1 ||
+        (charCode === 65 && event.ctrlKey) ||
+        (charCode === 67 && event.ctrlKey) ||
+        (charCode === 86 && event.ctrlKey) ||
+        (charCode === 88 && event.ctrlKey)) {
+      return true;
+    }
+    
+    if (input.value.length >= 3) {
+      event.preventDefault();
+      return false;
+    }
+    
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+      return false;
+    }
+    return true;
   }
 }

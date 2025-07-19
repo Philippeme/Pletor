@@ -9,7 +9,7 @@
                         <i class="fas fa-passport me-3"></i>
                         Passport Application
                     </h1>
-                    <p class="text-muted">Apply for a Cameroonian passport online</p>
+                    <p class="text-muted">Apply for a Bissau-Guinean biometric passport online</p>
                 </div>
                 <div class="col-md-4 text-md-end">
                     <div class="tracking-info" *ngIf="application">
@@ -51,15 +51,14 @@
                     <span class="step-label">Payment</span>
                 </div>
                 <div class="step-line" [class.completed]="currentStep > 4"></div>
-                
                 <div class="step" [class.active]="currentStep >= 5" [class.completed]="currentStep > 5">
                     <div class="step-circle">5</div>
-                    <span class="step-label">Confirm Biometric identification</span>
+                    <span class="step-label">Biometric Enrollment</span>
                 </div>
-                <div class="step-line" [class.completed]="currentStep > 6"></div>
-                <div class="step" [class.active]="currentStep >= 6" [class.completed]="currentStep > 6">
+                <div class="step-line" [class.completed]="currentStep > 5"></div>
+                <div class="step" [class.active]="currentStep >= 6">
                     <div class="step-circle">6</div>
-                    <span class="step-label">Passport collection</span>
+                    <span class="step-label">Collection</span>
                 </div>
             </div>
         </div>
@@ -84,10 +83,40 @@
                 <div class="form-step" *ngIf="currentStep === 1">
                     <div class="step-header mb-4">
                         <h3>Personal Information</h3>
-                        <p class="text-muted">Please provide your personal details as they appear on your birth
-                            certificate</p>
+                        <p class="text-muted">Provide personal details as they appear on your birth certificate</p>
                     </div>
 
+                    <!-- Request Type -->
+                    <div class="mb-4">
+                        <label class="form-label">Who is this request for? *</label>
+                        <div class="request-type-selection">
+                            <div class="form-check form-check-card">
+                                <input class="form-check-input" type="radio" value="self" formControlName="requestType"
+                                    id="self" (change)="onRequestTypeChange()">
+                                <label class="form-check-label" for="self">
+                                    <div class="card-content">
+                                        <i class="fas fa-user fa-2x mb-2"></i>
+                                        <h6>For Myself</h6>
+                                        <small class="text-muted">My own passport</small>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="form-check form-check-card">
+                                <input class="form-check-input" type="radio" value="child" formControlName="requestType"
+                                    id="child" (change)="onRequestTypeChange()">
+                                <label class="form-check-label" for="child">
+                                    <div class="card-content">
+                                        <i class="fas fa-child fa-2x mb-2"></i>
+                                        <h6>For My Child</h6>
+                                        <small class="text-muted">Child under 18 years</small>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Personal Information -->
+                    <h5 class="mb-3">{{ getPersonSectionTitle() }}</h5>
                     <div class="row">
                         <div class="col-md-4 mb-3">
                             <label class="form-label">First Name *</label>
@@ -151,6 +180,22 @@
                                 <option value="Widowed">Widowed</option>
                             </select>
                             <div class="invalid-feedback">Marital status is required</div>
+                        </div>
+                    </div>
+
+                    <!-- Relationship section for non-self applications -->
+                    <div class="row" *ngIf="passportForm.get('requestType')?.value === 'child'">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Relationship to Applicant *</label>
+                            <select class="form-select" formControlName="relationshipToApplicant">
+                                <option value="">Select Relationship</option>
+                                <option value="Parent">Parent</option>
+                                <option value="Guardian">Legal Guardian</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Guardian's Phone Number *</label>
+                            <input type="tel" class="form-control" formControlName="guardianPhone">
                         </div>
                     </div>
                 </div>
@@ -287,58 +332,632 @@
                                 <h5>Payment Summary</h5>
                                 <div class="fee-item">
                                     <div class="d-flex justify-content-between">
-                                        <span>Passport Application Fee</span>
-                                        <strong>110,000 XAF</strong>
+                                        <span>Biometric Passport Application Fee</span>
+                                        <span>110,000 XAF</span>
                                     </div>
                                 </div>
                                 <hr>
                                 <div class="total-amount">
                                     <div class="d-flex justify-content-between">
                                         <strong>Total Amount</strong>
-                                        <strong class="text-primary">110,000 XAF</strong>
+                                        <strong class="text-primary">{{ calculateTotalAmount() }} XAF</strong>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="payment-methods">
+                            <!-- Payment Already Completed Message -->
+                            <div class="alert alert-info mb-4" *ngIf="hasPaymentCompleted">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-check-circle fa-2x text-success me-3"></i>
+                                    <div>
+                                        <h6 class="mb-1">Payment Completed Successfully!</h6>
+                                        <p class="mb-0">Your payment has been processed. Please proceed to the next step to schedule your biometric enrollment.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Payment Methods with Accordions -->
+                            <div class="payment-methods" *ngIf="!hasPaymentCompleted">
                                 <h5 class="mb-3">Select Payment Method</h5>
-                                <div class="payment-options">
-                                    <div class="payment-option" *ngFor="let method of paymentMethods">
-                                        <input type="radio" [id]="'payment-' + method.value"
-                                            [(ngModel)]="selectedPaymentMethod" [value]="method.value"
-                                            [ngModelOptions]="{standalone: true}">
-                                        <label [for]="'payment-' + method.value" class="payment-label">
-                                            <i [class]="method.icon" class="me-3"></i>
-                                            {{ method.label }}
-                                        </label>
+                                
+                                <!-- MTN Mobile Money -->
+                                <div class="payment-accordion mb-3" [class.disabled]="arePaymentMethodsDisabled()">
+                                    <div class="accordion-header" (click)="togglePaymentAccordion('mtn')">
+                                        <div class="payment-method-option">
+                                            <input type="radio" name="paymentMethod" value="mtn" 
+                                                [checked]="activePaymentMethod === 'mtn'" [disabled]="arePaymentMethodsDisabled()">
+                                            <i class="fas fa-mobile-alt me-3"></i>
+                                            <span>MTN Mobile Money</span>
+                                            <i class="fas fa-chevron-down ms-auto" 
+                                                [class.rotated]="showMtnAccordion"></i>
+                                        </div>
+                                    </div>
+                                    <div class="accordion-content" [class.show]="showMtnAccordion">
+                                        <!-- MTN Payment Instructions -->
+                                        <div class="payment-instructions mb-3">
+                                            <h6 class="text-primary">
+                                                <i class="fas fa-info-circle me-2"></i>
+                                                MTN Mobile Money Payment Process
+                                            </h6>
+                                            <div class="instruction-steps">
+                                                <div class="step-item">
+                                                    <strong>Step 1:</strong> Dial <code>*126#</code> on your MTN line
+                                                </div>
+                                                <div class="step-item">
+                                                    <strong>Step 2:</strong> Select "2" for Bill Payment
+                                                </div>
+                                                <div class="step-item">
+                                                    <strong>Step 3:</strong> Enter the 6-digit merchant code
+                                                </div>
+                                                <div class="step-item">
+                                                    <strong>Step 4:</strong> Enter payment amount: <strong>{{ calculateTotalAmount() }} XAF</strong>
+                                                </div>
+                                                <div class="step-item">
+                                                    <strong>Step 5:</strong> Enter the transaction ID from your SMS confirmation
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <form [formGroup]="mtnForm">
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">MTN Phone Number *</label>
+                                                    <input type="tel" class="form-control" formControlName="phoneNumber"
+                                                        placeholder="6XXXXXXXX"
+                                                        [class.is-invalid]="mtnForm.get('phoneNumber')?.invalid && mtnForm.get('phoneNumber')?.touched">
+                                                    <div class="invalid-feedback">
+                                                        <small *ngIf="mtnForm.get('phoneNumber')?.errors?.['required']">
+                                                            MTN phone number is required
+                                                        </small>
+                                                        <small *ngIf="mtnForm.get('phoneNumber')?.errors?.['pattern']">
+                                                            Please enter a valid MTN number (6XXXXXXXX)
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Merchant Code</label>
+                                                    <input type="text" class="form-control" formControlName="merchantCode"
+                                                        readonly>
+                                                    <small class="form-text text-muted">Fixed merchant code for MK Gov services</small>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Amount</label>
+                                                    <input type="text" class="form-control" formControlName="amount"
+                                                        readonly>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Transaction ID *</label>
+                                                    <input type="text" class="form-control" formControlName="transactionId"
+                                                        placeholder="e.g., 11104326398"
+                                                        [class.is-invalid]="mtnForm.get('transactionId')?.invalid && mtnForm.get('transactionId')?.touched">
+                                                    <div class="invalid-feedback">
+                                                        <small *ngIf="mtnForm.get('transactionId')?.errors?.['required']">
+                                                            Transaction ID is required
+                                                        </small>
+                                                        <small *ngIf="mtnForm.get('transactionId')?.errors?.['pattern']">
+                                                            Transaction ID must be 11 digits
+                                                        </small>
+                                                    </div>
+                                                    <small class="form-text text-muted">Enter the 11-digit transaction ID from MTN confirmation SMS</small>
+                                                </div>
+                                            </div>
+
+                                            <button type="button" class="btn btn-warning" 
+                                                [disabled]="isProcessingPayment || mtnForm.invalid"
+                                                (click)="processMtnPayment()">
+                                                <span *ngIf="isProcessingPayment && activePaymentMethod === 'mtn'" 
+                                                    class="spinner-border spinner-border-sm me-2"></span>
+                                                Pay Now
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <!-- Orange Money -->
+                                <div class="payment-accordion mb-3" [class.disabled]="arePaymentMethodsDisabled()">
+                                    <div class="accordion-header" (click)="togglePaymentAccordion('orange')">
+                                        <div class="payment-method-option">
+                                            <input type="radio" name="paymentMethod" value="orange" 
+                                                [checked]="activePaymentMethod === 'orange'" [disabled]="arePaymentMethodsDisabled()">
+                                            <i class="fas fa-mobile-alt me-3"></i>
+                                            <span>Orange Money</span>
+                                            <i class="fas fa-chevron-down ms-auto" 
+                                                [class.rotated]="showOrangeAccordion"></i>
+                                        </div>
+                                    </div>
+                                    <div class="accordion-content" [class.show]="showOrangeAccordion">
+                                        <!-- Orange Payment Instructions -->
+                                        <div class="payment-instructions mb-3">
+                                            <h6 class="text-primary">
+                                                <i class="fas fa-info-circle me-2"></i>
+                                                Orange Money Payment Process
+                                            </h6>
+                                            <div class="instruction-steps">
+                                                <div class="step-item">
+                                                    <strong>Step 1:</strong> Dial <code>#150*47#</code> on your Orange line
+                                                </div>
+                                                <div class="step-item">
+                                                    <strong>Step 2:</strong> Enter the merchant code when prompted
+                                                </div>
+                                                <div class="step-item">
+                                                    <strong>Step 3:</strong> Enter payment amount: <strong>{{ calculateTotalAmount() }} XAF</strong>
+                                                </div>
+                                                <div class="step-item">
+                                                    <strong>Step 4:</strong> Enter the transaction ID from your SMS confirmation
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <form [formGroup]="orangeForm">
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Orange Phone Number *</label>
+                                                    <input type="tel" class="form-control" formControlName="phoneNumber"
+                                                        placeholder="6XXXXXXXX"
+                                                        [class.is-invalid]="orangeForm.get('phoneNumber')?.invalid && orangeForm.get('phoneNumber')?.touched">
+                                                    <div class="invalid-feedback">
+                                                        <small *ngIf="orangeForm.get('phoneNumber')?.errors?.['required']">
+                                                            Orange phone number is required
+                                                        </small>
+                                                        <small *ngIf="orangeForm.get('phoneNumber')?.errors?.['pattern']">
+                                                            Please enter a valid Orange number (6XXXXXXXX)
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Merchant Code</label>
+                                                    <input type="text" class="form-control" formControlName="merchantCode"
+                                                        readonly>
+                                                    <small class="form-text text-muted">Fixed merchant code for MK Gov services</small>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Amount</label>
+                                                    <input type="text" class="form-control" formControlName="amount"
+                                                        readonly>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Transaction ID *</label>
+                                                    <input type="text" class="form-control" formControlName="transactionId"
+                                                        placeholder="e.g., AB123456.1234.X12345"
+                                                        [class.is-invalid]="orangeForm.get('transactionId')?.invalid && orangeForm.get('transactionId')?.touched">
+                                                    <div class="invalid-feedback">
+                                                        <small *ngIf="orangeForm.get('transactionId')?.errors?.['required']">
+                                                            Transaction ID is required
+                                                        </small>
+                                                        <small *ngIf="orangeForm.get('transactionId')?.errors?.['pattern']">
+                                                            Transaction ID format: AB123456.1234.X12345
+                                                        </small>
+                                                    </div>
+                                                    <small class="form-text text-muted">Enter the transaction ID from Orange confirmation SMS</small>
+                                                </div>
+                                            </div>
+
+                                            <button type="button" class="btn btn-warning" 
+                                                [disabled]="isProcessingPayment || orangeForm.invalid"
+                                                (click)="processOrangePayment()">
+                                                <span *ngIf="isProcessingPayment && activePaymentMethod === 'orange'" 
+                                                    class="spinner-border spinner-border-sm me-2"></span>
+                                                Pay Now
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <!-- Visa Credit Card -->
+                                <div class="payment-accordion mb-3" [class.disabled]="arePaymentMethodsDisabled()">
+                                    <div class="accordion-header" (click)="togglePaymentAccordion('visa')">
+                                        <div class="payment-method-option">
+                                            <input type="radio" name="paymentMethod" value="visa" 
+                                                [checked]="activePaymentMethod === 'visa'" [disabled]="arePaymentMethodsDisabled()">
+                                            <i class="fas fa-credit-card me-3"></i>
+                                            <span>Visa Credit Card</span>
+                                            <i class="fas fa-chevron-down ms-auto" 
+                                                [class.rotated]="showVisaAccordion"></i>
+                                        </div>
+                                    </div>
+                                    <div class="accordion-content" [class.show]="showVisaAccordion">
+                                        <!-- Visa Payment Instructions -->
+                                        <div class="payment-instructions mb-3">
+                                            <h6 class="text-primary">
+                                                <i class="fas fa-info-circle me-2"></i>
+                                                Visa Credit Card Payment Process
+                                            </h6>
+                                            <div class="instruction-steps">
+                                                <div class="step-item">
+                                                    <strong>Step 1:</strong> Enter your Visa card details below
+                                                </div>
+                                                <div class="step-item">
+                                                    <strong>Step 2:</strong> Verify all information is correct
+                                                </div>
+                                                <div class="step-item">
+                                                    <strong>Step 3:</strong> Click "Pay Now" to process payment
+                                                </div>
+                                                <div class="step-item">
+                                                    <strong>Step 4:</strong> Payment will be processed securely
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <form [formGroup]="visaForm">
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Card Number *</label>
+                                                    <input type="text" class="form-control" formControlName="cardNumber"
+                                                        placeholder="4*** **** **** ****"
+                                                        maxlength="19"
+                                                        (input)="onCardNumberInput($event)"
+                                                        (keypress)="onCardNumberKeypress($event)"
+                                                        [class.is-invalid]="visaForm.get('cardNumber')?.invalid && visaForm.get('cardNumber')?.touched">
+                                                    <div class="invalid-feedback">
+                                                        <small *ngIf="visaForm.get('cardNumber')?.errors?.['required']">
+                                                            Card number is required
+                                                        </small>
+                                                        <small *ngIf="visaForm.get('cardNumber')?.errors?.['creditCard']">
+                                                            Please enter a valid 16-digit card number
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 mb-3">
+                                                    <label class="form-label">Expiry Date *</label>
+                                                    <input type="text" class="form-control" formControlName="expiryDate"
+                                                        placeholder="MM/YY"
+                                                        maxlength="5"
+                                                        (input)="onExpiryDateInput($event)"
+                                                        (keypress)="onExpiryDateKeypress($event)"
+                                                        [class.is-invalid]="visaForm.get('expiryDate')?.invalid && visaForm.get('expiryDate')?.touched">
+                                                    <div class="invalid-feedback">
+                                                        <small *ngIf="visaForm.get('expiryDate')?.errors?.['required']">
+                                                            Expiry date is required
+                                                        </small>
+                                                        <small *ngIf="visaForm.get('expiryDate')?.errors?.['pattern']">
+                                                            Format: MM/YY
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 mb-3">
+                                                    <label class="form-label">CVV *</label>
+                                                    <input type="text" class="form-control" formControlName="cvv"
+                                                        placeholder="123"
+                                                        maxlength="3"
+                                                        (keypress)="onCvvKeypress($event)"
+                                                        [class.is-invalid]="visaForm.get('cvv')?.invalid && visaForm.get('cvv')?.touched">
+                                                    <div class="invalid-feedback">
+                                                        <small *ngIf="visaForm.get('cvv')?.errors?.['required']">
+                                                            CVV is required
+                                                        </small>
+                                                        <small *ngIf="visaForm.get('cvv')?.errors?.['pattern']">
+                                                            CVV must be 3 digits
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Cardholder Name *</label>
+                                                    <input type="text" class="form-control" formControlName="cardholderName"
+                                                        placeholder="John Doe"
+                                                        [class.is-invalid]="visaForm.get('cardholderName')?.invalid && visaForm.get('cardholderName')?.touched">
+                                                    <div class="invalid-feedback">
+                                                        Cardholder name is required
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Amount</label>
+                                                    <input type="text" class="form-control" formControlName="amount"
+                                                        readonly>
+                                                </div>
+                                            </div>
+
+                                            <button type="button" class="btn btn-warning" 
+                                                [disabled]="isProcessingPayment || visaForm.invalid"
+                                                (click)="processVisaPayment()">
+                                                <span *ngIf="isProcessingPayment && activePaymentMethod === 'visa'" 
+                                                    class="spinner-border spinner-border-sm me-2"></span>
+                                                Pay Now
+                                            </button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
 
+                            <!-- Payment Status Messages -->
+                            <div class="alert alert-info mt-3" *ngIf="paymentStatusPending">
+                                <i class="fas fa-clock me-2"></i>
+                                Payment Status: <strong>Pending</strong> - Your payment is being processed...
+                            </div>
                         </div>
+                        
                         <div class="col-md-4">
-                            <div class="payment-info-card">
-                                <h6>Important Information</h6>
-                                <ul class="list-unstyled">
-                                    <li><i class="fas fa-check text-success me-2"></i>Secure payment processing</li>
-                                    <li><i class="fas fa-check text-success me-2"></i>Instant payment confirmation</li>
-                                    <li><i class="fas fa-check text-success me-2"></i>48-hour processing time</li>
-                                    <li><i class="fas fa-check text-success me-2"></i>SMS and email notifications</li>
-                                </ul>
+                            <div class="delivery-info-card">
+                                <h6>Service Information</h6>
+                                <div class="info-item">
+                                    <i class="fas fa-clock text-primary me-2"></i>
+                                    <strong>Processing Time:</strong>
+                                    <br>
+                                    <span class="text-muted">48 hours after biometric enrollment</span>
+                                </div>
+                                <div class="info-item">
+                                    <i class="fas fa-shield-alt text-success me-2"></i>
+                                    <strong>Security Features:</strong>
+                                    <br>
+                                    <span class="text-muted">ICAO compliant biometric chip</span>
+                                </div>
+                                <div class="info-item">
+                                    <i class="fas fa-calendar text-info me-2"></i>
+                                    <strong>Validity:</strong>
+                                    <br>
+                                    <span class="text-muted">5 years from issue date</span>
+                                </div>
+                            </div>
+
+                            <!-- Payment Processing Section -->
+                            <div class="payment-processing-card mb-3" *ngIf="showRefreshButton">
+                                <h6 class="text-primary">
+                                    <i class="fas fa-credit-card me-2"></i>
+                                    Payment Under Process
+                                </h6>
+                                <p class="text-muted mb-3">Your payment is being processed. Please wait 40 seconds before refreshing.</p>
+                                <button class="btn btn-outline-primary w-100" (click)="refreshPaymentStatus()">
+                                    <i class="fas fa-sync-alt me-2"></i>
+                                    Refresh Status
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Step 5: Confirmation -->
+                <!-- Step 5: Biometric Enrollment -->
                 <div class="form-step" *ngIf="currentStep === 5">
+                    <div class="step-header mb-4">
+                        <h3>Biometric Enrollment</h3>
+                        <p class="text-muted">Complete your biometric data capture at a DGSN center</p>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <!-- Appointment Booking -->
+                            <div class="appointment-section mb-4" *ngIf="!biometricAppointment">
+                                <h5 class="mb-3">
+                                    <i class="fas fa-calendar-plus me-2"></i>
+                                    Book Your Biometric Appointment
+                                </h5>
+                                
+                                <div class="alert alert-info mb-4">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    <strong>Important:</strong> You must visit a DGSN enrollment center for biometric data capture (photo, fingerprints, signature).
+                                </div>
+
+                                <form [formGroup]="biometricForm">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Select Enrollment Center *</label>
+                                            <select class="form-select" formControlName="enrollmentCenter"
+                                                [class.is-invalid]="biometricForm.get('enrollmentCenter')?.invalid && biometricForm.get('enrollmentCenter')?.touched">
+                                                <option value="">Choose a center</option>
+                                                <option value="bissau-central">DGSN Bissau - Central Office</option>
+                                                <option value="bissau-airport">DGSN Bissau - Airport Office</option>
+                                                <option value="bafata">DGSN Bafatá Regional Office</option>
+                                                <option value="gabu">DGSN Gabú Regional Office</option>
+                                                <option value="cacheu">DGSN Cacheu Regional Office</option>
+                                            </select>
+                                            <div class="invalid-feedback">Please select an enrollment center</div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Preferred Date *</label>
+                                            <input type="date" class="form-control" formControlName="appointmentDate"
+                                                [min]="getMinAppointmentDate()"
+                                                [class.is-invalid]="biometricForm.get('appointmentDate')?.invalid && biometricForm.get('appointmentDate')?.touched">
+                                            <div class="invalid-feedback">Please select a date</div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Preferred Time *</label>
+                                            <select class="form-select" formControlName="appointmentTime"
+                                                [class.is-invalid]="biometricForm.get('appointmentTime')?.invalid && biometricForm.get('appointmentTime')?.touched">
+                                                <option value="">Choose time slot</option>
+                                                <option value="09:00">09:00 AM</option>
+                                                <option value="10:00">10:00 AM</option>
+                                                <option value="11:00">11:00 AM</option>
+                                                <option value="14:00">02:00 PM</option>
+                                                <option value="15:00">03:00 PM</option>
+                                                <option value="16:00">04:00 PM</option>
+                                            </select>
+                                            <div class="invalid-feedback">Please select a time slot</div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Contact Phone *</label>
+                                            <input type="tel" class="form-control" formControlName="contactPhone"
+                                                [class.is-invalid]="biometricForm.get('contactPhone')?.invalid && biometricForm.get('contactPhone')?.touched">
+                                            <div class="invalid-feedback">Contact phone is required</div>
+                                        </div>
+                                    </div>
+
+                                    <button type="button" class="btn btn-primary" 
+                                        [disabled]="isBookingAppointment || biometricForm.invalid"
+                                        (click)="bookBiometricAppointment()">
+                                        <span *ngIf="isBookingAppointment" class="spinner-border spinner-border-sm me-2"></span>
+                                        <i class="fas fa-calendar-check me-2" *ngIf="!isBookingAppointment"></i>
+                                        Book Appointment
+                                    </button>
+                                </form>
+                            </div>
+
+                            <!-- Appointment Confirmation -->
+                            <div class="appointment-confirmation" *ngIf="biometricAppointment">
+                                <div class="appointment-card">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">
+                                            <i class="fas fa-check-circle text-success me-2"></i>
+                                            Appointment Confirmed
+                                        </h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="appointment-detail">
+                                                    <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                                                    <strong>Center:</strong> {{ getEnrollmentCenterName(biometricAppointment.center) }}
+                                                </div>
+                                                <div class="appointment-detail">
+                                                    <i class="fas fa-calendar text-primary me-2"></i>
+                                                    <strong>Date:</strong> {{ formatAppointmentDate(biometricAppointment.date) }}
+                                                </div>
+                                                <div class="appointment-detail">
+                                                    <i class="fas fa-clock text-primary me-2"></i>
+                                                    <strong>Time:</strong> {{ biometricAppointment.time }}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="appointment-detail">
+                                                    <i class="fas fa-hashtag text-primary me-2"></i>
+                                                    <strong>Reference:</strong> {{ biometricAppointment.reference }}
+                                                </div>
+                                                <div class="appointment-detail">
+                                                    <i class="fas fa-phone text-primary me-2"></i>
+                                                    <strong>Contact:</strong> {{ biometricAppointment.phone }}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="alert alert-warning mt-3">
+                                            <i class="fas fa-exclamation-triangle me-2"></i>
+                                            <strong>Important:</strong> Please arrive 15 minutes early with all required documents and this appointment reference.
+                                        </div>
+
+                                        <button class="btn btn-outline-secondary" (click)="changeAppointment()">
+                                            <i class="fas fa-calendar-alt me-2"></i>
+                                            Change Appointment
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Biometric Process Information -->
+                            <div class="biometric-process-info mt-4">
+                                <h5 class="mb-3">
+                                    <i class="fas fa-fingerprint me-2"></i>
+                                    What to Expect During Biometric Enrollment
+                                </h5>
+
+                                <div class="process-steps">
+                                    <div class="process-step">
+                                        <div class="step-number">1</div>
+                                        <div class="step-content">
+                                            <h6>Document Verification</h6>
+                                            <p>DGSN officer will verify your documents against your online application</p>
+                                        </div>
+                                    </div>
+                                    <div class="process-step">
+                                        <div class="step-number">2</div>
+                                        <div class="step-content">
+                                            <h6>Biometric Photo</h6>
+                                            <p>High-resolution photo taken according to ICAO standards</p>
+                                        </div>
+                                    </div>
+                                    <div class="process-step">
+                                        <div class="step-number">3</div>
+                                        <div class="step-content">
+                                            <h6>Fingerprint Capture</h6>
+                                            <p>All 10 fingerprints will be scanned using digital scanners</p>
+                                        </div>
+                                    </div>
+                                    <div class="process-step">
+                                        <div class="step-number">4</div>
+                                        <div class="step-content">
+                                            <h6>Digital Signature</h6>
+                                            <p>Electronic signature capture on a digital pad</p>
+                                        </div>
+                                    </div>
+                                    <div class="process-step">
+                                        <div class="step-number">5</div>
+                                        <div class="step-content">
+                                            <h6>Height Measurement</h6>
+                                            <p>Official height measurement for passport records</p>
+                                        </div>
+                                    </div>
+                                    <div class="process-step">
+                                        <div class="step-number">6</div>
+                                        <div class="step-content">
+                                            <h6>Data Validation</h6>
+                                            <p>Review and confirm all captured data before submission</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="alert alert-info mt-4">
+                                    <i class="fas fa-clock me-2"></i>
+                                    <strong>Duration:</strong> The entire process typically takes 15-20 minutes per person.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <!-- Required Documents for Appointment -->
+                            <div class="required-docs-card">
+                                <h6>
+                                    <i class="fas fa-clipboard-list me-2"></i>
+                                    Bring to Your Appointment
+                                </h6>
+                                <ul class="docs-checklist">
+                                    <li>
+                                        <i class="fas fa-check text-success me-2"></i>
+                                        Original Birth Certificate
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-check text-success me-2"></i>
+                                        Original National ID or Consular Card
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-check text-success me-2"></i>
+                                        Appointment confirmation (this page)
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-check text-success me-2"></i>
+                                        Payment receipt
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-check text-success me-2"></i>
+                                        Marriage certificate (if applicable)
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <!-- Contact Information -->
+                            <div class="contact-info-card mt-3">
+                                <h6>
+                                    <i class="fas fa-phone me-2"></i>
+                                    Need Help?
+                                </h6>
+                                <div class="contact-item">
+                                    <strong>DGSN Hotline:</strong><br>
+                                    <span class="text-muted">+245 123 456 789</span>
+                                </div>
+                                <div class="contact-item">
+                                    <strong>Email Support:</strong><br>
+                                    <span class="text-muted">passport@dgsn.gov.gw</span>
+                                </div>
+                                <div class="contact-item">
+                                    <strong>Office Hours:</strong><br>
+                                    <span class="text-muted">Mon-Fri: 8:00 AM - 4:00 PM</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 6: Collection Confirmation -->
+                <div class="form-step" *ngIf="currentStep === 6">
                     <div class="confirmation-content text-center">
                         <div class="success-icon mb-4">
                             <i class="fas fa-check-circle fa-4x text-success"></i>
                         </div>
-                        <h3>Application Submitted Successfully!</h3>
-                        <p class="text-muted mb-4">Your passport application has been submitted and payment processed.
-                        </p>
+                        <h3>Passport Application Completed Successfully!</h3>
+                        <p class="text-muted mb-4">Your biometric passport application has been processed and is ready for collection.</p>
 
                         <div class="confirmation-details">
                             <div class="detail-item">
@@ -346,11 +965,49 @@
                                 <span class="text-primary">{{ application?.trackingNumber }}</span>
                             </div>
                             <div class="detail-item">
-                                <strong>Expected Processing Time:</strong> 48 hours to 3 months
+                                <strong>Application Type:</strong> Biometric Passport
                             </div>
                             <div class="detail-item">
-                                <strong>Next Steps:</strong> Visit DGSN center for biometric enrollment
+                                <strong>Processing Status:</strong> 
+                                <span class="badge bg-success">Completed</span>
                             </div>
+                            <div class="detail-item">
+                                <strong>Total Paid:</strong> {{ calculateTotalAmount() }} XAF
+                            </div>
+                            <div class="detail-item" *ngIf="biometricAppointment">
+                                <strong>Biometric Enrollment:</strong> {{ formatAppointmentDate(biometricAppointment.date) }}
+                            </div>
+                            <div class="detail-item">
+                                <strong>Production Time:</strong> 48 hours after biometric enrollment
+                            </div>
+                        </div>
+
+                        <!-- Collection Information -->
+                        <div class="collection-section mt-4">
+                            <h5 class="text-primary mb-3">
+                                <i class="fas fa-hand-holding me-2"></i>
+                                Passport Collection
+                            </h5>
+                            <div class="collection-card">
+                                <div class="collection-header">
+                                    <i class="fas fa-map-marker-alt text-primary fa-2x mb-2"></i>
+                                    <h6>Collection Center</h6>
+                                </div>
+                                <div class="collection-details">
+                                    <p><strong>{{ getEnrollmentCenterName(biometricAppointment?.center || 'bissau-central') }}</strong></p>
+                                    <p class="text-muted">Present your original receipt and valid ID for collection</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info mt-4">
+                            <i class="fas fa-envelope me-2"></i>
+                            <strong>Email Notification:</strong> You will receive an email notification when your passport is ready for collection.
+                        </div>
+
+                        <div class="alert alert-warning mt-3">
+                            <i class="fas fa-fingerprint me-2"></i>
+                            <strong>Collection Verification:</strong> Passport collection requires fingerprint verification for security purposes.
                         </div>
                     </div>
                 </div>
@@ -360,7 +1017,7 @@
             <!-- Navigation Buttons -->
             <div class="form-navigation mt-4">
                 <div class="d-flex justify-content-between">
-                    <button type="button" class="btn btn-outline-secondary" *ngIf="currentStep > 1 && currentStep < 5"
+                    <button type="button" class="btn btn-outline-secondary" *ngIf="currentStep > 1 && currentStep < 6"
                         (click)="previousStep()">
                         <i class="fas fa-arrow-left me-2"></i>
                         Previous
@@ -378,13 +1035,21 @@
                             Submit Application
                         </button>
 
-                        <button type="button" class="btn btn-warning" *ngIf="currentStep === 4" [disabled]="isLoading"
-                            (click)="onPayment()">
-                            <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
-                            Pay Now
+                        <button type="button" class="btn btn-primary" *ngIf="currentStep === 4"
+                            [disabled]="!paymentVerificationComplete"
+                            (click)="proceedToBiometric()">
+                            Next
+                            <i class="fas fa-arrow-right ms-2"></i>
                         </button>
 
                         <button type="button" class="btn btn-primary" *ngIf="currentStep === 5"
+                            [disabled]="!biometricAppointment"
+                            (click)="proceedToCollection()">
+                            Complete Application
+                            <i class="fas fa-arrow-right ms-2"></i>
+                        </button>
+
+                        <button type="button" class="btn btn-primary" *ngIf="currentStep === 6"
                             (click)="goToTracking()">
                             <i class="fas fa-search me-2"></i>
                             Track Application
