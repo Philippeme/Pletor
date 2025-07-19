@@ -40,7 +40,6 @@ export class PassportApplicationComponent implements OnInit {
     {value: PaymentMethod.MTN_MONEY, label: 'MTN Mobile Money', icon: 'fas fa-mobile-alt'},
     {value: PaymentMethod.ORANGE_MONEY, label: 'Orange Money', icon: 'fas fa-mobile-alt'},
     {value: PaymentMethod.CREDIT_CARD, label: 'Credit Card', icon: 'fas fa-credit-card'},
-    {value: PaymentMethod.BANK_TRANSFER, label: 'Bank Transfer', icon: 'fas fa-university'}
   ];
 
   constructor(
@@ -284,6 +283,38 @@ export class PassportApplicationComponent implements OnInit {
         control.markAsTouched();
       }
     });
+  }
+
+  // Copy tracking number to clipboard
+  copyTrackingNumber(): void {
+    if (this.application?.trackingNumber) {
+      navigator.clipboard.writeText(this.application.trackingNumber).then(() => {
+        
+        setTimeout(() => {
+          this.successMessage = '';
+        }, 2000);
+      }).catch(() => {
+        const textArea = document.createElement('textarea');
+        textArea.value = this.application!.trackingNumber;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        
+        setTimeout(() => {
+          this.successMessage = '';
+        }, 2000);
+      });
+
+      const button = document.querySelector('.tracking-info .btn i') as HTMLElement;
+        if (button) {
+          button.className = 'fas fa-check';
+          // Reset icon after 2 seconds
+          setTimeout(() => {
+            button.className = 'fas fa-copy';
+          }, 2000);
+        }
+    }
   }
 
   onPayment(): void {

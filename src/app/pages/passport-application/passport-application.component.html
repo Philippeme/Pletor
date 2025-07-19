@@ -13,7 +13,16 @@
                 </div>
                 <div class="col-md-4 text-md-end">
                     <div class="tracking-info" *ngIf="application">
-                        <strong>Tracking #:</strong> {{ application.trackingNumber }}
+                        <div class="tracking-display d-inline-flex align-items-center">
+                            <span class="tracking-text">
+                                <strong>Tracking #:</strong> {{ application.trackingNumber }}
+                            </span>
+                            <button class="btn btn-sm btn-outline-primary ms-2" 
+                                (click)="copyTrackingNumber()" 
+                                title="Copy tracking number">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -306,10 +315,6 @@
                                 </div>
                             </div>
 
-                            <div class="alert alert-info mt-3">
-                                <i class="fas fa-info-circle me-2"></i>
-                                {{ 'messages.payment_simulation' | translate }}
-                            </div>
                         </div>
                         <div class="col-md-4">
                             <div class="payment-info-card">

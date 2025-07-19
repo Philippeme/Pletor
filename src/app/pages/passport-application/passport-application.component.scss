@@ -10,11 +10,29 @@
         }
 
         .tracking-info {
-            background: var(--primary-color);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
+            .tracking-display {
+                background: var(--primary-color); 
+                color: white;
+                padding: 0.5rem 1rem;
+                border-radius: 20px;
+                font-size: 0.9rem;
+                white-space: nowrap;
+                
+                .tracking-text {
+                    margin-right: 0.5rem;
+                }
+                
+                .btn {
+                    border-color: rgba(255, 255, 255, 0.3);
+                    color: white;
+                    
+                    &:hover {
+                        background-color: rgba(255, 255, 255, 0.1);
+                        border-color: white;
+                        color: white;
+                    }
+                }
+            }
         }
     }
 
