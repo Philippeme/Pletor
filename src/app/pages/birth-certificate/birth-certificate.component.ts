@@ -140,6 +140,11 @@ export class BirthCertificateComponent implements OnInit {
     this.prefillUserData();
     this.onRequestTypeChange();
     this.updatePaymentAmounts();
+    
+    // NOUVEAU: Synchroniser l'état initial
+    setTimeout(() => {
+      this.syncApplicationProgress();
+    }, 1000);
   }
 
   private updatePaymentAmounts(): void {
@@ -155,6 +160,11 @@ export class BirthCertificateComponent implements OnInit {
         if (application) {
           this.application = application;
           this.determineCurrentStep();
+          
+          // NOUVEAU: Synchroniser après chargement
+          setTimeout(() => {
+            this.syncApplicationProgress();
+          }, 500);
         }
       },
       error: (error) => {
@@ -240,6 +250,9 @@ export class BirthCertificateComponent implements OnInit {
       if (this.validateCurrentStep()) {
         this.currentStep++;
         this.errorMessage = '';
+        
+        // NOUVEAU: Synchroniser avec ApplicationService
+        this.syncApplicationProgress();
       }
     }
   }
@@ -248,6 +261,9 @@ export class BirthCertificateComponent implements OnInit {
     if (this.currentStep > 1) {
       this.currentStep--;
       this.errorMessage = '';
+      
+      // NOUVEAU: Synchroniser avec ApplicationService
+      this.syncApplicationProgress();
     }
   }
 
@@ -308,8 +324,11 @@ export class BirthCertificateComponent implements OnInit {
         this.application!.status = ApplicationStatus.PAYMENT_PENDING;
         this.isSubmitting = false;
         this.successMessage = 'Application submitted successfully!';
-        this.currentStep = 2;
+        this.currentStep = 2; // Move to payment step
         this.updatePaymentAmounts();
+        
+        // NOUVEAU: Synchroniser l'état avec ApplicationService
+        this.syncApplicationProgress();
         
         setTimeout(() => {
           this.successMessage = '';
@@ -462,6 +481,9 @@ export class BirthCertificateComponent implements OnInit {
       next: (payment) => {
         payment.status = PaymentStatus.COMPLETED;
         this.application!.status = ApplicationStatus.PROCESSING;
+        
+        // NOUVEAU: Synchroniser après paiement
+        this.syncApplicationProgress();
       },
       error: (error) => {
         this.isProcessingPayment = false;
@@ -475,6 +497,31 @@ export class BirthCertificateComponent implements OnInit {
   proceedToConfirmation(): void {
     if (this.paymentVerificationComplete) {
       this.currentStep = 3;
+
+      // NOUVEAU: Synchroniser l'état avec ApplicationService
+      this.syncApplicationProgress();
+    }
+  }
+
+  /**
+   * NOUVELLE MÉTHODE: Synchronise l'état d'avancement avec ApplicationService
+   */
+  private syncApplicationProgress(): void {
+    if (this.application) {
+      this.applicationService.updateApplicationStep(
+        this.application.id,
+        this.currentStep,
+        4 // serviceId pour birth certificate
+      ).subscribe({
+        next: (success) => {
+          if (success) {
+            console.log(`Birth Certificate progress synced: Step ${this.currentStep}/3`);
+          }
+        },
+        error: (error) => {
+          console.error('Failed to sync birth certificate progress:', error);
+        }
+      });
     }
   }
 

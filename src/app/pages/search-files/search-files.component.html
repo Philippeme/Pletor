@@ -90,28 +90,90 @@
                         </div>
                     </div>
 
-                    <!-- Application Timeline -->
-                    <div class="application-timeline" *ngIf="searchResult.timeline && searchResult.timeline.length > 0">
+                    <!-- Dynamic Progress Information -->
+                    <div class="progress-section" *ngIf="getCurrentStepInfo()">
+                        <div class="row align-items-center mb-4">
+                            <div class="col-md-8">
+                                <h5 class="progress-title mb-2">
+                                    <i class="fas fa-route me-2"></i>
+                                    Current Progress: {{ getCurrentStepInfo()?.stepName }}
+                                </h5>
+                                <p class="progress-subtitle">
+                                    Step {{ getCurrentStepInfo()?.stepNumber }} of {{ getCurrentStepInfo()?.totalSteps }}
+                                </p>
+                            </div>
+                            <div class="col-md-4 text-md-end">
+                                <div class="progress-circle">
+                                    <div class="circle-progress" [style.background]="'conic-gradient(var(--primary-color) ' + getProgressPercentage() + '%, #e9ecef 0%)'">
+                                        <div class="circle-inner">
+                                            <span class="progress-text">{{ getProgressPercentage() }}%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Progress Bar -->
+                        <div class="progress mb-3" style="height: 8px;">
+                            <div class="progress-bar bg-primary" role="progressbar" 
+                                [style.width.%]="getProgressPercentage()">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Application Timeline (Filtered) -->
+                    <div class="application-timeline" *ngIf="filteredTimeline && filteredTimeline.length > 0">
                         <h5 class="timeline-title mb-4">
-                            <i class="fas fa-route me-2"></i>
-                            Application Progress
+                            <i class="fas fa-list-check me-2"></i>
+                            Application Progress (Showing {{ filteredTimeline.length }} of {{ getTotalStepsForService(searchResult.serviceId) }} steps)
                         </h5>
 
                         <div class="timeline">
-                            <div class="timeline-item" *ngFor="let step of searchResult.timeline"
-                                [class.completed]="step.isCompleted" [class.active]="step.status === 'in_progress'">
-                                <div class="timeline-marker"></div>
+                            <div class="timeline-item" *ngFor="let step of filteredTimeline; let isLast = last"
+                                [class.completed]="step.isCompleted" 
+                                [class.active]="step.status === 'in_progress'"
+                                [class.current]="!step.isCompleted && step.status === 'pending'">
+                                
+                                <div class="timeline-marker">
+                                    <i [class]="getTimelineStepIcon(step)"></i>
+                                </div>
+                                
                                 <div class="timeline-content">
                                     <div class="timeline-header">
-                                        <h6 class="timeline-step">{{ step.step }}</h6>
-                                        <span class="timeline-date">{{ formatDate(step.date) }}</span>
+                                        <h6 class="timeline-step">
+                                            {{ step.step }}
+                                            <span class="step-status-badge ms-2" *ngIf="step.isCompleted">
+                                                <i class="fas fa-check-circle text-success"></i>
+                                            </span>
+                                            <span class="step-status-badge ms-2" *ngIf="step.status === 'in_progress'">
+                                                <i class="fas fa-cog fa-spin text-primary"></i>
+                                            </span>
+                                        </h6>
+                                        <span class="timeline-date" *ngIf="step.isCompleted || step.status === 'in_progress'">
+                                            {{ formatSimpleDate(step.date) }}
+                                        </span>
                                     </div>
                                     <p class="timeline-description">{{ step.description }}</p>
-                                    <div class="timeline-duration" *ngIf="step.estimatedDuration">
+                                    <div class="timeline-duration" *ngIf="step.estimatedDuration && !step.isCompleted">
                                         <i class="fas fa-clock me-1"></i>
                                         {{ 'timeline.estimated_duration' | translate }}: {{ step.estimatedDuration }}
                                     </div>
                                 </div>
+
+                                <!-- Add connecting line except for last item -->
+                                <div class="timeline-line" *ngIf="!isLast"></div>
+                            </div>
+                        </div>
+
+                        <!-- Next Step Preview -->
+                        <div class="next-step-preview" *ngIf="shouldShowNextStepPreview()">
+                            <div class="preview-card">
+                                <div class="preview-icon">
+                                    <i class="fas fa-arrow-down text-muted"></i>
+                                </div>
+                                <h6 class="preview-title">Next Step</h6>
+                                <p class="preview-text">{{ getNextStepPreview() }}</p>
+                                <small class="text-muted">Will be available when current step is completed</small>
                             </div>
                         </div>
                     </div>
@@ -153,6 +215,31 @@
                             Additional Information
                         </h5>
                         <p class="info-text">{{ searchResult.notes }}</p>
+                    </div>
+
+                    <!-- Application Summary Footer -->
+                    <div class="application-footer">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="summary-item">
+                                    <i class="fas fa-calendar text-primary me-2"></i>
+                                    <strong>Expected Completion:</strong>
+                                    <span *ngIf="searchResult.expectedCompletionDate">
+                                        {{ formatSimpleDate(searchResult.expectedCompletionDate) }}
+                                    </span>
+                                    <span *ngIf="!searchResult.expectedCompletionDate" class="text-muted">
+                                        To be determined
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="summary-item">
+                                    <i class="fas fa-user text-primary me-2"></i>
+                                    <strong>Application Type:</strong>
+                                    {{ searchResult.applicantType | titlecase }}
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                 </div>

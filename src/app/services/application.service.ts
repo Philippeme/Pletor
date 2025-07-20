@@ -27,6 +27,19 @@ export class ApplicationService {
     const savedApplications = localStorage.getItem('mk-gov-applications');
     if (savedApplications) {
       const applications = JSON.parse(savedApplications);
+      applications.forEach((app: Application) => {
+        app.submissionDate = new Date(app.submissionDate);
+        if (app.completionDate) app.completionDate = new Date(app.completionDate);
+        if (app.expectedCompletionDate) app.expectedCompletionDate = new Date(app.expectedCompletionDate);
+        
+        app.timeline.forEach((timeline: ApplicationTimeline) => {
+          timeline.date = new Date(timeline.date);
+        });
+        
+        app.payments.forEach((payment: Payment) => {
+          payment.date = new Date(payment.date);
+        });
+      });
       this.applicationsSubject.next(applications);
     }
   }
@@ -45,8 +58,9 @@ export class ApplicationService {
       applicantType,
       status: ApplicationStatus.DRAFT,
       submissionDate: new Date(),
+      expectedCompletionDate: this.calculateExpectedCompletion(serviceId),
       documents: [],
-      timeline: this.createInitialTimeline(serviceId),
+      timeline: this.createServiceSpecificTimeline(serviceId),
       payments: [],
       trackingNumber: this.generateTrackingNumber()
     };
@@ -58,123 +72,228 @@ export class ApplicationService {
     return of(newApplication).pipe(delay(500));
   }
 
-  private createInitialTimeline(serviceId: number): ApplicationTimeline[] {
-    if (serviceId === 1) { // passport service
+  private createServiceSpecificTimeline(serviceId: number): ApplicationTimeline[] {
+    const baseDate = new Date();
+    
+    if (serviceId === 1) { // Passport Application - Exact match with component steps
       return [
         {
-          id: 'step-1',
-          step: 'Pre-enrollment',
-          status: TimelineStatus.PENDING,
-          date: new Date(),
-          description: 'Complete online pre-enrollment form on PASSCAM platform',
-          isCompleted: false,
-          estimatedDuration: '10-15 minutes'
-        },
-        {
-          id: 'step-2',
-          step: 'Payment',
-          status: TimelineStatus.PENDING,
-          date: new Date(),
-          description: 'Pay passport fees (110,000 XAF) via MTN Money or Orange Money',
-          isCompleted: false,
-          estimatedDuration: '5 minutes'
-        },
-        {
-          id: 'step-3',
-          step: 'Appointment Booking',
-          status: TimelineStatus.PENDING,
-          date: new Date(),
-          description: 'Schedule biometric enrollment appointment at DGSN center',
-          isCompleted: false,
-          estimatedDuration: '5 minutes'
-        },
-        {
-          id: 'step-4',
-          step: 'Document Verification',
-          status: TimelineStatus.PENDING,
-          date: new Date(),
-          description: 'Submit required documents for verification',
-          isCompleted: false,
-          estimatedDuration: '15-20 minutes'
-        },
-        {
-          id: 'step-5',
-          step: 'Biometric Enrollment',
-          status: TimelineStatus.PENDING,
-          date: new Date(),
-          description: 'Biometric data capture (fingerprints and photo) at DGSN center',
-          isCompleted: false,
-          estimatedDuration: '30 minutes'
-        },
-        {
-          id: 'step-6',
-          step: 'Production',
-          status: TimelineStatus.PENDING,
-          date: new Date(),
-          description: 'Passport production with advanced security features',
-          isCompleted: false,
-          estimatedDuration: '48 hours'
-        },
-        {
-          id: 'step-7',
-          step: 'Ready for Collection',
-          status: TimelineStatus.PENDING,
-          date: new Date(),
-          description: 'Passport ready for collection at designated center',
-          isCompleted: false,
-          estimatedDuration: 'Immediate'
-        }
-      ];
-    } else if (serviceId === 4) { // birth-certificate-copy service
-      return [
-        {
-          id: 'step-1',
-          step: 'Form Submission',
-          status: TimelineStatus.PENDING,
-          date: new Date(),
-          description: 'Submit request form with required information',
+          id: 'passport-step-1',
+          step: 'Personal Information',
+          status: TimelineStatus.IN_PROGRESS, // Start with first step active
+          date: baseDate,
+          description: 'Provide personal details as they appear on your birth certificate',
           isCompleted: false,
           estimatedDuration: '5-10 minutes'
         },
         {
-          id: 'step-2',
-          step: 'Payment',
+          id: 'passport-step-2',
+          step: 'Contact & Emergency Information',
           status: TimelineStatus.PENDING,
-          date: new Date(),
-          description: 'Pay certification fees (300 XAF total)',
+          date: baseDate,
+          description: 'Provide your current contact details and emergency contact information',
           isCompleted: false,
-          estimatedDuration: '2 minutes'
+          estimatedDuration: '5-10 minutes'
         },
         {
-          id: 'step-3',
-          step: 'Record Verification',
+          id: 'passport-step-3',
+          step: 'Document Upload',
           status: TimelineStatus.PENDING,
-          date: new Date(),
-          description: 'Verification of birth record in civil registry',
+          date: baseDate,
+          description: 'Upload all required documents: birth certificate, ID, photos, residence proof',
           isCompleted: false,
-          estimatedDuration: '30 minutes - 2 hours'
+          estimatedDuration: '10-15 minutes'
         },
         {
-          id: 'step-4',
-          step: 'Document Preparation',
+          id: 'passport-step-4',
+          step: 'Payment Processing',
           status: TimelineStatus.PENDING,
-          date: new Date(),
-          description: 'Preparation of certified copy with official seal',
+          date: baseDate,
+          description: 'Complete payment of passport application fees (110,000 XAF)',
           isCompleted: false,
-          estimatedDuration: '15-30 minutes'
+          estimatedDuration: '2-5 minutes'
         },
         {
-          id: 'step-5',
-          step: 'Ready for Collection',
+          id: 'passport-step-5',
+          step: 'Biometric Enrollment',
           status: TimelineStatus.PENDING,
-          date: new Date(),
-          description: 'Certified copy ready for collection',
+          date: baseDate,
+          description: 'Attend biometric appointment at DGSN center for fingerprints, photo capture, and signature',
           isCompleted: false,
-          estimatedDuration: 'Immediate'
+          estimatedDuration: '20-30 minutes'
+        },
+        {
+          id: 'passport-step-6',
+          step: 'Passport Collection',
+          status: TimelineStatus.PENDING,
+          date: baseDate,
+          description: 'Collect your completed biometric passport (48 hours after biometric enrollment)',
+          isCompleted: false,
+          estimatedDuration: '15 minutes'
+        }
+      ];
+    } else if (serviceId === 4) { // Birth Certificate - Exact match with component steps
+      return [
+        {
+          id: 'birth-step-1',
+          step: 'Person Information',
+          status: TimelineStatus.IN_PROGRESS, // Start with first step active
+          date: baseDate,
+          description: 'Provide details of the person whose birth certificate is being requested and request inputs',
+          isCompleted: false,
+          estimatedDuration: '5-10 minutes'
+        },
+        {
+          id: 'birth-step-2',
+          step: 'Payment Processing',
+          status: TimelineStatus.PENDING,
+          date: baseDate,
+          description: 'Complete payment of birth certificate copy fees (200 XAF)',
+          isCompleted: false,
+          estimatedDuration: '2-5 minutes'
+        },
+        {
+          id: 'birth-step-3',
+          step: 'CRVS Processing & Delivery',
+          status: TimelineStatus.PENDING,
+          date: baseDate,
+          description: 'Civil registry verification, certified copy preparation, and email delivery',
+          isCompleted: false,
+          estimatedDuration: '1-2 business days'
         }
       ];
     }
-    return [];
+    
+    // Default timeline for other services
+    return [
+      {
+        id: 'default-step-1',
+        step: 'Application Submission',
+        status: TimelineStatus.IN_PROGRESS,
+        date: baseDate,
+        description: 'Complete and submit your application with required information',
+        isCompleted: false,
+        estimatedDuration: '10-20 minutes'
+      },
+      {
+        id: 'default-step-2',
+        step: 'Document Review',
+        status: TimelineStatus.PENDING,
+        date: baseDate,
+        description: 'Review and verification of submitted documents',
+        isCompleted: false,
+        estimatedDuration: '1-3 business days'
+      },
+      {
+        id: 'default-step-3',
+        step: 'Processing',
+        status: TimelineStatus.PENDING,
+        date: baseDate,
+        description: 'Administrative processing of your application',
+        isCompleted: false,
+        estimatedDuration: '5-10 business days'
+      },
+      {
+        id: 'default-step-4',
+        step: 'Completion',
+        status: TimelineStatus.PENDING,
+        date: baseDate,
+        description: 'Final processing and document preparation',
+        isCompleted: false,
+        estimatedDuration: '1-2 business days'
+      }
+    ];
+  }
+
+  /**
+   * NEW: Update application step based on component current step
+   * This syncs the timeline with the actual progress in components
+   */
+  updateApplicationStep(applicationId: string, currentStep: number, serviceId: number): Observable<boolean> {
+    const applications = this.applicationsSubject.value;
+    const application = applications.find(app => app.id === applicationId);
+    
+    if (!application) return of(false);
+
+    // Update timeline based on current step and service type
+    if (serviceId === 1) { // Passport
+      this.updatePassportTimeline(application, currentStep);
+    } else if (serviceId === 4) { // Birth Certificate
+      this.updateBirthCertificateTimeline(application, currentStep);
+    }
+
+    this.updateApplicationStatusFromTimeline(application);
+    this.saveApplications(applications);
+    
+    return of(true).pipe(delay(300));
+  }
+
+  private updatePassportTimeline(application: Application, currentStep: number): void {
+    const timeline = application.timeline;
+    
+    // Mark completed steps
+    for (let i = 0; i < Math.min(currentStep - 1, timeline.length); i++) {
+      timeline[i].status = TimelineStatus.COMPLETED;
+      timeline[i].isCompleted = true;
+      timeline[i].date = new Date();
+    }
+    
+    // Mark current step as in progress
+    if (currentStep <= timeline.length) {
+      timeline[currentStep - 1].status = TimelineStatus.IN_PROGRESS;
+      timeline[currentStep - 1].isCompleted = false;
+      timeline[currentStep - 1].date = new Date();
+    }
+    
+    // Keep future steps as pending
+    for (let i = currentStep; i < timeline.length; i++) {
+      timeline[i].status = TimelineStatus.PENDING;
+      timeline[i].isCompleted = false;
+    }
+  }
+
+  private updateBirthCertificateTimeline(application: Application, currentStep: number): void {
+    const timeline = application.timeline;
+    
+    // Mark completed steps
+    for (let i = 0; i < Math.min(currentStep - 1, timeline.length); i++) {
+      timeline[i].status = TimelineStatus.COMPLETED;
+      timeline[i].isCompleted = true;
+      timeline[i].date = new Date();
+    }
+    
+    // Mark current step as in progress
+    if (currentStep <= timeline.length) {
+      timeline[currentStep - 1].status = TimelineStatus.IN_PROGRESS;
+      timeline[currentStep - 1].isCompleted = false;
+      timeline[currentStep - 1].date = new Date();
+    }
+    
+    // Keep future steps as pending
+    for (let i = currentStep; i < timeline.length; i++) {
+      timeline[i].status = TimelineStatus.PENDING;
+      timeline[i].isCompleted = false;
+    }
+  }
+
+  private calculateExpectedCompletion(serviceId: number): Date {
+    const submissionDate = new Date();
+    let daysToAdd = 7;
+
+    switch (serviceId) {
+      case 1: // Passport
+        daysToAdd = 45;
+        break;
+      case 4: // Birth Certificate
+        daysToAdd = 2;
+        break;
+      default:
+        daysToAdd = 14;
+    }
+
+    const expectedDate = new Date(submissionDate);
+    expectedDate.setDate(expectedDate.getDate() + daysToAdd);
+    return expectedDate;
   }
 
   private generateTrackingNumber(): string {
@@ -182,6 +301,54 @@ export class ApplicationService {
     const timestamp = Date.now().toString().slice(-8);
     const random = Math.random().toString(36).substr(2, 4).toUpperCase();
     return `${prefix}${timestamp}${random}`;
+  }
+
+  updateApplicationTimeline(applicationId: string, stepId: string, status: TimelineStatus = TimelineStatus.COMPLETED): Observable<boolean> {
+    const applications = this.applicationsSubject.value;
+    const application = applications.find(app => app.id === applicationId);
+    
+    if (application) {
+      const timeline = application.timeline;
+      const stepIndex = timeline.findIndex(step => step.id === stepId);
+      
+      if (stepIndex >= 0) {
+        timeline[stepIndex].status = status;
+        timeline[stepIndex].isCompleted = status === TimelineStatus.COMPLETED;
+        timeline[stepIndex].date = new Date();
+        
+        if (status === TimelineStatus.COMPLETED && stepIndex < timeline.length - 1) {
+          timeline[stepIndex + 1].status = TimelineStatus.IN_PROGRESS;
+        }
+        
+        this.updateApplicationStatusFromTimeline(application);
+        this.saveApplications(applications);
+        return of(true).pipe(delay(500));
+      }
+    }
+    
+    return of(false);
+  }
+
+  private updateApplicationStatusFromTimeline(application: Application): void {
+    const timeline = application.timeline;
+    const completedSteps = timeline.filter(step => step.isCompleted).length;
+    const totalSteps = timeline.length;
+    
+    if (completedSteps === 0) {
+      application.status = ApplicationStatus.DRAFT;
+    } else if (completedSteps === 1) {
+      application.status = ApplicationStatus.SUBMITTED;
+    } else if (completedSteps < totalSteps) {
+      const paymentStep = timeline.find(step => step.step.toLowerCase().includes('payment'));
+      if (paymentStep && !paymentStep.isCompleted) {
+        application.status = ApplicationStatus.PAYMENT_PENDING;
+      } else {
+        application.status = ApplicationStatus.PROCESSING;
+      }
+    } else {
+      application.status = ApplicationStatus.COMPLETED;
+      application.completionDate = new Date();
+    }
   }
 
   simulatePayment(applicationId: string, amount: number, method: PaymentMethod): Observable<Payment> {
@@ -200,13 +367,12 @@ export class ApplicationService {
     return of(payment).pipe(
       delay(this.getPaymentProcessingDelay(method)),
       map(() => {
-        // Simulate successful payment with 95% success rate
         const isSuccessful = Math.random() > 0.05;
         payment.status = isSuccessful ? PaymentStatus.COMPLETED : PaymentStatus.FAILED;
 
         if (isSuccessful) {
           this.updateApplicationPayment(applicationId, payment);
-          this.updateApplicationTimeline(applicationId, 'payment');
+          this.updatePaymentTimelineStep(applicationId);
         }
 
         return payment;
@@ -214,17 +380,39 @@ export class ApplicationService {
     );
   }
 
+  private updatePaymentTimelineStep(applicationId: string): void {
+    const applications = this.applicationsSubject.value;
+    const application = applications.find(app => app.id === applicationId);
+    
+    if (application) {
+      const paymentStep = application.timeline.find(step => 
+        step.step.toLowerCase().includes('payment')
+      );
+      
+      if (paymentStep) {
+        paymentStep.status = TimelineStatus.COMPLETED;
+        paymentStep.isCompleted = true;
+        paymentStep.date = new Date();
+        
+        const stepIndex = application.timeline.indexOf(paymentStep);
+        if (stepIndex < application.timeline.length - 1) {
+          application.timeline[stepIndex + 1].status = TimelineStatus.IN_PROGRESS;
+        }
+        
+        this.updateApplicationStatusFromTimeline(application);
+        this.saveApplications(applications);
+      }
+    }
+  }
+
   private getPaymentDescription(applicationId: string): string {
     const application = this.applicationsSubject.value.find(app => app.id === applicationId);
     if (!application) return 'Service application fee';
 
     switch (application.serviceId) {
-      case 1: // passport
-        return 'Biometric passport application fee';
-      case 4: // birth-certificate-copy
-        return 'Birth certificate copy certification fee';
-      default:
-        return 'Government service application fee';
+      case 1: return 'Biometric passport application fee';
+      case 4: return 'Birth certificate copy certification fee';
+      default: return 'Government service application fee';
     }
   }
 
@@ -232,11 +420,11 @@ export class ApplicationService {
     switch (method) {
       case PaymentMethod.MTN_MONEY:
       case PaymentMethod.ORANGE_MONEY:
-        return 2000; // 2 seconds for mobile money
+        return 2000;
       case PaymentMethod.CREDIT_CARD:
-        return 3000; // 3 seconds for credit card
+        return 3000;
       case PaymentMethod.BANK_TRANSFER:
-        return 5000; // 5 seconds for bank transfer
+        return 5000;
       default:
         return 1000;
     }
@@ -261,36 +449,6 @@ export class ApplicationService {
     }
   }
 
-  private updateApplicationTimeline(applicationId: string, completedStep: string): void {
-    const applications = this.applicationsSubject.value;
-    const application = applications.find(app => app.id === applicationId);
-    if (application) {
-      const timeline = application.timeline;
-      let stepFound = false;
-
-      for (let i = 0; i < timeline.length; i++) {
-        const step = timeline[i];
-        if (step.step.toLowerCase().includes(completedStep.toLowerCase()) ||
-          (completedStep === 'payment' && step.id === 'step-2')) {
-          step.status = TimelineStatus.COMPLETED;
-          step.isCompleted = true;
-          step.date = new Date();
-          stepFound = true;
-
-          // Mark next step as in progress
-          if (i + 1 < timeline.length) {
-            timeline[i + 1].status = TimelineStatus.IN_PROGRESS;
-          }
-          break;
-        }
-      }
-
-      if (stepFound) {
-        this.saveApplications(applications);
-      }
-    }
-  }
-
   updateApplicationStatus(applicationId: string, status: ApplicationStatus): Observable<boolean> {
     const applications = this.applicationsSubject.value;
     const application = applications.find(app => app.id === applicationId);
@@ -298,10 +456,8 @@ export class ApplicationService {
     if (application) {
       application.status = status;
 
-      // Update completion date if completed
       if (status === ApplicationStatus.COMPLETED) {
         application.completionDate = new Date();
-        // Mark all timeline steps as completed
         application.timeline.forEach(step => {
           step.status = TimelineStatus.COMPLETED;
           step.isCompleted = true;
@@ -329,7 +485,7 @@ export class ApplicationService {
 
   searchApplicationByTrackingNumber(trackingNumber: string): Observable<Application | undefined> {
     return this.applications$.pipe(
-      delay(1000), // Simulate API call
+      delay(1000),
       map(applications => applications.find(app => app.trackingNumber === trackingNumber))
     );
   }
@@ -378,7 +534,6 @@ export class ApplicationService {
               nextPendingStep.isCompleted = true;
               nextPendingStep.date = new Date();
 
-              // Check if all steps are completed
               const allCompleted = timeline.every(step => step.isCompleted);
               if (allCompleted) {
                 application.status = ApplicationStatus.COMPLETED;
@@ -392,9 +547,8 @@ export class ApplicationService {
             }, 2000);
           }
         }
-      }, 5000); // Progress every 5 seconds
+      }, 5000);
 
-      // Stop simulation after 2 minutes
       setTimeout(() => {
         clearInterval(interval);
         observer.complete();

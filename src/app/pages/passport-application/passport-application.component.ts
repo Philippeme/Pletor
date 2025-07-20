@@ -249,6 +249,9 @@ export class PassportApplicationComponent implements OnInit {
       case ApplicationStatus.PROCESSING:
         this.currentStep = 5;
         break;
+      case ApplicationStatus.COMPLETED:
+      this.currentStep = 6;
+      break;
       default:
         this.currentStep = 1;
     }
@@ -291,6 +294,8 @@ export class PassportApplicationComponent implements OnInit {
     if (this.currentStep < this.totalSteps) {
       if (this.validateCurrentStep()) {
         this.currentStep++;
+        // Synchroniser avec ApplicationService
+        this.syncApplicationProgress();
       }
     }
   }
@@ -298,6 +303,8 @@ export class PassportApplicationComponent implements OnInit {
   previousStep(): void {
     if (this.currentStep > 1) {
       this.currentStep--;
+      // Synchroniser avec ApplicationService
+      this.syncApplicationProgress();
     }
   }
 
@@ -405,6 +412,8 @@ export class PassportApplicationComponent implements OnInit {
         // Move to payment step
         this.currentStep = 4;
         this.updatePaymentAmounts();
+
+        this.syncApplicationProgress();
         
         // Clear success message after 3 seconds
         setTimeout(() => {
@@ -589,7 +598,9 @@ export class PassportApplicationComponent implements OnInit {
         payment.status = PaymentStatus.COMPLETED;
         this.application!.status = ApplicationStatus.PROCESSING;
         
-        // Also update via API
+        // NOUVEAU: Synchroniser après paiement
+        this.syncApplicationProgress();
+        
         this.apiService.patch(`/requests/${this.request.id}/status`, {
           paymentStatus: PaymentStatus.COMPLETED,
           status: PaymentStatus.COMPLETED,
@@ -627,6 +638,9 @@ export class PassportApplicationComponent implements OnInit {
       this.currentStep = 5;
       this.successMessage = ''; // Clear any payment messages
       this.errorMessage = ''; // Clear any error messages
+
+      // NOUVEAU: Synchroniser l'état avec ApplicationService
+      this.syncApplicationProgress();
     }
   }
 
@@ -693,7 +707,32 @@ export class PassportApplicationComponent implements OnInit {
 
   proceedToCollection(): void {
     this.currentStep = 6;
+
+    // NOUVEAU: Synchroniser l'état avec ApplicationService
+    this.syncApplicationProgress();
   }
+
+  /**
+   * NOUVELLE MÉTHODE: Synchronise l'état d'avancement avec ApplicationService
+   */
+  private syncApplicationProgress(): void {
+  if (this.application && this.application.id) {
+    this.applicationService.updateApplicationStep(
+      this.application.id,
+      this.currentStep,
+      1 // serviceId pour passport
+    ).subscribe({
+      next: (success) => {
+        if (success) {
+          console.log(`Passport progress synced: Step ${this.currentStep}/6`);
+        }
+      },
+      error: (error) => {
+        console.error('Failed to sync passport progress:', error);
+      }
+    });
+  }
+}
 
 
   goToTracking(): void {
