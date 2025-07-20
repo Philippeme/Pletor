@@ -106,7 +106,7 @@ export class ApplicationService {
         },
         {
           id: 'passport-step-4',
-          step: 'Payment Processing',
+          step: 'Payment',
           status: TimelineStatus.PENDING,
           date: baseDate,
           description: 'Complete payment of passport application fees (110,000 XAF)',
@@ -134,38 +134,6 @@ export class ApplicationService {
       ];
     } else if (serviceId === 4) { // Birth Certificate - Exact match with component steps
       return [
-        {
-          id: 'birth-step-1',
-          step: 'Person Information',
-          status: TimelineStatus.IN_PROGRESS, // Start with first step active
-          date: baseDate,
-          description: 'Provide details of the person whose birth certificate is being requested and request inputs',
-          isCompleted: false,
-          estimatedDuration: '5-10 minutes'
-        },
-        {
-          id: 'birth-step-2',
-          step: 'Payment Processing',
-          status: TimelineStatus.PENDING,
-          date: baseDate,
-          description: 'Complete payment of birth certificate copy fees (200 XAF)',
-          isCompleted: false,
-          estimatedDuration: '2-5 minutes'
-        },
-        {
-          id: 'birth-step-3',
-          step: 'CRVS Processing & Delivery',
-          status: TimelineStatus.PENDING,
-          date: baseDate,
-          description: 'Civil registry verification, certified copy preparation, and email delivery',
-          isCompleted: false,
-          estimatedDuration: '1-2 business days'
-        }
-      ];
-    }
-    
-    // Default timeline for other services
-    return [
       {
         id: 'default-step-1',
         step: 'Application Submission',
@@ -203,6 +171,38 @@ export class ApplicationService {
         estimatedDuration: '1-2 business days'
       }
     ];
+    }
+    
+    // Default timeline for other services
+    return [
+        {
+          id: 'birth-step-1',
+          step: 'Person Information',
+          status: TimelineStatus.IN_PROGRESS, // Start with first step active
+          date: baseDate,
+          description: 'Provide details of the person whose birth certificate is being requested and request inputs',
+          isCompleted: false,
+          estimatedDuration: '5-10 minutes'
+        },
+        {
+          id: 'birth-step-2',
+          step: 'Payment',
+          status: TimelineStatus.PENDING,
+          date: baseDate,
+          description: 'Complete payment of birth certificate copy fees (200 XAF)',
+          isCompleted: false,
+          estimatedDuration: '2-5 minutes'
+        },
+        {
+          id: 'birth-step-3',
+          step: 'CRVS Processing & Delivery',
+          status: TimelineStatus.PENDING,
+          date: baseDate,
+          description: 'Civil registry verification, certified copy preparation, and email delivery',
+          isCompleted: false,
+          estimatedDuration: '1-2 business days'
+        }
+      ];
   }
 
   /**

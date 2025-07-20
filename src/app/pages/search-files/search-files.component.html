@@ -134,9 +134,7 @@
                                 [class.active]="step.status === 'in_progress'"
                                 [class.current]="!step.isCompleted && step.status === 'pending'">
                                 
-                                <div class="timeline-marker">
-                                    <i [class]="getTimelineStepIcon(step)"></i>
-                                </div>
+                                <div class="timeline-marker"></div>
                                 
                                 <div class="timeline-content">
                                     <div class="timeline-header">

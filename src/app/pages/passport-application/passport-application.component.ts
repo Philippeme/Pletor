@@ -32,6 +32,7 @@ export class PassportApplicationComponent implements OnInit {
   isSubmitting = false;
   errorMessage = '';
   successMessage = '';
+  isApplicationReady = false; // NOUVEAU: Flag pour s'assurer que l'application est prête
 
   // File upload properties
   uploadedFiles: { [key: string]: File } = {};
@@ -181,12 +182,17 @@ export class PassportApplicationComponent implements OnInit {
       next: (application) => {
         if (application) {
           this.application = application;
+          this.isApplicationReady = true; // CORRIGÉ: Marquer comme prêt
           this.determineCurrentStep();
+        } else {
+          this.errorMessage = 'Application not found.';
+          this.isApplicationReady = false;
         }
       },
       error: (error) => {
         console.error('Error loading application:', error);
         this.errorMessage = 'Failed to load application details.';
+        this.isApplicationReady = false;
       }
     });
   }
@@ -202,12 +208,18 @@ export class PassportApplicationComponent implements OnInit {
       ).subscribe({
         next: (application) => {
           this.application = application;
+          this.isApplicationReady = true; // CORRIGÉ: Marquer comme prêt
+          console.log('Application created successfully:', application);
         },
         error: (error) => {
           console.error('Error creating application:', error);
           this.errorMessage = 'Failed to create application.';
+          this.isApplicationReady = false;
         }
       });
+    } else {
+      this.errorMessage = 'User not authenticated.';
+      this.isApplicationReady = false;
     }
   }
 
@@ -236,24 +248,37 @@ export class PassportApplicationComponent implements OnInit {
   private determineCurrentStep(): void {
     if (!this.application) return;
 
-    switch (this.application.status) {
-      case ApplicationStatus.DRAFT:
+    // CORRIGÉ: Déterminer l'étape basée sur la timeline plutôt que le statut
+    if (this.application.timeline && this.application.timeline.length > 0) {
+      const completedSteps = this.application.timeline.filter(step => step.isCompleted).length;
+      const inProgressStep = this.application.timeline.find(step => step.status === 'in_progress');
+      
+      if (inProgressStep) {
+        const inProgressIndex = this.application.timeline.indexOf(inProgressStep);
+        this.currentStep = inProgressIndex + 1;
+      } else if (completedSteps > 0) {
+        this.currentStep = Math.min(completedSteps + 1, this.totalSteps);
+      } else {
         this.currentStep = 1;
-        break;
-      case ApplicationStatus.SUBMITTED:
-        this.currentStep = 3;
-        break;
-      case ApplicationStatus.PAYMENT_PENDING:
-        this.currentStep = 4;
-        break;
-      case ApplicationStatus.PROCESSING:
-        this.currentStep = 5;
-        break;
-      case ApplicationStatus.COMPLETED:
-      this.currentStep = 6;
-      break;
-      default:
-        this.currentStep = 1;
+      }
+    } else {
+      // Fallback sur le statut seulement si pas de timeline
+      switch (this.application.status) {
+        case ApplicationStatus.DRAFT:
+          this.currentStep = 1;
+          break;
+        case ApplicationStatus.PAYMENT_PENDING:
+          this.currentStep = 4;
+          break;
+        case ApplicationStatus.PROCESSING:
+          this.currentStep = 5;
+          break;
+        case ApplicationStatus.COMPLETED:
+          this.currentStep = 6;
+          break;
+        default:
+          this.currentStep = 1;
+      }
     }
   }
 
@@ -291,9 +316,16 @@ export class PassportApplicationComponent implements OnInit {
   }
 
   nextStep(): void {
+    // CORRIGÉ: Vérifier que l'application est prête avant de continuer
+    if (!this.isApplicationReady || !this.application) {
+      this.errorMessage = 'Please wait for the application to load.';
+      return;
+    }
+
     if (this.currentStep < this.totalSteps) {
       if (this.validateCurrentStep()) {
         this.currentStep++;
+        this.errorMessage = ''; // Clear error message
         // Synchroniser avec ApplicationService
         this.syncApplicationProgress();
       }
@@ -303,12 +335,15 @@ export class PassportApplicationComponent implements OnInit {
   previousStep(): void {
     if (this.currentStep > 1) {
       this.currentStep--;
+      this.errorMessage = ''; // Clear error message
       // Synchroniser avec ApplicationService
       this.syncApplicationProgress();
     }
   }
 
   private validateCurrentStep(): boolean {
+    this.errorMessage = '';
+    
     switch (this.currentStep) {
       case 1: // Personal Information
         const personalFields = ['requestType', 'firstName', 'lastName', 'dateOfBirth', 'placeOfBirth', 'gender', 'maritalStatus'];
@@ -320,7 +355,7 @@ export class PassportApplicationComponent implements OnInit {
         const contactFields = ['phoneNumber', 'email', 'currentAddress', 'permanentAddress',
           'emergencyContactName', 'emergencyContactPhone', 'emergencyContactRelation'];
         return this.validateFields(contactFields);
-      case 3: // Document Upload
+      case 3: // Document Upload - CORRIGÉ: Validation plus robuste
         return this.validateDocumentUploads();
       default:
         return true;
@@ -329,20 +364,43 @@ export class PassportApplicationComponent implements OnInit {
 
   private validateFields(fieldNames: string[]): boolean {
     let isValid = true;
+    const invalidFields: string[] = [];
+    
     fieldNames.forEach(fieldName => {
       const control = this.passportForm.get(fieldName);
       if (control && control.invalid) {
         control.markAsTouched();
+        invalidFields.push(fieldName);
         isValid = false;
       }
     });
+
+    if (!isValid) {
+      this.errorMessage = `Please complete all required fields: ${invalidFields.join(', ')}`;
+    }
+
     return isValid;
   }
 
   validateDocumentUploads(): boolean {
     const requiredDocs = this.requiredDocuments.filter(doc => doc.required);
     const uploadedRequiredDocs = requiredDocs.filter(doc => this.uploadedFiles[doc.id]);
-    return uploadedRequiredDocs.length === requiredDocs.length;
+    
+    // CORRIGÉ: Affichage des documents uploadés pour debug
+    console.log('Required documents:', requiredDocs.map(d => d.id));
+    console.log('Uploaded files:', Object.keys(this.uploadedFiles));
+    console.log('Required vs Uploaded:', uploadedRequiredDocs.length, '/', requiredDocs.length);
+    
+    if (uploadedRequiredDocs.length !== requiredDocs.length) {
+      const missingDocs = requiredDocs
+        .filter(doc => !this.uploadedFiles[doc.id])
+        .map(doc => doc.name);
+      this.errorMessage = `Please upload the following required documents: ${missingDocs.join(', ')}`;
+      return false;
+    }
+    
+    this.errorMessage = ''; // Clear any previous error
+    return true;
   }
 
   onFileUpload(event: any, documentId: string): void {
@@ -363,14 +421,22 @@ export class PassportApplicationComponent implements OnInit {
 
       this.uploadedFiles[documentId] = file;
       this.errorMessage = '';
+      console.log(`File uploaded for ${documentId}:`, file.name);
     }
   }
 
   removeFile(documentId: string): void {
     delete this.uploadedFiles[documentId];
+    console.log(`File removed for ${documentId}`);
   }
 
   onSubmitApplication(): void {
+    // CORRIGÉ: Vérifications plus robustes
+    if (!this.isApplicationReady || !this.application) {
+      this.errorMessage = 'Application not ready. Please wait.';
+      return;
+    }
+
     // Validate form and documents
     if (!this.passportForm.valid) {
       this.markFormGroupTouched(this.passportForm);
@@ -379,12 +445,7 @@ export class PassportApplicationComponent implements OnInit {
     }
 
     if (!this.validateDocumentUploads()) {
-      this.errorMessage = 'Please upload all required documents before submitting.';
-      return;
-    }
-
-    if (!this.application) {
-      this.errorMessage = 'Application not found. Please try again.';
+      // Error message already set in validateDocumentUploads
       return;
     }
 
@@ -418,7 +479,7 @@ export class PassportApplicationComponent implements OnInit {
         // Clear success message after 3 seconds
         setTimeout(() => {
           this.successMessage = '';
-        }, 3000);
+        }, 2000);
         
       } catch (error) {
         this.isSubmitting = false;
@@ -426,49 +487,13 @@ export class PassportApplicationComponent implements OnInit {
         console.error('Submission error:', error);
       }
     }, 1500);
-
-    /* Original API implementation (commented for demo):
-    const body: any = this.passportForm.value;
-    
-    this.apiService.post<any>('/requests', { ...body, procedure_id: 1 }).subscribe({
-      next: (data: any) => {
-        this.request = data;
-        const requestId = data.id;
-        const formData: any = new FormData();
-        Object.keys(this.uploadedFiles).forEach(key => {
-          formData.append(key, this.uploadedFiles[key]);
-        });
-        this.apiService.post(`/requests/${requestId}/upload`, formData).subscribe({
-          next: () => {
-            this.isSubmitting = false;
-            this.successMessage = 'Application submitted successfully!';
-            this.currentStep = 4;
-            this.updatePaymentAmounts();
-          },
-          error: err => {
-            this.isSubmitting = false;
-            this.errorMessage = 'Upload failed. Please try again.';
-            console.error('Upload failed', err);
-          }
-        });
-      },
-      error: err => {
-        this.isSubmitting = false;
-        this.errorMessage = 'Request creation failed. Please try again.';
-        console.error('Request creation failed', err);
-      }
-    });
-    */
   }
 
   // Copy tracking number to clipboard
   copyTrackingNumber(): void {
     if (this.application?.trackingNumber) {
       navigator.clipboard.writeText(this.application.trackingNumber).then(() => {
-     
-        setTimeout(() => {
-          this.successMessage = '';
-        }, 2000);
+      
       }).catch(() => {
         const textArea = document.createElement('textarea');
         textArea.value = this.application!.trackingNumber;
@@ -476,10 +501,7 @@ export class PassportApplicationComponent implements OnInit {
         textArea.select();
         document.execCommand('copy');
         document.body.removeChild(textArea);
-      
-        setTimeout(() => {
-          this.successMessage = '';
-        }, 2000);
+  
       });
 
       const button = document.querySelector('.tracking-info .btn i') as HTMLElement;
@@ -581,7 +603,6 @@ export class PassportApplicationComponent implements OnInit {
         this.successMessage = `Payment is still processing. Please wait ${remainingTime} more seconds before refreshing.`;
       }
     } 
-    
   }
 
   private completePaymentProcess(): void {
@@ -601,18 +622,20 @@ export class PassportApplicationComponent implements OnInit {
         // NOUVEAU: Synchroniser après paiement
         this.syncApplicationProgress();
         
-        this.apiService.patch(`/requests/${this.request.id}/status`, {
-          paymentStatus: PaymentStatus.COMPLETED,
-          status: PaymentStatus.COMPLETED,
-          paidAmount: totalAmount
-        }).subscribe({
-          next: () => {
-            this.successMessage = 'Payment completed successfully!';
-          },
-          error: (error: any) => {
-            console.error('Payment status update failed:', error);
-          }
-        });
+        if (this.request) {
+          this.apiService.patch(`/requests/${this.request.id}/status`, {
+            paymentStatus: PaymentStatus.COMPLETED,
+            status: PaymentStatus.COMPLETED,
+            paidAmount: totalAmount
+          }).subscribe({
+            next: () => {
+              this.successMessage = 'Payment completed successfully!';
+            },
+            error: (error: any) => {
+              console.error('Payment status update failed:', error);
+            }
+          });
+        }
       },
       error: (error) => {
         this.isProcessingPayment = false;
@@ -716,24 +739,23 @@ export class PassportApplicationComponent implements OnInit {
    * NOUVELLE MÉTHODE: Synchronise l'état d'avancement avec ApplicationService
    */
   private syncApplicationProgress(): void {
-  if (this.application && this.application.id) {
-    this.applicationService.updateApplicationStep(
-      this.application.id,
-      this.currentStep,
-      1 // serviceId pour passport
-    ).subscribe({
-      next: (success) => {
-        if (success) {
-          console.log(`Passport progress synced: Step ${this.currentStep}/6`);
+    if (this.application && this.application.id) {
+      this.applicationService.updateApplicationStep(
+        this.application.id,
+        this.currentStep,
+        1 // serviceId pour passport
+      ).subscribe({
+        next: (success) => {
+          if (success) {
+            console.log(`Passport progress synced: Step ${this.currentStep}/6`);
+          }
+        },
+        error: (error) => {
+          console.error('Failed to sync passport progress:', error);
         }
-      },
-      error: (error) => {
-        console.error('Failed to sync passport progress:', error);
-      }
-    });
+      });
+    }
   }
-}
-
 
   goToTracking(): void {
     if (this.application) {

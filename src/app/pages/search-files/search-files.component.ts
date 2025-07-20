@@ -159,7 +159,7 @@ export class SearchFilesComponent implements OnInit {
   getTotalStepsForService(serviceId: number): number {
     switch (serviceId) {
       case 1: return 6; // Passport
-      case 4: return 3; // Birth Certificate
+      case 2: return 3; // Birth Certificate
       default: return 4; // Default
     }
   }

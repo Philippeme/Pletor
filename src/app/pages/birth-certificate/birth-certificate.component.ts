@@ -21,6 +21,7 @@ export class BirthCertificateComponent implements OnInit {
   isSubmitting = false;
   errorMessage = '';
   successMessage = '';
+  isApplicationReady = false; 
   
   // Payment processing states
   isProcessingPayment = false;
@@ -30,7 +31,7 @@ export class BirthCertificateComponent implements OnInit {
   currentPaymentStep = 1;
   hasPaymentCompleted = false; 
   showRefreshButton = false; 
-  paymentProcessingStartTime = 0; // 
+  paymentProcessingStartTime = 0;
   
   // Accordion states
   activePaymentMethod = '';
@@ -43,7 +44,7 @@ export class BirthCertificateComponent implements OnInit {
   paymentMethods = [
     { value: PaymentMethod.MTN_MONEY, label: 'MTN Mobile Money', icon: 'fas fa-mobile-alt' },
     { value: PaymentMethod.ORANGE_MONEY, label: 'Orange Money', icon: 'fas fa-mobile-alt' },
-    { value: PaymentMethod.CREDIT_CARD, label: 'Visa Credit Card', icon: 'fas fa-credit-card' } // Updated label
+    { value: PaymentMethod.CREDIT_CARD, label: 'Visa Credit Card', icon: 'fas fa-credit-card' }
   ];
 
   // MTN Mobile Money form
@@ -51,7 +52,7 @@ export class BirthCertificateComponent implements OnInit {
   // Orange Money form
   orangeForm: FormGroup;
   // Visa Credit Card form
-  visaForm: FormGroup; // New form for Visa
+  visaForm: FormGroup;
   
   // Payment step tracking
   mtnPaymentSteps = [
@@ -140,11 +141,6 @@ export class BirthCertificateComponent implements OnInit {
     this.prefillUserData();
     this.onRequestTypeChange();
     this.updatePaymentAmounts();
-    
-    // NOUVEAU: Synchroniser l'état initial
-    setTimeout(() => {
-      this.syncApplicationProgress();
-    }, 1000);
   }
 
   private updatePaymentAmounts(): void {
@@ -159,17 +155,17 @@ export class BirthCertificateComponent implements OnInit {
       next: (application) => {
         if (application) {
           this.application = application;
+          this.isApplicationReady = true; // CORRIGÉ: Marquer comme prêt
           this.determineCurrentStep();
-          
-          // NOUVEAU: Synchroniser après chargement
-          setTimeout(() => {
-            this.syncApplicationProgress();
-          }, 500);
+        } else {
+          this.errorMessage = 'Application not found.';
+          this.isApplicationReady = false;
         }
       },
       error: (error) => {
         console.error('Error loading application:', error);
         this.errorMessage = 'Failed to load application details.';
+        this.isApplicationReady = false;
       }
     });
   }
@@ -185,12 +181,18 @@ export class BirthCertificateComponent implements OnInit {
       ).subscribe({
         next: (application) => {
           this.application = application;
+          this.isApplicationReady = true; 
+          console.log('Birth certificate application created successfully:', application);
         },
         error: (error) => {
           console.error('Error creating application:', error);
           this.errorMessage = 'Failed to create application.';
+          this.isApplicationReady = false;
         }
       });
+    } else {
+      this.errorMessage = 'User not authenticated.';
+      this.isApplicationReady = false;
     }
   }
 
@@ -200,7 +202,8 @@ export class BirthCertificateComponent implements OnInit {
       this.certificateForm.patchValue({
         emailAddress: currentUser.email,
         personFirstName: currentUser.firstName || '',
-        personLastName: currentUser.lastName || ''
+        personLastName: currentUser.lastName || '',
+        userIdentificationNumber: currentUser.cniNumber || currentUser.consularCardNumber || ''
       });
 
       // Prefill cardholder name for Visa form
@@ -246,12 +249,16 @@ export class BirthCertificateComponent implements OnInit {
   }
 
   nextStep(): void {
+    // CORRIGÉ: Vérifier que l'application est prête avant de continuer
+    if (!this.isApplicationReady || !this.application) {
+      this.errorMessage = 'Please wait for the application to load.';
+      return;
+    }
+
     if (this.currentStep < this.totalSteps) {
       if (this.validateCurrentStep()) {
         this.currentStep++;
         this.errorMessage = '';
-        
-        // NOUVEAU: Synchroniser avec ApplicationService
         this.syncApplicationProgress();
       }
     }
@@ -261,8 +268,6 @@ export class BirthCertificateComponent implements OnInit {
     if (this.currentStep > 1) {
       this.currentStep--;
       this.errorMessage = '';
-      
-      // NOUVEAU: Synchroniser avec ApplicationService
       this.syncApplicationProgress();
     }
   }
@@ -305,19 +310,19 @@ export class BirthCertificateComponent implements OnInit {
   }
 
   onSubmitApplication(): void {
-    this.errorMessage = '';
-    this.successMessage = '';
+    // CORRIGÉ: Vérifications plus robustes
+    if (!this.isApplicationReady || !this.application) {
+      this.errorMessage = 'Application not ready. Please wait for the application to load completely.';
+      return;
+    }
 
     if (!this.validateCurrentStep()) {
       return;
     }
 
-    if (!this.application) {
-      this.errorMessage = 'Application not found. Please try again.';
-      return;
-    }
-
     this.isSubmitting = true;
+    this.errorMessage = '';
+    this.successMessage = '';
     
     setTimeout(() => {
       try {
@@ -327,7 +332,6 @@ export class BirthCertificateComponent implements OnInit {
         this.currentStep = 2; // Move to payment step
         this.updatePaymentAmounts();
         
-        // NOUVEAU: Synchroniser l'état avec ApplicationService
         this.syncApplicationProgress();
         
         setTimeout(() => {
@@ -374,10 +378,7 @@ export class BirthCertificateComponent implements OnInit {
   copyTrackingNumber(): void {
     if (this.application?.trackingNumber) {
       navigator.clipboard.writeText(this.application.trackingNumber).then(() => {
-        
-        setTimeout(() => {
-          this.successMessage = '';
-        }, 2000);
+       
       }).catch(() => {
         const textArea = document.createElement('textarea');
         textArea.value = this.application!.trackingNumber;
@@ -385,10 +386,7 @@ export class BirthCertificateComponent implements OnInit {
         textArea.select();
         document.execCommand('copy');
         document.body.removeChild(textArea);
-        
-        setTimeout(() => {
-          this.successMessage = '';
-        }, 2000);
+
       });
 
       const button = document.querySelector('.tracking-info .btn i') as HTMLElement;
@@ -482,7 +480,6 @@ export class BirthCertificateComponent implements OnInit {
         payment.status = PaymentStatus.COMPLETED;
         this.application!.status = ApplicationStatus.PROCESSING;
         
-        // NOUVEAU: Synchroniser après paiement
         this.syncApplicationProgress();
       },
       error: (error) => {
@@ -497,14 +494,12 @@ export class BirthCertificateComponent implements OnInit {
   proceedToConfirmation(): void {
     if (this.paymentVerificationComplete) {
       this.currentStep = 3;
-
-      // NOUVEAU: Synchroniser l'état avec ApplicationService
       this.syncApplicationProgress();
     }
   }
 
   /**
-   * NOUVELLE MÉTHODE: Synchronise l'état d'avancement avec ApplicationService
+   * Synchronise l'état d'avancement avec ApplicationService
    */
   private syncApplicationProgress(): void {
     if (this.application) {
