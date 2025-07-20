@@ -567,8 +567,12 @@ export class PassportApplicationComponent implements OnInit {
       this.completePaymentProcess();
     } else {
       const remainingTime = Math.ceil((40000 - elapsedTime) / 1000);
-      this.successMessage = `Payment is still processing. Please wait ${remainingTime} more seconds before refreshing.`;
-    }
+      // Only show message if still on payment step
+      if (this.currentStep === 4) {
+        this.successMessage = `Payment is still processing. Please wait ${remainingTime} more seconds before refreshing.`;
+      }
+    } 
+    
   }
 
   private completePaymentProcess(): void {
@@ -621,7 +625,43 @@ export class PassportApplicationComponent implements OnInit {
   proceedToBiometric(): void {
     if (this.paymentVerificationComplete) {
       this.currentStep = 5;
+      this.successMessage = ''; // Clear any payment messages
+      this.errorMessage = ''; // Clear any error messages
     }
+  }
+
+  // Biometric appointment methods - Auto-generated appointment
+  getAppointmentDate(): string {
+    const today = new Date();
+    let appointmentDate = new Date(today);
+    let daysAdded = 0;
+    let businessDaysAdded = 0;
+
+    // Add 3 business days (excluding Saturday and Sunday)
+    while (businessDaysAdded < 3) {
+      daysAdded++;
+      appointmentDate = new Date(today.getTime() + (daysAdded * 24 * 60 * 60 * 1000));
+      
+      // Check if it's not Saturday (6) or Sunday (0)
+      if (appointmentDate.getDay() !== 0 && appointmentDate.getDay() !== 6) {
+        businessDaysAdded++;
+      }
+    }
+
+    return appointmentDate.toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  }
+
+  generateAppointmentReference(): string {
+    // Generate a consistent reference based on application tracking number
+    if (this.application?.trackingNumber) {
+      return this.application.trackingNumber.slice(-8);
+    }
+    return Date.now().toString().slice(-8);
   }
 
   // Biometric appointment methods
@@ -629,38 +669,6 @@ export class PassportApplicationComponent implements OnInit {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     return tomorrow.toISOString().split('T')[0];
-  }
-
-  bookBiometricAppointment(): void {
-    if (this.biometricForm.valid) {
-      this.isBookingAppointment = true;
-      this.errorMessage = '';
-
-      // Simulate appointment booking
-      setTimeout(() => {
-        this.biometricAppointment = {
-          center: this.biometricForm.get('enrollmentCenter')?.value,
-          date: new Date(this.biometricForm.get('appointmentDate')?.value),
-          time: this.biometricForm.get('appointmentTime')?.value,
-          reference: 'DGSN-' + Date.now().toString().slice(-8),
-          phone: this.biometricForm.get('contactPhone')?.value
-        };
-        
-        this.isBookingAppointment = false;
-        this.successMessage = 'Biometric appointment booked successfully!';
-        
-        setTimeout(() => {
-          this.successMessage = '';
-        }, 3000);
-      }, 2000);
-    } else {
-      this.markFormGroupTouched(this.biometricForm);
-    }
-  }
-
-  changeAppointment(): void {
-    this.biometricAppointment = null;
-    this.biometricForm.reset();
   }
 
   getEnrollmentCenterName(centerCode: string): string {
@@ -684,10 +692,9 @@ export class PassportApplicationComponent implements OnInit {
   }
 
   proceedToCollection(): void {
-    if (this.biometricAppointment) {
-      this.currentStep = 6;
-    }
+    this.currentStep = 6;
   }
+
 
   goToTracking(): void {
     if (this.application) {

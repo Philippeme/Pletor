@@ -719,76 +719,8 @@
 
                     <div class="row">
                         <div class="col-lg-8">
-                            <!-- Appointment Booking -->
-                            <div class="appointment-section mb-4" *ngIf="!biometricAppointment">
-                                <h5 class="mb-3">
-                                    <i class="fas fa-calendar-plus me-2"></i>
-                                    Book Your Biometric Appointment
-                                </h5>
-                                
-                                <div class="alert alert-info mb-4">
-                                    <i class="fas fa-info-circle me-2"></i>
-                                    <strong>Important:</strong> You must visit a DGSN enrollment center for biometric data capture (photo, fingerprints, signature).
-                                </div>
-
-                                <form [formGroup]="biometricForm">
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Select Enrollment Center *</label>
-                                            <select class="form-select" formControlName="enrollmentCenter"
-                                                [class.is-invalid]="biometricForm.get('enrollmentCenter')?.invalid && biometricForm.get('enrollmentCenter')?.touched">
-                                                <option value="">Choose a center</option>
-                                                <option value="bissau-central">DGSN Bissau - Central Office</option>
-                                                <option value="bissau-airport">DGSN Bissau - Airport Office</option>
-                                                <option value="bafata">DGSN Bafatá Regional Office</option>
-                                                <option value="gabu">DGSN Gabú Regional Office</option>
-                                                <option value="cacheu">DGSN Cacheu Regional Office</option>
-                                            </select>
-                                            <div class="invalid-feedback">Please select an enrollment center</div>
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Preferred Date *</label>
-                                            <input type="date" class="form-control" formControlName="appointmentDate"
-                                                [min]="getMinAppointmentDate()"
-                                                [class.is-invalid]="biometricForm.get('appointmentDate')?.invalid && biometricForm.get('appointmentDate')?.touched">
-                                            <div class="invalid-feedback">Please select a date</div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Preferred Time *</label>
-                                            <select class="form-select" formControlName="appointmentTime"
-                                                [class.is-invalid]="biometricForm.get('appointmentTime')?.invalid && biometricForm.get('appointmentTime')?.touched">
-                                                <option value="">Choose time slot</option>
-                                                <option value="09:00">09:00 AM</option>
-                                                <option value="10:00">10:00 AM</option>
-                                                <option value="11:00">11:00 AM</option>
-                                                <option value="14:00">02:00 PM</option>
-                                                <option value="15:00">03:00 PM</option>
-                                                <option value="16:00">04:00 PM</option>
-                                            </select>
-                                            <div class="invalid-feedback">Please select a time slot</div>
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Contact Phone *</label>
-                                            <input type="tel" class="form-control" formControlName="contactPhone"
-                                                [class.is-invalid]="biometricForm.get('contactPhone')?.invalid && biometricForm.get('contactPhone')?.touched">
-                                            <div class="invalid-feedback">Contact phone is required</div>
-                                        </div>
-                                    </div>
-
-                                    <button type="button" class="btn btn-primary" 
-                                        [disabled]="isBookingAppointment || biometricForm.invalid"
-                                        (click)="bookBiometricAppointment()">
-                                        <span *ngIf="isBookingAppointment" class="spinner-border spinner-border-sm me-2"></span>
-                                        <i class="fas fa-calendar-check me-2" *ngIf="!isBookingAppointment"></i>
-                                        Book Appointment
-                                    </button>
-                                </form>
-                            </div>
-
                             <!-- Appointment Confirmation -->
-                            <div class="appointment-confirmation" *ngIf="biometricAppointment">
+                            <div class="appointment-confirmation">
                                 <div class="appointment-card">
                                     <div class="card-header">
                                         <h5 class="mb-0">
@@ -797,42 +729,53 @@
                                         </h5>
                                     </div>
                                     <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="appointment-detail">
-                                                    <i class="fas fa-map-marker-alt text-primary me-2"></i>
-                                                    <strong>Center:</strong> {{ getEnrollmentCenterName(biometricAppointment.center) }}
-                                                </div>
-                                                <div class="appointment-detail">
-                                                    <i class="fas fa-calendar text-primary me-2"></i>
-                                                    <strong>Date:</strong> {{ formatAppointmentDate(biometricAppointment.date) }}
-                                                </div>
-                                                <div class="appointment-detail">
-                                                    <i class="fas fa-clock text-primary me-2"></i>
-                                                    <strong>Time:</strong> {{ biometricAppointment.time }}
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="appointment-detail">
-                                                    <i class="fas fa-hashtag text-primary me-2"></i>
-                                                    <strong>Reference:</strong> {{ biometricAppointment.reference }}
-                                                </div>
-                                                <div class="appointment-detail">
-                                                    <i class="fas fa-phone text-primary me-2"></i>
-                                                    <strong>Contact:</strong> {{ biometricAppointment.phone }}
-                                                </div>
-                                            </div>
+                                        <!-- Appointment Details Table -->
+                                        <div class="appointment-table-container mb-4">
+                                            <table class="table table-bordered appointment-details-table">
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="detail-label">
+                                                            <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                                                            <strong>Center</strong>
+                                                        </td>
+                                                        <td class="detail-value">DGSN Bissau - Central Office</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="detail-label">
+                                                            <i class="fas fa-calendar text-primary me-2"></i>
+                                                            <strong>Date</strong>
+                                                        </td>
+                                                        <td class="detail-value">{{ getAppointmentDate() }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="detail-label">
+                                                            <i class="fas fa-clock text-primary me-2"></i>
+                                                            <strong>Time</strong>
+                                                        </td>
+                                                        <td class="detail-value">10:00 AM</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="detail-label">
+                                                            <i class="fas fa-hashtag text-primary me-2"></i>
+                                                            <strong>Reference</strong>
+                                                        </td>
+                                                        <td class="detail-value">DGSN-{{ generateAppointmentReference() }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="detail-label">
+                                                            <i class="fas fa-phone text-primary me-2"></i>
+                                                            <strong>Contact</strong>
+                                                        </td>
+                                                        <td class="detail-value">656789827</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
                                         </div>
 
-                                        <div class="alert alert-warning mt-3">
+                                        <div class="alert alert-warning">
                                             <i class="fas fa-exclamation-triangle me-2"></i>
                                             <strong>Important:</strong> Please arrive 15 minutes early with all required documents and this appointment reference.
                                         </div>
-
-                                        <button class="btn btn-outline-secondary" (click)="changeAppointment()">
-                                            <i class="fas fa-calendar-alt me-2"></i>
-                                            Change Appointment
-                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -1032,7 +975,7 @@
                         <button type="button" class="btn btn-success" *ngIf="currentStep === 3"
                             [disabled]="isSubmitting || !validateDocumentUploads()" (click)="onSubmitApplication()">
                             <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
-                            Submit Application
+                            Proceed with Payment
                         </button>
 
                         <button type="button" class="btn btn-primary" *ngIf="currentStep === 4"
@@ -1043,7 +986,6 @@
                         </button>
 
                         <button type="button" class="btn btn-primary" *ngIf="currentStep === 5"
-                            [disabled]="!biometricAppointment"
                             (click)="proceedToCollection()">
                             Complete Application
                             <i class="fas fa-arrow-right ms-2"></i>

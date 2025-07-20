@@ -31,16 +31,11 @@
             <div class="progress-steps">
                 <div class="step" [class.active]="currentStep >= 1" [class.completed]="currentStep > 1">
                     <div class="step-circle">1</div>
-                    <span class="step-label">Category & Type</span>
+                    <span class="step-label">Claim Details</span>
                 </div>
                 <div class="step-line" [class.completed]="currentStep > 1"></div>
-                <div class="step" [class.active]="currentStep >= 2" [class.completed]="currentStep > 2">
+                <div class="step" [class.active]="currentStep >= 2">
                     <div class="step-circle">2</div>
-                    <span class="step-label">Details</span>
-                </div>
-                <div class="step-line" [class.completed]="currentStep > 2"></div>
-                <div class="step" [class.active]="currentStep >= 3">
-                    <div class="step-circle">3</div>
                     <span class="step-label">Confirmation</span>
                 </div>
             </div>
@@ -62,11 +57,11 @@
 
             <form [formGroup]="claimForm">
 
-                <!-- Step 1: Category & Type -->
+                <!-- Step 1: Unified Claim Details -->
                 <div class="form-step" *ngIf="currentStep === 1">
                     <div class="step-header mb-4">
-                        <h3>Category & Type</h3>
-                        <p class="text-muted">Select the category and type of your claim</p>
+                        <h3>Claim Details</h3>
+                        <p class="text-muted">Provide complete information about your claim</p>
                     </div>
 
                     <!-- Claim Category -->
@@ -103,25 +98,6 @@
                         </div>
                     </div>
 
-                    <!-- Priority -->
-                    <div class="mb-4">
-                        <label class="form-label">Priority Level *</label>
-                        <select class="form-select" formControlName="priority">
-                            <option value="">Select Priority</option>
-                            <option *ngFor="let priority of claimPriorities" [value]="priority.value">
-                                {{ priority.label }}
-                            </option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Step 2: Details -->
-                <div class="form-step" *ngIf="currentStep === 2">
-                    <div class="step-header mb-4">
-                        <h3>Claim Details</h3>
-                        <p class="text-muted">Provide detailed information about your claim</p>
-                    </div>
-
                     <!-- Subject -->
                     <div class="mb-3">
                         <label class="form-label">Subject *</label>
@@ -134,7 +110,7 @@
                     </div>
 
                     <!-- Description -->
-                    <div class="mb-3">
+                    <div class="mb-4">
                         <label class="form-label">Description *</label>
                         <textarea class="form-control" rows="6" formControlName="description"
                             placeholder="Provide detailed information about your claim, including what happened, when it occurred, and what resolution you're seeking."
@@ -148,7 +124,7 @@
                     </div>
 
                     <!-- Related Application (Optional) -->
-                    <div class="row">
+                    <div class="row mb-4">
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Related Application ID (Optional)</label>
                             <input type="text" class="form-control" formControlName="applicationId"
@@ -158,34 +134,23 @@
                             </small>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Service ID (Optional)</label>
-                            <input type="number" class="form-control" formControlName="serviceId"
-                                placeholder="1">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" formControlName="phoneNumber"
+                                placeholder="Enter your phone number">
                             <small class="form-text text-muted">
-                                Service number if applicable
+                                For urgent follow-up if needed
                             </small>
                         </div>
                     </div>
 
-                    <!-- Contact Preferences -->
-                    <h5 class="mb-3 mt-4">Contact Preferences</h5>
-                    <div class="row">
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label">Preferred Contact Method *</label>
-                            <select class="form-select" formControlName="preferredContactMethod">
-                                <option value="email">Email</option>
-                                <option value="phone">Phone</option>
-                                <option value="both">Both</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label">Email Address</label>
-                            <input type="email" class="form-control" formControlName="email">
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label">Phone Number</label>
-                            <input type="tel" class="form-control" formControlName="phoneNumber">
-                        </div>
+                    <!-- Email Address -->
+                    <div class="mb-4">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" class="form-control" formControlName="email"
+                            placeholder="Enter your email address">
+                        <small class="form-text text-muted">
+                            Updates will be sent to this email address
+                        </small>
                     </div>
 
                     <!-- File Attachments -->
@@ -218,8 +183,8 @@
                     </div>
                 </div>
 
-                <!-- Step 3: Confirmation -->
-                <div class="form-step" *ngIf="currentStep === 3">
+                <!-- Step 2: Confirmation -->
+                <div class="form-step" *ngIf="currentStep === 2">
                     <div class="confirmation-content text-center" *ngIf="submittedClaim">
                         <div class="success-icon mb-4">
                             <i class="fas fa-check-circle fa-4x text-success"></i>
@@ -236,10 +201,10 @@
                                 <strong>Subject:</strong> {{ submittedClaim.subject }}
                             </div>
                             <div class="summary-item">
-                                <strong>Priority:</strong> 
-                                <span class="badge" [class]="'bg-' + getPriorityColor(submittedClaim.priority)">
-                                    {{ submittedClaim.priority | titlecase }}
-                                </span>
+                                <strong>Category:</strong> {{ submittedClaim.category | titlecase }}
+                            </div>
+                            <div class="summary-item">
+                                <strong>Type:</strong> {{ submittedClaim.claimType | titlecase }}
                             </div>
                             <div class="summary-item">
                                 <strong>Status:</strong> {{ submittedClaim.status | titlecase }}
@@ -271,27 +236,13 @@
             </form>
 
             <!-- Navigation Buttons -->
-            <div class="form-navigation mt-4" *ngIf="currentStep < 3">
-                <div class="d-flex justify-content-between">
-                    <button type="button" class="btn btn-outline-secondary" *ngIf="currentStep > 1"
-                        (click)="previousStep()">
-                        <i class="fas fa-arrow-left me-2"></i>
-                        Previous
+            <div class="form-navigation mt-4" *ngIf="currentStep < 2">
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="btn btn-success" 
+                        [disabled]="isSubmitting" (click)="onSubmitClaim()">
+                        <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
+                        Submit Claim
                     </button>
-
-                    <div class="ms-auto">
-                        <button type="button" class="btn btn-primary" *ngIf="currentStep === 1"
-                            (click)="nextStep()">
-                            Next
-                            <i class="fas fa-arrow-right ms-2"></i>
-                        </button>
-
-                        <button type="button" class="btn btn-success" *ngIf="currentStep === 2"
-                            [disabled]="isSubmitting" (click)="onSubmitClaim()">
-                            <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
-                            Submit Claim
-                        </button>
-                    </div>
                 </div>
             </div>
         </div>

@@ -20,7 +20,7 @@ import {
 export class ClaimComponent implements OnInit {
   claimForm: FormGroup;
   currentStep = 1;
-  totalSteps = 3;
+  totalSteps = 2;
   isSubmitting = false;
   errorMessage = '';
   successMessage = '';
@@ -52,13 +52,6 @@ export class ClaimComponent implements OnInit {
     { value: ClaimCategory.INQUIRY, label: 'Inquiry', description: 'Ask questions' }
   ];
 
-  claimPriorities = [
-    { value: ClaimPriority.LOW, label: 'Low', color: 'success' },
-    { value: ClaimPriority.MEDIUM, label: 'Medium', color: 'warning' },
-    { value: ClaimPriority.HIGH, label: 'High', color: 'danger' },
-    { value: ClaimPriority.URGENT, label: 'Urgent', color: 'dark' }
-  ];
-
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -67,19 +60,12 @@ export class ClaimComponent implements OnInit {
     private translate: TranslateService
   ) {
     this.claimForm = this.fb.group({
-      // Step 1: Basic Information
+      // Step 1: Unified Information
       claimCategory: ['', Validators.required],
       claimType: ['', Validators.required],
-      priority: [ClaimPriority.MEDIUM, Validators.required],
-      
-      // Step 2: Details
       subject: ['', [Validators.required, Validators.minLength(10)]],
       description: ['', [Validators.required, Validators.minLength(20)]],
       applicationId: [''],
-      serviceId: [''],
-      
-      // Contact preferences
-      preferredContactMethod: ['email', Validators.required],
       phoneNumber: [''],
       email: ['']
     });
@@ -99,29 +85,14 @@ export class ClaimComponent implements OnInit {
     }
   }
 
-  nextStep(): void {
-    if (this.validateCurrentStep()) {
-      this.currentStep++;
-    }
-  }
-
-  previousStep(): void {
-    if (this.currentStep > 1) {
-      this.currentStep--;
-    }
-  }
-
   private validateCurrentStep(): boolean {
     this.errorMessage = '';
     
-    switch (this.currentStep) {
-      case 1:
-        return this.validateFields(['claimCategory', 'claimType', 'priority']);
-      case 2:
-        return this.validateFields(['subject', 'description']);
-      default:
-        return true;
+    if (this.currentStep === 1) {
+      return this.validateFields(['claimCategory', 'claimType', 'subject', 'description']);
     }
+    
+    return true;
   }
 
   private validateFields(fieldNames: string[]): boolean {
@@ -188,6 +159,7 @@ export class ClaimComponent implements OnInit {
     const claimData = {
       ...this.claimForm.value,
       userId: currentUser.id,
+      priority: ClaimPriority.MEDIUM, // Default priority
       attachments: this.uploadedFiles
     };
 
@@ -195,7 +167,7 @@ export class ClaimComponent implements OnInit {
       next: (claim) => {
         this.isSubmitting = false;
         this.submittedClaim = claim;
-        this.currentStep = 3;
+        this.currentStep = 2;
         this.successMessage = 'Claim submitted successfully!';
       },
       error: (error) => {
@@ -218,11 +190,6 @@ export class ClaimComponent implements OnInit {
   getClaimTypeIcon(type: ClaimType): string {
     const claimType = this.claimTypes.find(ct => ct.value === type);
     return claimType?.icon || 'fas fa-question';
-  }
-
-  getPriorityColor(priority: ClaimPriority): string {
-    const priorityObj = this.claimPriorities.find(p => p.value === priority);
-    return priorityObj?.color || 'secondary';
   }
 
   goToTracking(): void {

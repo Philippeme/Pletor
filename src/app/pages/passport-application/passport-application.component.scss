@@ -447,7 +447,7 @@
             }
         }
 
-        // Biometric appointment section
+                // Biometric appointment section
         .appointment-section {
             .appointment-card {
                 border: none;
@@ -468,6 +468,51 @@
 
                 .card-body {
                     padding: 2rem;
+
+                    .appointment-table-container {
+                        .appointment-details-table {
+                            margin-bottom: 0;
+                            border-radius: 8px;
+                            overflow: hidden;
+                            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+                            td {
+                                border: 1px solid #e9ecef;
+                                padding: 1rem;
+                                vertical-align: middle;
+
+                                &.detail-label {
+                                    background-color: #f8f9fa;
+                                    border-right: 2px solid var(--primary-color);
+                                    width: 35%;
+                                    font-weight: 500;
+
+                                    i {
+                                        width: 20px;
+                                        text-align: center;
+                                    }
+                                }
+
+                                &.detail-value {
+                                    background-color: white;
+                                    font-weight: 500;
+                                    color: var(--dark-color);
+                                }
+                            }
+
+                            tr:first-child td {
+                                border-top: none;
+                            }
+
+                            tr:last-child td:first-child {
+                                border-bottom-left-radius: 8px;
+                            }
+
+                            tr:last-child td:last-child {
+                                border-bottom-right-radius: 8px;
+                            }
+                        }
+                    }
 
                     .appointment-detail {
                         margin-bottom: 1rem;

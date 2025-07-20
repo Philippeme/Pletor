@@ -6,8 +6,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ApiService {
-  //private readonly API_URL = 'http://localhost:8000/api';
-  private readonly API_URL = 'https://apimkgov.mkba.net/api';
+  private readonly API_URL = 'http://localhost:8000/api';
+  //private readonly API_URL = 'https://apimkgov.mkba.net/api';
 
   constructor(private http: HttpClient) {}
 
