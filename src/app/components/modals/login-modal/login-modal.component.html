@@ -1,9 +1,8 @@
 <div class="modal-header border-0">
     <div class="w-100 text-center">
-      
         <h4 class="modal-title">{{ 'forms.login.title' | translate }}</h4>
     </div>
-    <button type="button" class="btn-close" (click)="close()"></button>
+    <button type="button" class="btn-close" (click)="close()" [attr.aria-label]="'buttons.close' | translate"></button>
 </div>
 
 <div class="modal-body px-4 pb-4">
@@ -22,13 +21,13 @@
                     <i class="fas fa-user"></i>
                 </span>
                 <input type="text" class="form-control" formControlName="identifier"
-                    [placeholder]="'forms.login.phone_email' | translate"
+                    [placeholder]="'forms.login.phone_email_placeholder' | translate"
                     [class.is-invalid]="loginForm.get('identifier')?.invalid && loginForm.get('identifier')?.touched">
             </div>
             <div class="invalid-feedback"
                 *ngIf="loginForm.get('identifier')?.invalid && loginForm.get('identifier')?.touched">
                 <small *ngIf="loginForm.get('identifier')?.errors?.['required']">
-                    This field is required
+                    {{ 'forms.login.identifier_required' | translate }}
                 </small>
             </div>
         </div>
@@ -41,19 +40,20 @@
                     <i class="fas fa-lock"></i>
                 </span>
                 <input [type]="showPassword ? 'text' : 'password'" class="form-control" formControlName="password"
-                    [placeholder]="'forms.login.password' | translate"
+                    [placeholder]="'forms.login.password_placeholder' | translate"
                     [class.is-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
-                <button type="button" class="btn btn-outline-secondary" (click)="togglePasswordVisibility()">
+                <button type="button" class="btn btn-outline-secondary" (click)="togglePasswordVisibility()"
+                    [attr.aria-label]="'forms.login.toggle_password' | translate">
                     <i class="fas" [class.fa-eye]="!showPassword" [class.fa-eye-slash]="showPassword"></i>
                 </button>
             </div>
             <div class="invalid-feedback"
                 *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
                 <small *ngIf="loginForm.get('password')?.errors?.['required']">
-                    Password is required
+                    {{ 'forms.login.password_required' | translate }}
                 </small>
                 <small *ngIf="loginForm.get('password')?.errors?.['minlength']">
-                    Password must be at least 6 characters
+                    {{ 'forms.login.password_minlength' | translate }}
                 </small>
             </div>
         </div>
@@ -68,7 +68,8 @@
 
         <!-- Login Button -->
         <button type="submit" class="btn btn-primary w-100 mb-3" [disabled]="isLoading">
-            <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+            <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" 
+                [attr.aria-label]="'messages.loading' | translate"></span>
             {{ 'forms.login.login_button' | translate }}
         </button>
 

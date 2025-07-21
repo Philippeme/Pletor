@@ -36,20 +36,20 @@ export class ClaimComponent implements OnInit {
 
   // Data options
   claimTypes = [
-    { value: ClaimType.SERVICE_DELAY, label: 'Service Delay', icon: 'fas fa-clock' },
-    { value: ClaimType.SERVICE_QUALITY, label: 'Bribe', icon: 'fas fa-hand-holding-usd' },
-    { value: ClaimType.PAYMENT_ISSUE, label: 'Payment Issue', icon: 'fas fa-credit-card' },
-    { value: ClaimType.DOCUMENT_ERROR, label: 'Doc Not Found', icon: 'fas fa-file-alt' },
-    { value: ClaimType.STAFF_BEHAVIOR, label: 'Staff Behavior', icon: 'fas fa-user-tie' },
-    { value: ClaimType.SYSTEM_ERROR, label: 'System Error', icon: 'fas fa-bug' },
-    { value: ClaimType.OTHER, label: 'Other', icon: 'fas fa-question' }
+    { value: 'service_delay', label: 'Service Delay', icon: 'fas fa-clock' },
+    { value: 'bribe', label: 'Bribe', icon: 'fas fa-hand-holding-usd' },
+    { value: 'payment_issue', label: 'Payment Issue', icon: 'fas fa-credit-card' },
+    { value: 'doc_not_found', label: 'Doc Not Found', icon: 'fas fa-file-alt' },
+    { value: 'staff_behavior', label: 'Staff Behavior', icon: 'fas fa-user-tie' },
+    { value: 'system_error', label: 'System Error', icon: 'fas fa-bug' },
+    { value: 'other', label: 'Other', icon: 'fas fa-question' }
   ];
 
   claimCategories = [
-    { value: ClaimCategory.COMPLAINT, label: 'Complaint', description: 'Express dissatisfaction' },
-    { value: ClaimCategory.SUGGESTION, label: 'Suggestion', description: 'Suggest improvements' },
-    { value: ClaimCategory.COMPLIMENT, label: 'Compliment', description: 'Praise good service' },
-    { value: ClaimCategory.INQUIRY, label: 'Inquiry', description: 'Ask questions' }
+    { value: 'complaint' },
+    { value: 'suggestion' },
+    { value: 'compliment' },
+    { value: 'inquiry' }
   ];
 
   constructor(

@@ -7,19 +7,19 @@
                 <div class="col-md-8">
                     <h1 class="page-title">
                         <i class="fas fa-exclamation-triangle me-3"></i>
-                        Submit a Claim
+                        {{ 'forms.claim.title' | translate }}
                     </h1>
-                    <p class="text-muted">Report issues, provide feedback, or make suggestions about government services</p>
+                    <p class="text-muted">{{ 'forms.claim.subtitle' | translate }}</p>
                 </div>
                 <div class="col-md-4 text-md-end">
                     <div class="help-links">
                         <a href="#" class="btn btn-outline-primary btn-sm me-2">
                             <i class="fas fa-question-circle me-1"></i>
-                            Help Guide
+                            {{ 'forms.claim.help_guide' | translate }}
                         </a>
                         <a routerLink="/search-files" class="btn btn-outline-secondary btn-sm">
                             <i class="fas fa-search me-1"></i>
-                            Track Claim
+                            {{ 'forms.claim.track_claim' | translate }}
                         </a>
                     </div>
                 </div>
@@ -31,12 +31,12 @@
             <div class="progress-steps">
                 <div class="step" [class.active]="currentStep >= 1" [class.completed]="currentStep > 1">
                     <div class="step-circle">1</div>
-                    <span class="step-label">Claim Details</span>
+                    <span class="step-label">{{ 'forms.claim.claim_details' | translate }}</span>
                 </div>
                 <div class="step-line" [class.completed]="currentStep > 1"></div>
                 <div class="step" [class.active]="currentStep >= 2">
                     <div class="step-circle">2</div>
-                    <span class="step-label">Confirmation</span>
+                    <span class="step-label">{{ 'forms.claim.confirmation' | translate }}</span>
                 </div>
             </div>
         </div>
@@ -60,21 +60,21 @@
                 <!-- Step 1: Unified Claim Details -->
                 <div class="form-step" *ngIf="currentStep === 1">
                     <div class="step-header mb-4">
-                        <h3>Claim Details</h3>
-                        <p class="text-muted">Provide complete information about your claim</p>
+                        <h3>{{ 'forms.claim.claim_details' | translate }}</h3>
+                        <p class="text-muted">{{ 'forms.claim.provide_details' | translate }}</p>
                     </div>
 
                     <!-- Claim Category -->
                     <div class="mb-4">
-                        <label class="form-label">Claim Category *</label>
+                        <label class="form-label">{{ 'forms.claim.claim_category' | translate }} *</label>
                         <div class="category-selection">
                             <div class="form-check form-check-card" *ngFor="let category of claimCategories">
                                 <input class="form-check-input" type="radio" [value]="category.value" 
                                     formControlName="claimCategory" [id]="category.value">
                                 <label class="form-check-label" [for]="category.value">
                                     <div class="card-content">
-                                        <h6>{{ category.label }}</h6>
-                                        <small class="text-muted">{{ category.description }}</small>
+                                        <h6>{{ ('claim_categories.' + category.value) | translate }}</h6>
+                                        <small class="text-muted">{{ ('claim_categories.' + category.value + '_desc') | translate }}</small>
                                     </div>
                                 </label>
                             </div>
@@ -83,7 +83,7 @@
 
                     <!-- Claim Type -->
                     <div class="mb-4">
-                        <label class="form-label">Issue Type *</label>
+                        <label class="form-label">{{ 'forms.claim.issue_type' | translate }} *</label>
                         <div class="type-selection">
                             <div class="form-check form-check-type" *ngFor="let type of claimTypes">
                                 <input class="form-check-input" type="radio" [value]="type.value" 
@@ -91,7 +91,7 @@
                                 <label class="form-check-label" [for]="type.value">
                                     <div class="type-content">
                                         <i [class]="type.icon"></i>
-                                        <span>{{ type.label }}</span>
+                                        <span>{{ ('claim_types.' + type.value) | translate }}</span>
                                     </div>
                                 </label>
                             </div>
@@ -100,80 +100,80 @@
 
                     <!-- Subject -->
                     <div class="mb-3">
-                        <label class="form-label">Subject *</label>
+                        <label class="form-label">{{ 'forms.claim.subject' | translate }} *</label>
                         <input type="text" class="form-control" formControlName="subject"
-                            placeholder="Brief summary of your claim"
+                            [placeholder]="'forms.claim.subject_placeholder' | translate"
                             [class.is-invalid]="claimForm.get('subject')?.invalid && claimForm.get('subject')?.touched">
                         <div class="invalid-feedback">
-                            Subject is required (minimum 10 characters)
+                            {{ 'forms.claim.subject_required' | translate }}
                         </div>
                     </div>
 
                     <!-- Description -->
                     <div class="mb-4">
-                        <label class="form-label">Description *</label>
+                        <label class="form-label">{{ 'forms.claim.description' | translate }} *</label>
                         <textarea class="form-control" rows="6" formControlName="description"
-                            placeholder="Provide detailed information about your claim, including what happened, when it occurred, and what resolution you're seeking."
+                            [placeholder]="'forms.claim.description_placeholder' | translate"
                             [class.is-invalid]="claimForm.get('description')?.invalid && claimForm.get('description')?.touched"></textarea>
                         <div class="invalid-feedback">
-                            Description is required (minimum 20 characters)
+                            {{ 'forms.claim.description_required' | translate }}
                         </div>
                         <small class="form-text text-muted">
-                            Include as much detail as possible to help us understand and resolve your claim.
+                            {{ 'forms.claim.description_help' | translate }}
                         </small>
                     </div>
 
                     <!-- Related Application (Optional) -->
                     <div class="row mb-4">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Related Application ID (Optional)</label>
+                            <label class="form-label">{{ 'forms.claim.related_application' | translate }}</label>
                             <input type="text" class="form-control" formControlName="applicationId"
-                                placeholder="MKG123456789ABC">
+                                [placeholder]="'forms.claim.application_id_placeholder' | translate">
                             <small class="form-text text-muted">
-                                If your claim is related to a specific application
+                                {{ 'forms.claim.application_help' | translate }}
                             </small>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Phone Number</label>
+                            <label class="form-label">{{ 'forms.claim.phone_number' | translate }}</label>
                             <input type="tel" class="form-control" formControlName="phoneNumber"
-                                placeholder="Enter your phone number">
+                                [placeholder]="'forms.claim.phone_placeholder' | translate">
                             <small class="form-text text-muted">
-                                For urgent follow-up if needed
+                                {{ 'forms.claim.phone_help' | translate }}
                             </small>
                         </div>
                     </div>
 
                     <!-- Email Address -->
                     <div class="mb-4">
-                        <label class="form-label">Email Address</label>
+                        <label class="form-label">{{ 'forms.claim.email_address' | translate }}</label>
                         <input type="email" class="form-control" formControlName="email"
-                            placeholder="Enter your email address">
+                            [placeholder]="'forms.claim.email_placeholder' | translate">
                         <small class="form-text text-muted">
-                            Updates will be sent to this email address
+                            {{ 'forms.claim.email_help' | translate }}
                         </small>
                     </div>
 
                     <!-- File Attachments -->
                     <div class="file-upload-section">
-                        <h5 class="mb-3">Supporting Documents (Optional)</h5>
+                        <h5 class="mb-3">{{ 'forms.claim.supporting_documents' | translate }}</h5>
                         <div class="upload-area">
                             <input type="file" id="fileUpload" (change)="onFileUpload($event)" 
                                 multiple accept=".pdf,.jpg,.jpeg,.png,.txt" class="d-none">
                             <label for="fileUpload" class="upload-label">
                                 <i class="fas fa-cloud-upload-alt fa-2x mb-2"></i>
-                                <span>Click to upload files or drag and drop</span>
-                                <small class="text-muted d-block">PDF, JPEG, PNG, TXT (max 5MB each)</small>
+                                <span>{{ 'forms.claim.upload_files' | translate }}</span>
+                                <small class="text-muted d-block">{{ 'forms.claim.file_types' | translate }}</small>
                             </label>
                         </div>
 
                         <!-- Uploaded Files -->
                         <div class="uploaded-files" *ngIf="uploadedFiles.length > 0">
-                            <h6 class="mb-2">Uploaded Files:</h6>
+                            <h6 class="mb-2">{{ 'forms.claim.uploaded_files' | translate }}</h6>
                             <div class="file-item" *ngFor="let file of uploadedFiles; let i = index">
                                 <div class="file-info">
                                     <i class="fas fa-file-alt me-2"></i>
                                     <span>{{ file.name }}</span>
-                                    <small class="text-muted">({{ (file.size / 1024).toFixed(1) }} KB)</small>
+                                    <small class="text-muted">({{ (file.size / 1024).toFixed(1) }} {{ 'forms.claim.kb' | translate }})</small>
                                 </div>
                                 <button type="button" class="btn btn-outline-danger btn-sm" (click)="removeFile(i)">
                                     <i class="fas fa-trash"></i>
@@ -189,45 +189,49 @@
                         <div class="success-icon mb-4">
                             <i class="fas fa-check-circle fa-4x text-success"></i>
                         </div>
-                        <h3>Claim Submitted Successfully!</h3>
-                        <p class="text-muted mb-4">Your claim has been received and will be reviewed by our team.</p>
+                        <h3>{{ 'forms.claim.claim_submitted' | translate }}</h3>
+                        <p class="text-muted mb-4">{{ 'forms.claim.claim_received' | translate }}</p>
 
                         <div class="claim-summary">
                             <div class="summary-item">
-                                <strong>Tracking Number:</strong>
+                                <strong>{{ 'forms.claim.tracking_number' | translate }}:</strong>
                                 <span class="text-primary">{{ submittedClaim.trackingNumber }}</span>
                             </div>
                             <div class="summary-item">
-                                <strong>Subject:</strong> {{ submittedClaim.subject }}
+                                <strong>{{ 'forms.claim.subject' | translate }}:</strong> {{ submittedClaim.subject }}
                             </div>
                             <div class="summary-item">
-                                <strong>Category:</strong> {{ submittedClaim.category | titlecase }}
+                                <strong>{{ 'forms.claim.category' | translate }}:</strong> 
+                                {{ ('claim_categories.' + submittedClaim.category) | translate }}
                             </div>
                             <div class="summary-item">
-                                <strong>Type:</strong> {{ submittedClaim.claimType | titlecase }}
+                                <strong>{{ 'forms.claim.type' | translate }}:</strong> 
+                                {{ ('claim_types.' + submittedClaim.claimType) | translate }}
                             </div>
                             <div class="summary-item">
-                                <strong>Status:</strong> {{ submittedClaim.status | titlecase }}
+                                <strong>{{ 'forms.claim.status' | translate }}:</strong> 
+                                {{ ('status.' + submittedClaim.status) | translate }}
                             </div>
                             <div class="summary-item">
-                                <strong>Submitted:</strong> {{ submittedClaim.submissionDate | date:'medium' }}
+                                <strong>{{ 'forms.claim.submitted' | translate }}:</strong> 
+                                {{ submittedClaim.submissionDate | date:('forms.claim.date_format' | translate) }}
                             </div>
                         </div>
 
                         <div class="alert alert-info mt-4">
                             <i class="fas fa-info-circle me-2"></i>
-                            <strong>What's Next?</strong> You will receive email notifications about the progress of your claim. 
-                            Expected response time: 3-5 business days.
+                            <strong>{{ 'forms.claim.whats_next' | translate }}</strong> {{ 'forms.claim.notification_info' | translate }} 
+                            {{ 'forms.claim.response_time' | translate }}
                         </div>
 
                         <div class="action-buttons mt-4">
                             <button class="btn btn-primary me-3" (click)="goToTracking()">
                                 <i class="fas fa-search me-2"></i>
-                                Track Claim
+                                {{ 'forms.claim.track_claim_btn' | translate }}
                             </button>
                             <button class="btn btn-outline-secondary" (click)="goToHome()">
                                 <i class="fas fa-home me-2"></i>
-                                Back to Home
+                                {{ 'forms.claim.back_to_home' | translate }}
                             </button>
                         </div>
                     </div>
@@ -241,7 +245,7 @@
                     <button type="button" class="btn btn-success" 
                         [disabled]="isSubmitting" (click)="onSubmitClaim()">
                         <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
-                        Submit Claim
+                        {{ 'forms.claim.submit_claim' | translate }}
                     </button>
                 </div>
             </div>

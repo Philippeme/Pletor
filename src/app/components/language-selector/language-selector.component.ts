@@ -25,4 +25,13 @@ export class LanguageSelectorComponent implements OnInit {
   getCurrentLanguage() {
     return this.availableLanguages.find(lang => lang.code === this.currentLanguage);
   }
+
+  // S'assurer que le flag de la Guinée-Bissau est correct :
+getAvailableLanguages(): { code: string; name: string; flag: string }[] {
+  return [
+    { code: 'en', name: 'English', flag: '🇺🇸' },
+    { code: 'fr', name: 'Français', flag: '🇫🇷' },
+    { code: 'pt', name: 'Português', flag: '🇬🇼' } // Flag de la Guiné-Bissau
+  ];
+}
 }

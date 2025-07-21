@@ -4,7 +4,6 @@
             <!-- Section principale du footer -->
             <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
                 <div class="d-flex align-items-center mb-3">
-
                     <span class="h5 mb-0 text-white">{{ 'app.title' | translate }}</span>
                 </div>
                 <p class="text-muted mb-3">
@@ -35,7 +34,7 @@
 
             <!-- Section Services Populaires -->
             <div class="col-lg-3 col-md-6 col-sm-6 mb-4 mb-lg-0">
-                <h6 class="text-white mb-3">Popular Services</h6>
+                <h6 class="text-white mb-3">{{ 'footer.popular_services' | translate }}</h6>
                 <ul class="list-unstyled">
                     <li><a routerLink="/service-detail/passport" class="text-muted footer-link">{{
                             'services.passport.name' | translate }}</a></li>
@@ -55,24 +54,24 @@
                 <ul class="list-unstyled mb-3">
                     <li><a href="#" class="text-muted footer-link">{{ 'help.faq' | translate }}</a></li>
                     <li><a href="#" class="text-muted footer-link">{{ 'help.user_guide' | translate }}</a></li>
-                    <li><a href="#" class="text-muted footer-link">Contact Us</a></li>
-                    <li><a href="#" class="text-muted footer-link">Privacy Policy</a></li>
-                    <li><a href="#" class="text-muted footer-link">Terms of Service</a></li>
+                    <li><a href="#" class="text-muted footer-link">{{ 'help.contact_support' | translate }}</a></li>
+                    <li><a href="#" class="text-muted footer-link">{{ 'footer.legal_notice' | translate }}</a></li>
+                    <li><a href="#" class="text-muted footer-link">{{ 'buttons.terms' | translate }}</a></li>
                 </ul>
 
                 <!-- Informations de contact -->
                 <div class="contact-info">
                     <div class="contact-item mb-2">
                         <i class="fas fa-phone text-primary me-2"></i>
-                        <small class="text-muted">+245(0) 245 47 50 51 / +245(6) 70 60 42 15</small>
+                        <small class="text-muted">{{ 'footer.contact_phone' | translate }}</small>
                     </div>
                     <div class="contact-item mb-2">
                         <i class="fas fa-envelope text-primary me-2"></i>
-                        <small class="text-muted">info@mkgov.cm</small>
+                        <small class="text-muted">{{ 'footer.contact_email' | translate }}</small>
                     </div>
                     <div class="contact-item">
                         <i class="fas fa-clock text-primary me-2"></i>
-                        <small class="text-muted">24/7 Online Services</small>
+                        <small class="text-muted">{{ 'footer.service_hours' | translate }}</small>
                     </div>
                 </div>
             </div>
@@ -82,56 +81,56 @@
         <div class="separator-line my-4"></div>
         <div class="row">
             <div class="col-12">
-                <h6 class="text-white mb-3 text-center">Government Agencies & Service Providers</h6>
+                <h6 class="text-white mb-3 text-center">{{ 'footer.government_agencies' | translate }}</h6>
                 <div class="row text-center">
                     <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-3">
-                        <a href="https://www.dgsn.cm" target="_blank" class="agency-link">
-                            <small class="text-muted">DGSN</small>
+                        <a href="https://www.dgsn.gw" target="_blank" class="agency-link">
+                            <small class="text-muted">{{ 'agencies.dgsn' | translate }}</small>
                         </a>
                     </div>
                     <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-3">
-                        <a href="https://www.minjustice.gov.cm" target="_blank" class="agency-link">
-                            <small class="text-muted">Ministry of Justice</small>
+                        <a href="https://www.minjustice.gov.gw" target="_blank" class="agency-link">
+                            <small class="text-muted">{{ 'agencies.ministry_justice' | translate }}</small>
                         </a>
                     </div>
                     <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-3">
-                        <a href="https://www.mintransport.gov.cm" target="_blank" class="agency-link">
-                            <small class="text-muted">Ministry of Transport</small>
+                        <a href="https://www.mintransport.gov.gw" target="_blank" class="agency-link">
+                            <small class="text-muted">{{ 'agencies.ministry_transport' | translate }}</small>
                         </a>
                     </div>
                     <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-3">
-                        <a href="https://www.minesup.gov.cm" target="_blank" class="agency-link">
-                            <small class="text-muted">Ministry of Higher Education</small>
+                        <a href="https://www.minesup.gov.gw" target="_blank" class="agency-link">
+                            <small class="text-muted">{{ 'agencies.ministry_education' | translate }}</small>
                         </a>
                     </div>
                     <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-3">
-                        <a href="https://www.cfce.cm" target="_blank" class="agency-link">
-                            <small class="text-muted">CFCE</small>
+                        <a href="https://www.cfce.gw" target="_blank" class="agency-link">
+                            <small class="text-muted">{{ 'agencies.cfce' | translate }}</small>
                         </a>
                     </div>
                     <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-3">
-                        <a href="https://www.minfopra.gov.cm" target="_blank" class="agency-link">
-                            <small class="text-muted">Ministry of Public Service</small>
+                        <a href="https://www.minfopra.gov.gw" target="_blank" class="agency-link">
+                            <small class="text-muted">{{ 'agencies.ministry_public_service' | translate }}</small>
                         </a>
                     </div>
                     <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-3">
-                        <a href="https://www.mindcaf.cm" target="_blank" class="agency-link">
-                            <small class="text-muted">Ministry of State Property</small>
+                        <a href="https://www.mindcaf.gw" target="_blank" class="agency-link">
+                            <small class="text-muted">{{ 'agencies.ministry_state_property' | translate }}</small>
                         </a>
                     </div>
                     <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-3">
-                        <a href="https://www.minrex.gov.cm" target="_blank" class="agency-link">
-                            <small class="text-muted">Ministry of External Relations</small>
+                        <a href="https://www.minrex.gov.gw" target="_blank" class="agency-link">
+                            <small class="text-muted">{{ 'agencies.ministry_external_relations' | translate }}</small>
                         </a>
                     </div>
                     <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-3">
-                        <a href="https://www.minsante.cm" target="_blank" class="agency-link">
-                            <small class="text-muted">Ministry of Public Health</small>
+                        <a href="https://www.minsante.gw" target="_blank" class="agency-link">
+                            <small class="text-muted">{{ 'agencies.ministry_public_health' | translate }}</small>
                         </a>
                     </div>
                     <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-3">
-                        <a href="https://www.minat.gov.cm" target="_blank" class="agency-link">
-                            <small class="text-muted">Prefecture Services</small>
+                        <a href="https://www.minat.gov.gw" target="_blank" class="agency-link">
+                            <small class="text-muted">{{ 'agencies.prefecture' | translate }}</small>
                         </a>
                     </div>
                 </div>
@@ -145,10 +144,10 @@
         <div class="row align-items-center">
             <div class="col-lg-6 col-md-12 mb-3 mb-lg-0">
                 <p class="text-muted mb-0 small">
-                    © {{ currentYear }} MK Gov - Digital Government Portal. All rights reserved.
+                    © {{ currentYear }} {{ 'footer.copyright' | translate }}
                 </p>
                 <p class="text-muted mb-0 small">
-                    Republic of Cameroon - Ministry of Public Service and Administrative Reform
+                    {{ 'footer.ministry_attribution' | translate }}
                 </p>
             </div>
 
@@ -175,13 +174,13 @@
                 <!-- Badges de certification -->
                 <div class="certification-badges mt-3">
                     <span class="badge bg-success me-2">
-                        <i class="fas fa-shield-alt me-1"></i>Secure
+                        <i class="fas fa-shield-alt me-1"></i>{{ 'footer.badges.secure' | translate }}
                     </span>
                     <span class="badge bg-primary me-2">
-                        <i class="fas fa-mobile-alt me-1"></i>Mobile Ready
+                        <i class="fas fa-mobile-alt me-1"></i>{{ 'footer.badges.mobile_ready' | translate }}
                     </span>
                     <span class="badge bg-info">
-                        <i class="fas fa-universal-access me-1"></i>Accessible
+                        <i class="fas fa-universal-access me-1"></i>{{ 'footer.badges.accessible' | translate }}
                     </span>
                 </div>
             </div>
@@ -193,9 +192,7 @@
                 <div class="legal-notice p-3 bg-dark border border-secondary rounded">
                     <small class="text-muted">
                         <i class="fas fa-info-circle me-2 text-primary"></i>
-                        <strong>Legal Notice:</strong> This platform is an official government portal.
-                        All transactions are secured and monitored. For technical issues, contact our support team.
-                        Data protection complies with Cameroon's digital governance standards.
+                        <strong>{{ 'footer.legal_notice' | translate }}:</strong> {{ 'footer.legal_text' | translate }}
                     </small>
                 </div>
             </div>

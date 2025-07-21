@@ -1,13 +1,14 @@
 {
     "app": {
         "title": "MK Gov",
-        "subtitle": "Portal Governamental para Cidadãos Camaroneses",
-        "welcome": "Bem-vindo ao MK Gov"
+        "subtitle": "Portal Governamental Digital para Cidadãos da Guiné-Bissau",
+        "welcome": "Bem-vindo ao MK Gov",
+        "description": "Sua plataforma digital única para acessar serviços governamentais de forma eficiente e transparente."
     },
     "navigation": {
         "home": "Início",
         "procedures": "Procedimentos",
-        "registration": "Inscrição",
+        "registration": "Registro",
         "login": "Entrar",
         "search_files": "Pesquisar Arquivos",
         "logout": "Sair",
@@ -16,31 +17,31 @@
     },
     "categories": {
         "police_justice": {
-            "name": "Polícia & Justiça",
-            "description": "Documentos de identidade, registros judiciais e serviços legais"
+            "name": "Polícia e Justiça",
+            "description": "Documentos de identidade, registos judiciais e serviços legais"
         },
         "family": {
             "name": "Família",
-            "description": "Documentos de estado civil e serviços familiares"
+            "description": "Documentos de estado civil e serviços relacionados à família"
         },
         "transport": {
             "name": "Transporte",
-            "description": "Carteiras de motorista, registro de veículos e licenças de transporte"
+            "description": "Licenças de condução, registo de veículos e licenças de transporte"
         },
         "education": {
             "name": "Educação",
-            "description": "Certificação de diplomas, autorizações educacionais"
+            "description": "Certificação de diplomas, autorizações educacionais e serviços académicos"
         },
         "business": {
             "name": "Empresas",
-            "description": "Registro de empresas, licenças comerciais e serviços"
+            "description": "Registo de empresas, licenças comerciais e serviços comerciais"
         },
         "public_service": {
-            "name": "Serviço Público",
-            "description": "Candidaturas serviço público e procedimentos administrativos"
+            "name": "Função Pública",
+            "description": "Candidaturas ao serviço público e procedimentos administrativos"
         },
         "land_construction": {
-            "name": "Terra & Construção",
+            "name": "Terra e Construção",
             "description": "Títulos de terra, licenças de construção e certificados de propriedade"
         },
         "consular": {
@@ -53,99 +54,267 @@
         },
         "civic_life": {
             "name": "Vida Cívica",
-            "description": "Autorizações de eventos e atividades cívicas"
+            "description": "Licenças para eventos e autorização de atividades cívicas"
         }
     },
     "services": {
         "passport": {
             "name": "Pedido de Passaporte",
-            "description": "Solicitar passaporte camaronês",
-            "detailed_description": "Serviço eletrônico para solicitar um passaporte camaronês. O pedido é processado pelas autoridades governamentais locais através da plataforma digital DGSN."
+            "description": "Solicitar passaporte biométrico guineense online",
+            "detailed_description": "Serviço eletrónico para solicitar um passaporte biométrico guineense. O pedido é processado pela Direção Geral da Segurança Nacional (DGSN) através da sua plataforma digital. O novo passaporte biométrico possui tecnologia de segurança avançada com um chip eletrónico integrado e é reconhecido internacionalmente."
         },
         "birth_certificate_copy": {
             "name": "Cópia Certificada de Certidão de Nascimento",
-            "description": "Solicitar cópia certificada de certidão de nascimento",
-            "detailed_description": "Serviço para obter uma cópia certificada de certidão de nascimento. O pedido é processado pelo registro civil do local de registro do nascimento."
+            "description": "Solicitar cópia certificada da certidão de nascimento",
+            "detailed_description": "Serviço oficial para obter uma cópia certificada de certidão de nascimento. O pedido é processado pelo registo civil onde o nascimento foi originalmente registado. Este documento é essencial para vários procedimentos administrativos incluindo pedidos de passaporte, inscrição escolar e processos legais."
         },
         "national_id": {
             "name": "Cartão Nacional de Identidade",
             "description": "Solicitar cartão nacional de identidade",
-            "detailed_description": "Serviço de solicitação de cartão nacional de identidade ou renovação de cartão existente."
+            "detailed_description": "Serviço para solicitar um novo cartão nacional de identidade ou renovar um existente. O CNI é um documento de identidade obrigatório para todos os cidadãos guineenses."
+        },
+        "criminal_record": {
+            "name": "Extrato de Registo Criminal",
+            "description": "Solicitar extrato de registo criminal",
+            "detailed_description": "Documento oficial que certifica o histórico criminal ou registo limpo de um indivíduo. Necessário para vários procedimentos administrativos incluindo registo de empresas e emprego."
+        },
+        "marriage_certificate": {
+            "name": "Cópia de Certidão de Casamento",
+            "description": "Solicitar cópia certificada de certidão de casamento",
+            "detailed_description": "Cópia oficial de certidão de casamento emitida pelo registo civil."
+        },
+        "death_certificate": {
+            "name": "Cópia de Certidão de Óbito",
+            "description": "Solicitar cópia certificada de certidão de óbito",
+            "detailed_description": "Cópia oficial de certidão de óbito emitida pelo registo civil."
+        },
+        "driving_license": {
+            "name": "Carta de Condução",
+            "description": "Solicitar carta de condução",
+            "detailed_description": "Serviço para obter carta de condução após passar nos exames teóricos e práticos necessários."
+        },
+        "diploma_certification": {
+            "name": "Certificação de Diploma",
+            "description": "Certificar diplomas académicos",
+            "detailed_description": "Certificação oficial de diplomas académicos para uso no estrangeiro ou para fins profissionais."
+        },
+        "business_registration": {
+            "name": "Registo de Empresa",
+            "description": "Registar nova empresa",
+            "detailed_description": "Processo completo de registo de empresa incluindo inscrição no registo comercial e registo fiscal."
+        },
+        "civil_service_application": {
+            "name": "Candidatura à Função Pública",
+            "description": "Candidatar-se a cargos da função pública",
+            "detailed_description": "Processo de candidatura para concursos da função pública e cargos governamentais."
+        },
+        "land_title": {
+            "name": "Título de Terra",
+            "description": "Obter título de terra",
+            "detailed_description": "Processo para obter títulos oficiais de propriedade de terra e certificados de propriedade."
+        },
+        "visa_application": {
+            "name": "Pedido de Visto",
+            "description": "Solicitar visto de viagem",
+            "detailed_description": "Processo de candidatura para vistos de viagem para vários países através de serviços consulares."
+        },
+        "health_facility_authorization": {
+            "name": "Autorização de Estabelecimento de Saúde",
+            "description": "Autorização para operar estabelecimentos de saúde",
+            "detailed_description": "Processo de licenciamento para abertura e operação de estabelecimentos de saúde incluindo clínicas e farmácias."
+        },
+        "event_authorization": {
+            "name": "Autorização de Evento",
+            "description": "Autorização para eventos públicos",
+            "detailed_description": "Pedido de licença para organizar eventos públicos, manifestações e atividades culturais."
         }
     },
     "forms": {
         "login": {
             "title": "Entrar",
             "phone_email": "Número de Telefone ou Email",
-            "password": "Senha",
-            "forgot_password": "Esqueceu a senha?",
+            "password": "Palavra-passe",
+            "forgot_password": "Esqueceu a palavra-passe?",
             "login_button": "Entrar",
             "no_account": "Não tem uma conta?",
             "create_account": "Criar uma",
-            "terms_text": "Ao entrar, você aceita os termos de uso incluindo a política de privacidade do MK Gov"
+            "terms_text": "Ao entrar, aceita os termos de uso incluindo a política de privacidade do MK Gov"
         },
         "registration": {
-            "title": "Inscrição",
+            "title": "Registo",
             "account_type": "Tipo de Conta",
-            "local_citizen": "Cidadão Local",
+            "local_citizen": "Residente Local",
             "diaspora_citizen": "Cidadão da Diáspora",
-            "cni_number": "Número do Cartão de Identidade",
+            "cni_number": "Número do Cartão de Identidade Nacional",
             "consular_card": "Número do Cartão Consular",
             "phone_number": "Número de Telefone",
             "email": "Endereço de Email",
-            "password": "Senha",
-            "confirm_password": "Confirmar Senha",
-            "register_button": "Inscrever-se",
+            "password": "Palavra-passe",
+            "confirm_password": "Confirmar Palavra-passe",
+            "register_button": "Registar",
             "already_have_account": "Já tem uma conta?",
             "login_link": "Entrar",
-            "step1": "Enviar informações necessárias",
+            "step1": "Informações da Conta",
             "step2": "Verificação da conta",
-            "step3": "Criar sua senha",
-            "terms_acceptance": "Ao se inscrever, você aceita os novos termos de uso incluindo a política de privacidade do MK Gov"
+            "step3": "Criar a sua palavra-passe",
+            "terms_acceptance": "Ao registar-se, aceita os termos de uso incluindo a política de privacidade do MK Gov"
         },
         "service_application": {
-            "apply_for": "Para quem está se candidatando?",
+            "apply_for": "Para quem está a candidatar-se?",
             "self": "Para mim",
-            "child": "Meu filho",
-            "other": "Outra pessoa",
+            "child": "Para o meu filho",
+            "other": "Para outra pessoa",
             "apply_button": "Candidatar-se",
             "processing_time": "Tempo de Processamento",
             "cost": "Custo",
             "provided_by": "Fornecido por",
-            "required_documents": "Documentos Necessários"
+            "required_documents": "Documentos Necessários",
+            "required": "Obrigatório"
+        },
+        "claim": {
+            "title": "Submeter Reclamação",
+            "subtitle": "Reportar problemas, fornecer feedback ou fazer sugestões sobre serviços governamentais",
+            "help_guide": "Guia de Ajuda",
+            "track_claim": "Rastrear Reclamação",
+            "claim_details": "Detalhes da Reclamação",
+            "confirmation": "Confirmação",
+            "provide_details": "Forneça informações completas sobre a sua reclamação",
+            "claim_category": "Categoria da Reclamação",
+            "issue_type": "Tipo de Problema",
+            "subject": "Assunto",
+            "subject_placeholder": "Resumo breve da sua reclamação",
+            "subject_required": "Assunto é obrigatório (mínimo 10 caracteres)",
+            "description": "Descrição",
+            "description_placeholder": "Forneça informações detalhadas sobre a sua reclamação, incluindo o que aconteceu, quando ocorreu e que resolução está a procurar.",
+            "description_required": "Descrição é obrigatória (mínimo 20 caracteres)",
+            "description_help": "Inclua o máximo de detalhes possível para nos ajudar a entender e resolver a sua reclamação.",
+            "related_application": "ID da Candidatura Relacionada (Opcional)",
+            "application_id_placeholder": "MKG123456789ABC",
+            "application_help": "Se a sua reclamação está relacionada com uma candidatura específica",
+            "phone_number": "Número de Telefone",
+            "phone_placeholder": "Insira o seu número de telefone",
+            "phone_help": "Para seguimento urgente se necessário",
+            "email_address": "Endereço de Email",
+            "email_placeholder": "Insira o seu endereço de email",
+            "email_help": "As atualizações serão enviadas para este endereço de email",
+            "supporting_documents": "Documentos de Apoio (Opcional)",
+            "upload_files": "Clique para carregar ficheiros ou arraste e solte",
+            "file_types": "PDF, JPEG, PNG, TXT (máx. 5MB cada)",
+            "uploaded_files": "Ficheiros Carregados:",
+            "kb": "KB",
+            "submit_claim": "Submeter Reclamação",
+            "claim_submitted": "Reclamação Submetida com Sucesso!",
+            "claim_received": "A sua reclamação foi recebida e será revista pela nossa equipa.",
+            "tracking_number": "Número de Rastreamento",
+            "category": "Categoria",
+            "type": "Tipo",
+            "status": "Estado",
+            "submitted": "Submetida",
+            "date_format": "medium",
+            "whats_next": "O que se segue?",
+            "notification_info": "Receberá notificações por email sobre o progresso da sua reclamação.",
+            "response_time": "Tempo de resposta esperado: 3-5 dias úteis.",
+            "track_claim_btn": "Rastrear Reclamação",
+            "back_to_home": "Voltar ao Início"
+        },
+        "forgot_password": {
+            "title": "Redefinir Palavra-passe",
+            "how_it_works": "Como funciona:",
+            "step1": "Submeta as suas informações",
+            "step2": "Receba o código de verificação",
+            "step3": "Crie uma nova palavra-passe"
         }
+    },
+    "claim_categories": {
+        "complaint": "Reclamação",
+        "complaint_desc": "Expressar insatisfação",
+        "suggestion": "Sugestão", 
+        "suggestion_desc": "Sugerir melhorias",
+        "compliment": "Elogio",
+        "compliment_desc": "Elogiar bom serviço",
+        "inquiry": "Consulta",
+        "inquiry_desc": "Fazer perguntas"
+    },
+    "claim_types": {
+        "service_delay": "Atraso no Serviço",
+        "bribe": "Suborno",
+        "payment_issue": "Problema de Pagamento",
+        "doc_not_found": "Documento Não Encontrado",
+        "staff_behavior": "Comportamento do Pessoal",
+        "system_error": "Erro do Sistema",
+        "other": "Outro"
     },
     "requirements": {
         "passport_form": "Formulário de Pedido de Passaporte",
-        "passport_form_desc": "Formulário de pedido de passaporte preenchido",
+        "passport_form_desc": "Formulário de pedido de passaporte preenchido com informações precisas",
         "birth_certificate": "Certidão de Nascimento",
         "birth_cert_desc": "Cópia certificada da certidão de nascimento (menos de 3 meses)",
         "national_id": "Cartão Nacional de Identidade",
-        "national_id_desc": "Cópia do cartão nacional de identidade válido",
+        "national_id_desc": "Cópia do cartão nacional de identidade válido ou cartão consular",
         "passport_photos": "Fotos de Passaporte",
-        "passport_photos_desc": "12 fotos de passaporte padronizadas",
-        "residence_proof": "Comprovante de Residência",
-        "residence_proof_desc": "Certificado de residência da administração local",
+        "passport_photos_desc": "12 fotos de passaporte padronizadas com fundo branco",
+        "residence_proof": "Comprovativo de Residência",
+        "residence_proof_desc": "Conta de luz recente ou certificado de residência da administração local",
         "request_form": "Formulário de Pedido",
         "request_form_desc": "Formulário de pedido preenchido para cópia certificada",
         "fiscal_stamp": "Selo Fiscal",
-        "fiscal_stamp_desc": "Selo fiscal de 200 XAF",
+        "fiscal_stamp_desc": "Selo fiscal obrigatório",
         "requester_id": "Identidade do Requerente",
-        "requester_id_desc": "Documento de identificação válido do requerente"
+        "requester_id_desc": "Documento de identificação válido do requerente",
+        "driving_form": "Formulário de Pedido de Carta de Condução",
+        "driving_form_desc": "Formulário de pedido de carta de condução preenchido",
+        "medical_certificate": "Certificado Médico",
+        "medical_cert_desc": "Certificado de aptidão médica de médico autorizado",
+        "diploma_original": "Diploma Original",
+        "diploma_original_desc": "Diploma original ou cópia certificada para verificação",
+        "business_form": "Formulário de Registo de Empresa",
+        "business_form_desc": "Formulário de candidatura de registo de empresa preenchido"
     },
     "buttons": {
-        "submit": "Enviar",
+        "submit": "Submeter",
         "cancel": "Cancelar",
         "continue": "Continuar",
         "back": "Voltar",
         "close": "Fechar",
-        "save": "Salvar",
+        "save": "Guardar",
         "search": "Pesquisar",
         "apply": "Candidatar-se",
-        "download": "Baixar",
+        "download": "Descarregar",
         "upload": "Carregar",
         "pay": "Pagar",
-        "confirm": "Confirmar"
+        "confirm": "Confirmar",
+        "next": "Seguinte",
+        "previous": "Anterior",
+        "view_all": "Ver Tudo",
+        "terms": "Termos de Serviço"
+    },
+    "agencies": {
+        "dgsn": "DGSN - Direção Geral da Segurança Nacional",
+        "ministry_justice": "Ministério da Justiça",
+        "ministry_transport": "Ministério dos Transportes",
+        "ministry_education": "Ministério do Ensino Superior",
+        "cfce": "CFCE - Centro de Criação de Empresas",
+        "ministry_public_service": "Ministério da Função Pública",
+        "ministry_state_property": "Ministério da Propriedade do Estado",
+        "ministry_external_relations": "Ministério das Relações Exteriores",
+        "ministry_public_health": "Ministério da Saúde Pública",
+        "prefecture": "Serviços da Prefeitura"
+    },
+    "footer": {
+        "government_agencies": "Agências Governamentais e Prestadores de Serviços",
+        "popular_services": "Serviços Populares",
+        "legal_notice": "Aviso Legal",
+        "legal_text": "Esta plataforma é um portal governamental oficial. Todas as transações são seguras e monitorizadas. Para problemas técnicos, contacte a nossa equipa de apoio. A proteção de dados cumpre os padrões de governança digital da Guiné-Bissau.",
+        "copyright": "Portal Governamental Digital. Todos os direitos reservados.",
+        "ministry_attribution": "República da Guiné-Bissau - Ministério da Função Pública e Reforma Administrativa",
+        "contact_phone": "+245(0) 245 47 50 51 / +245(6) 70 60 42 15",
+        "contact_email": "info@mkgov.gw",
+        "service_hours": "Serviços Online 24/7",
+        "badges": {
+            "secure": "Seguro",
+            "mobile_ready": "Pronto para Móvel",
+            "accessible": "Acessível"
+        }
     },
     "messages": {
         "loading": "Carregando...",
@@ -155,14 +324,98 @@
         "info": "Informação",
         "no_results": "Nenhum resultado encontrado",
         "coming_soon": "Em Breve",
-        "service_not_available": "Este serviço ainda não está disponível online",
-        "login_required": "Por favor, faça login para acessar este serviço",
-        "payment_simulation": "Esta é uma simulação de pagamento para fins de demonstração"
+        "service_not_available": "Este serviço ainda não está disponível online. Por favor visite o escritório relevante.",
+        "service_implemented": "Este serviço está totalmente implementado com procedimentos administrativos reais da Guiné-Bissau.",
+        "login_required": "Por favor entre para aceder a este serviço",
+        "payment_simulation": "Esta é uma simulação de pagamento para fins de demonstração. Na implementação real, o processamento de pagamento real seria integrado.",
+        "application_submitted": "A sua candidatura foi submetida com sucesso!",
+        "payment_completed": "Pagamento concluído com sucesso!",
+        "document_uploaded": "Documento carregado com sucesso!",
+        "invalid_file_type": "Tipo de ficheiro inválido. Por favor carregue apenas ficheiros PDF, JPEG ou PNG.",
+        "file_too_large": "Tamanho do ficheiro muito grande. Por favor carregue ficheiros menores que 5MB.",
+        "form_validation_error": "Por favor preencha todos os campos obrigatórios corretamente."
     },
     "timeline": {
         "pending": "Pendente",
-        "in_progress": "Em Andamento",
+        "in_progress": "Em Progresso",
         "completed": "Concluído",
-        "estimated_duration": "Duração Estimada"
+        "estimated_duration": "Duração Estimada",
+        "pre_enrollment": "Pré-inscrição",
+        "payment": "Pagamento",
+        "document_verification": "Verificação de Documentos",
+        "biometric_enrollment": "Inscrição Biométrica",
+        "processing": "Processamento",
+        "ready_for_pickup": "Pronto para Recolha",
+        "form_submission": "Submissão de Formulário",
+        "certification": "Certificação"
+    },
+    "status": {
+        "draft": "Rascunho",
+        "submitted": "Submetido",
+        "under_review": "Em Análise",
+        "payment_pending": "Pagamento Pendente",
+        "processing": "Processamento",
+        "ready_for_pickup": "Pronto para Recolha",
+        "completed": "Concluído",
+        "rejected": "Rejeitado",
+        "cancelled": "Cancelado"
+    },
+    "payment": {
+        "methods": {
+            "mtn_money": "MTN Mobile Money",
+            "orange_money": "Orange Money",
+            "credit_card": "Cartão de Crédito",
+            "bank_transfer": "Transferência Bancária",
+            "cash": "Pagamento em Dinheiro"
+        },
+        "status": {
+            "pending": "Pendente",
+            "processing": "Processamento",
+            "completed": "Concluído",
+            "failed": "Falhado",
+            "refunded": "Reembolsado"
+        }
+    },
+    "help": {
+        "contact_support": "Contactar Apoio",
+        "faq": "Perguntas Frequentes",
+        "user_guide": "Guia do Utilizador",
+        "need_help": "Precisa de Ajuda?",
+        "track_application": "Rastrear a Sua Candidatura",
+        "support_description": "Contacte a nossa equipa de apoio para assistência com a sua candidatura.",
+        "track_description": "Já submeteu? Rastreie o estado da sua candidatura usando o seu número de rastreamento."
+    },
+    "search": {
+        "placeholder": "Pesquisar por serviços...",
+        "results": "Resultados da pesquisa para",
+        "no_results": "Nenhum resultado encontrado para",
+        "try_different": "Tente termos de pesquisa diferentes"
+    },
+    "home": {
+        "hero_title": "Bem-vindo ao Portal Governamental Digital",
+        "hero_subtitle": "Aceda aos serviços governamentais de forma rápida e segura",
+        "quick_actions": "Ações Rápidas",
+        "browse_procedures": "Navegar Procedimentos",
+        "browse_procedures_desc": "Explore todos os serviços governamentais disponíveis",
+        "track_application": "Rastrear Candidatura",
+        "track_application_desc": "Pesquise e rastreie as suas candidaturas submetidas",
+        "create_account": "Criar Conta",
+        "create_account_desc": "Registe-se para aceder aos serviços governamentais",
+        "apply_passport": "Candidatar-se a Passaporte",
+        "apply_passport_desc": "Inicie o seu processo de candidatura a passaporte",
+        "available_services": "Serviços Disponíveis"
+    },
+    "procedures": {
+        "title": "Procedimentos Governamentais",
+        "subtitle": "Navegar serviços governamentais por categoria",
+        "search_placeholder": "Pesquisar procedimentos...",
+        "services_found": "serviço(s) encontrado(s)",
+        "no_results_title": "Nenhum resultado encontrado",
+        "no_results_subtitle": "Tente ajustar os seus critérios de pesquisa",
+        "available": "Disponível",
+        "coming_soon": "Em Breve",
+        "available_services": "Serviços Disponíveis",
+        "more_services": "mais serviços",
+        "services": "serviços"
     }
 }

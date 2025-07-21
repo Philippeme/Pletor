@@ -7,10 +7,10 @@
                 <div class="col-md-6">
                     <h1 class="page-title">
                         <i class="fas fa-list-alt me-3"></i>
-                        {{ 'navigation.procedures' | translate }}
+                        {{ 'procedures.title' | translate }}
                     </h1>
                     <p class="text-muted" *ngIf="viewMode === 'categories'">
-                        Browse government services by category
+                        {{ 'procedures.subtitle' | translate }}
                     </p>
                     <div class="breadcrumb-nav" *ngIf="viewMode === 'services' && selectedCategory">
                         <nav aria-label="breadcrumb">
@@ -32,7 +32,7 @@
                     <div class="search-container">
                         <div class="input-group">
                             <input type="text" class="form-control" [(ngModel)]="searchQuery" (keyup.enter)="onSearch()"
-                                placeholder="Search procedures...">
+                                [placeholder]="'procedures.search_placeholder' | translate">
                             <button class="btn btn-primary" (click)="onSearch()">
                                 <i class="fas fa-search"></i>
                             </button>
@@ -49,7 +49,7 @@
         <!-- Loading State -->
         <div class="text-center py-5" *ngIf="isLoading">
             <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
+                <span class="visually-hidden">{{ 'messages.loading' | translate }}</span>
             </div>
         </div>
 
@@ -65,7 +65,7 @@
                         <p class="category-description">{{ category.description }}</p>
                         <div class="category-meta">
                             <span class="service-count">
-                                {{ category.procedures.length || 0 }} services
+                                {{ category.procedures.length || 0 }} {{ 'procedures.services' | translate }}
                             </span>
                         </div>
                     </div>
@@ -82,16 +82,16 @@
                             {{ getCategoryById(selectedCategory)!.fname }}
                         </h3>
                         <h3 *ngIf="!selectedCategory && searchQuery">
-                            Search Results for "{{ searchQuery }}"
+                            {{ 'search.results' | translate }} "{{ searchQuery }}"
                         </h3>
-                        <p class="text-muted">{{ filteredServices.length }} service(s) found</p>
+                        <p class="text-muted">{{ filteredServices.length }} {{ 'procedures.services_found' | translate }}</p>
                     </div>
 
                     <!-- No Results -->
                     <div class="text-center py-5" *ngIf="filteredServices.length === 0">
                         <i class="fas fa-search fa-3x text-muted mb-3"></i>
-                        <h4>{{ 'messages.no_results' | translate }}</h4>
-                        <p class="text-muted">Try adjusting your search criteria</p>
+                        <h4>{{ 'procedures.no_results_title' | translate }}</h4>
+                        <p class="text-muted">{{ 'procedures.no_results_subtitle' | translate }}</p>
                     </div>
 
                     <!-- Services List -->
@@ -101,8 +101,8 @@
                             <div class="service-header">
                                 <h5 class="service-name">{{ service.pname }}</h5>
                                 <div class="service-badges">
-                                    <span class="badge bg-success" *ngIf="service.published">Available</span>
-                                    <span class="badge bg-secondary" *ngIf="!service.published">Coming Soon</span>
+                                    <span class="badge bg-success" *ngIf="service.published">{{ 'procedures.available' | translate }}</span>
+                                    <span class="badge bg-secondary" *ngIf="!service.published">{{ 'procedures.coming_soon' | translate }}</span>
                                 </div>
                             </div>
                             <p class="service-description">{{ service.shortdesc }}</p>

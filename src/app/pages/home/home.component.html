@@ -5,12 +5,12 @@
             <div class="row align-items-center min-vh-50">
                 <div class="col-lg-6">
                     <div class="hero-content">
-                        <h1 class="hero-title">{{ 'app.welcome' | translate }}</h1>
-                        <p class="hero-subtitle">{{ 'app.subtitle' | translate }}</p>
+                        <h1 class="hero-title">{{ 'home.hero_title' | translate }}</h1>
+                        <p class="hero-subtitle">{{ 'home.hero_subtitle' | translate }}</p>
                         <div class="search-container mt-4">
                             <div class="input-group input-group-lg">
                                 <input type="text" class="form-control search-input" [(ngModel)]="searchQuery"
-                                    (keyup.enter)="onSearch()" placeholder="Search for services...">
+                                    (keyup.enter)="onSearch()" [placeholder]="'search.placeholder' | translate">
                                 <button class="btn btn-primary search-btn" (click)="onSearch()">
                                     <i class="fas fa-search"></i>
                                     {{ 'buttons.search' | translate }}
@@ -21,7 +21,7 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="hero-image text-center">
-                        <img src="assets/images/Flag_of_Guinea-Bissau.svg.png" alt="Cameroon" class="img-fluid" style="max-width: 350px;">
+                        <img src="assets/images/Flag_of_Guinea-Bissau.svg.png" alt="Guinea-Bissau" class="img-fluid" style="max-width: 350px;">
                     </div>
                 </div>
             </div>
@@ -33,14 +33,14 @@
         <div class="container">
             <div class="row">
                 <div class="col-12">
-                    <h2 class="section-title text-center mb-5">Government Services</h2>
+                    <h2 class="section-title text-center mb-5">{{ 'navigation.procedures' | translate }}</h2>
                 </div>
             </div>
 
             <!-- Loading State -->
             <div class="text-center" *ngIf="isLoading">
                 <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
+                    <span class="visually-hidden">{{ 'messages.loading' | translate }}</span>
                 </div>
             </div>
 
@@ -58,17 +58,17 @@
 
                         <!-- Services List -->
                         <div class="services-list" *ngIf="category.procedures && category.procedures.length > 0">
-                            <h6 class="services-title">Available Services:</h6>
+                            <h6 class="services-title">{{ 'procedures.available_services' | translate }}:</h6>
                             <ul class="list-unstyled">
                                 <li *ngFor="let service of category.procedures | slice:0:3" class="service-link"
                                     (click)="onServiceClick(service); $event.stopPropagation()">
                                     <i class="fas fa-chevron-right me-2"></i>
                                     {{ service.pname }}
-                                    <span class="badge bg-success ms-2" *ngIf="service.published">Live</span>
-                                    <span class="badge bg-secondary ms-2" *ngIf="!service.published">Soon</span>
+                                    <span class="badge bg-success ms-2" *ngIf="service.published">{{ 'procedures.available' | translate }}</span>
+                                    <span class="badge bg-secondary ms-2" *ngIf="!service.published">{{ 'procedures.coming_soon' | translate }}</span>
                                 </li>
                                 <li *ngIf="category.procedures.length > 3" class="text-muted small">
-                                    +{{ category.procedures.length - 3 }} more services
+                                    +{{ category.procedures.length - 3 }} {{ 'procedures.more_services' | translate }}
                                 </li>
                             </ul>
                         </div>
@@ -83,37 +83,37 @@
         <div class="container">
             <div class="row">
                 <div class="col-12 text-center">
-                    <h3 class="mb-4">Quick Actions</h3>
+                    <h3 class="mb-4">{{ 'home.quick_actions' | translate }}</h3>
                 </div>
             </div>
             <div class="row g-4 justify-content-center">
                 <div class="col-md-3 col-sm-6">
                     <div class="quick-action-card" routerLink="/procedures">
                         <i class="fas fa-list-alt"></i>
-                        <h5>Browse Procedures</h5>
-                        <p>Explore all available government services</p>
+                        <h5>{{ 'home.browse_procedures' | translate }}</h5>
+                        <p>{{ 'home.browse_procedures_desc' | translate }}</p>
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-6">
                     <div class="quick-action-card" routerLink="/search-files">
                         <i class="fas fa-search"></i>
-                        <h5>Track Application</h5>
-                        <p>Search and track your submitted applications</p>
+                        <h5>{{ 'home.track_application' | translate }}</h5>
+                        <p>{{ 'home.track_application_desc' | translate }}</p>
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-6">
                     <div class="quick-action-card" routerLink="/registration">
                         <i class="fas fa-user-plus"></i>
-                        <h5>Create Account</h5>
-                        <p>Register to access government services</p>
+                        <h5>{{ 'home.create_account' | translate }}</h5>
+                        <p>{{ 'home.create_account_desc' | translate }}</p>
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-6">
                     <div class="quick-action-card"
                         (click)="getPassportService() && onServiceClick(getPassportService()!)">
                         <i class="fas fa-passport"></i>
-                        <h5>Apply for Passport</h5>
-                        <p>Start your passport application process</p>
+                        <h5>{{ 'home.apply_passport' | translate }}</h5>
+                        <p>{{ 'home.apply_passport_desc' | translate }}</p>
                     </div>
                 </div>
             </div>

@@ -1,6 +1,6 @@
 <div class="modal-header">
     <h4 class="modal-title">{{ service.pname }}</h4>
-    <button type="button" class="btn-close" (click)="close()"></button>
+    <button type="button" class="btn-close" (click)="close()" [attr.aria-label]="'buttons.close' | translate"></button>
 </div>
 
 <div class="modal-body">
@@ -39,9 +39,8 @@
 
     <!-- Required Documents -->
     <div class="mb-4" *ngIf="service.documents && service.documents.length > 0">
-        
-       <h6 class="mb-3">{{ 'forms.service_application.required_documents' | translate }}:</h6>
-       <ul class="list-group">
+        <h6 class="mb-3">{{ 'forms.service_application.required_documents' | translate }}:</h6>
+        <ul class="list-group">
             <li class="list-group-item d-flex align-items-center" *ngFor="let requirement of service.documents">
                 <i class="fas fa-file-alt text-primary me-3"></i>
                 <div>
@@ -49,7 +48,9 @@
                     <br>
                     <small class="text-muted">{{ requirement.description }}</small>
                 </div>
-                <span class="badge bg-danger ms-auto" *ngIf="requirement.isRequired">Required</span>
+                <span class="badge bg-danger ms-auto" *ngIf="requirement.isRequired">
+                    {{ 'forms.service_application.required' | translate }}
+                </span>
             </li>
         </ul>
     </div>
@@ -83,7 +84,7 @@
     <!-- Warning Note -->
     <div class="alert alert-warning" *ngIf="service.published">
         <i class="fas fa-info-circle me-2"></i>
-        This service is fully implemented with real Cameroonian administrative procedures.
+        {{ 'messages.service_implemented' | translate }}
     </div>
 
     <div class="alert alert-info" *ngIf="!service.published">
@@ -97,7 +98,8 @@
         {{ 'buttons.cancel' | translate }}
     </button>
     <button type="button" class="btn btn-primary" [disabled]="!service.published || isLoading" (click)="onApply()">
-        <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+        <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status"
+            [attr.aria-label]="'messages.loading' | translate"></span>
         {{ 'forms.service_application.apply_button' | translate }}
     </button>
 </div>

@@ -60,8 +60,8 @@
     "services": {
         "passport": {
             "name": "Passport Application",
-            "description": "Apply for a Cameroonian biometric passport online",
-            "detailed_description": "Electronic service for applying for a Cameroonian biometric passport. The application is processed by the General Delegation for National Security (DGSN) through their digital platform. The new biometric passport features advanced security technology with an integrated electronic chip and is internationally recognized."
+            "description": "Apply for a Guinea-Bissau biometric passport online",
+            "detailed_description": "Electronic service for applying for a Guinea-Bissau biometric passport. The application is processed by the General Delegation for National Security (DGSN) through their digital platform. The new biometric passport features advanced security technology with an integrated electronic chip and is internationally recognized."
         },
         "birth_certificate_copy": {
             "name": "Certified Copy of Birth Certificate",
@@ -71,7 +71,7 @@
         "national_id": {
             "name": "National Identity Card",
             "description": "Apply for national identity card",
-            "detailed_description": "Service for requesting a new national identity card or renewing an existing one. The CNI is a mandatory identity document for all Cameroonian citizens."
+            "detailed_description": "Service for requesting a new national identity card or renewing an existing one. The CNI is a mandatory identity document for all Guinea-Bissau citizens."
         },
         "criminal_record": {
             "name": "Criminal Record Extract",
@@ -133,7 +133,13 @@
         "login": {
             "title": "Login",
             "phone_email": "Phone Number or Email",
+            "phone_email_placeholder": "Enter your phone number or email",
+            "identifier_required": "This field is required",
             "password": "Password",
+            "password_placeholder": "Enter your password",
+            "password_required": "Password is required",
+            "password_minlength": "Password must be at least 6 characters",
+            "toggle_password": "Toggle password visibility",
             "forgot_password": "Forgot Password?",
             "login_button": "Login",
             "no_account": "Don't have an account?",
@@ -168,8 +174,91 @@
             "processing_time": "Processing Time",
             "cost": "Cost",
             "provided_by": "Provided by",
-            "required_documents": "Required Documents"
+            "required_documents": "Required Documents",
+            "required": "Required"
+        },
+        "claim": {
+            "title": "Submit a Claim",
+            "subtitle": "Report issues, provide feedback, or make suggestions about government services",
+            "help_guide": "Help Guide",
+            "track_claim": "Track Claim",
+            "claim_details": "Claim Details",
+            "confirmation": "Confirmation",
+            "provide_details": "Provide complete information about your claim",
+            "claim_category": "Claim Category",
+            "issue_type": "Issue Type",
+            "subject": "Subject",
+            "subject_placeholder": "Brief summary of your claim",
+            "subject_required": "Subject is required (minimum 10 characters)",
+            "description": "Description",
+            "description_placeholder": "Provide detailed information about your claim, including what happened, when it occurred, and what resolution you're seeking.",
+            "description_required": "Description is required (minimum 20 characters)",
+            "description_help": "Include as much detail as possible to help us understand and resolve your claim.",
+            "related_application": "Related Application ID (Optional)",
+            "application_id_placeholder": "MKG123456789ABC",
+            "application_help": "If your claim is related to a specific application",
+            "phone_number": "Phone Number",
+            "phone_placeholder": "Enter your phone number",
+            "phone_help": "For urgent follow-up if needed",
+            "email_address": "Email Address",
+            "email_placeholder": "Enter your email address",
+            "email_help": "Updates will be sent to this email address",
+            "supporting_documents": "Supporting Documents (Optional)",
+            "upload_files": "Click to upload files or drag and drop",
+            "file_types": "PDF, JPEG, PNG, TXT (max 5MB each)",
+            "uploaded_files": "Uploaded Files:",
+            "kb": "KB",
+            "submit_claim": "Submit Claim",
+            "claim_submitted": "Claim Submitted Successfully!",
+            "claim_received": "Your claim has been received and will be reviewed by our team.",
+            "tracking_number": "Tracking Number",
+            "category": "Category",
+            "type": "Type",
+            "status": "Status",
+            "submitted": "Submitted",
+            "date_format": "medium",
+            "whats_next": "What's Next?",
+            "notification_info": "You will receive email notifications about the progress of your claim.",
+            "response_time": "Expected response time: 3-5 business days.",
+            "track_claim_btn": "Track Claim",
+            "back_to_home": "Back to Home"
+        },
+        "forgot_password": {
+            "title": "Reset Password",
+            "forgot_title": "Forgot your password?",
+            "forgot_subtitle": "Enter your phone number or email to receive a verification code.",
+            "code_sent_title": "Code Sent!",
+            "identifier_label": "Phone Number or Email",
+            "identifier_placeholder": "Enter your phone number or email",
+            "identifier_required": "This field is required",
+            "send_code_button": "Send Reset Code",
+            "how_it_works": "How it works:",
+            "step1_title": "Submit your information",
+            "step1_desc": "Enter your registered phone number or email",
+            "step2_title": "Receive verification code",
+            "step2_desc": "A verification code will be sent to verify your identity",
+            "step3_title": "Create new password",
+            "step3_desc": "Set up your new password and confirm it"
         }
+    },
+    "claim_categories": {
+        "complaint": "Complaint",
+        "complaint_desc": "Express dissatisfaction",
+        "suggestion": "Suggestion",
+        "suggestion_desc": "Suggest improvements",
+        "compliment": "Compliment",
+        "compliment_desc": "Praise good service",
+        "inquiry": "Inquiry",
+        "inquiry_desc": "Ask questions"
+    },
+    "claim_types": {
+        "service_delay": "Service Delay",
+        "bribe": "Bribe",
+        "payment_issue": "Payment Issue",
+        "doc_not_found": "Document Not Found",
+        "staff_behavior": "Staff Behavior",
+        "system_error": "System Error",
+        "other": "Other"
     },
     "requirements": {
         "passport_form": "Passport Application Form",
@@ -211,12 +300,14 @@
         "pay": "Pay",
         "confirm": "Confirm",
         "next": "Next",
-        "previous": "Previous"
+        "previous": "Previous",
+        "view_all": "View All",
+        "terms": "Terms of Service"
     },
-     "agencies": {
-        "dgsn": "DGSN - Direction Générale de la Sûreté Nationale",
+    "agencies": {
+        "dgsn": "DGSN - General Delegation for National Security",
         "ministry_justice": "Ministry of Justice",
-        "ministry_transport": "Ministry of Transport", 
+        "ministry_transport": "Ministry of Transport",
         "ministry_education": "Ministry of Higher Education",
         "cfce": "CFCE - Business Creation Center",
         "ministry_public_service": "Ministry of Public Service",
@@ -229,11 +320,11 @@
         "government_agencies": "Government Agencies & Service Providers",
         "popular_services": "Popular Services",
         "legal_notice": "Legal Notice",
-        "legal_text": "This platform is an official government portal. All transactions are secured and monitored. For technical issues, contact our support team. Data protection complies with Cameroon's digital governance standards.",
+        "legal_text": "This platform is an official government portal. All transactions are secured and monitored. For technical issues, contact our support team. Data protection complies with Guinea-Bissau's digital governance standards.",
         "copyright": "Digital Government Portal. All rights reserved.",
-        "ministry_attribution": "Republic of Cameroon - Ministry of Public Service and Administrative Reform",
-        "contact_phone": "+237 2XX XXX XXX",
-        "contact_email": "info@mkgov.cm", 
+        "ministry_attribution": "Republic of Guinea-Bissau - Ministry of Public Service and Administrative Reform",
+        "contact_phone": "+245(0) 245 47 50 51 / +245(6) 70 60 42 15",
+        "contact_email": "info@mkgov.gw",
         "service_hours": "24/7 Online Services",
         "badges": {
             "secure": "Secure",
@@ -250,6 +341,7 @@
         "no_results": "No results found",
         "coming_soon": "Coming Soon",
         "service_not_available": "This service is not yet available online. Please visit the relevant office.",
+        "service_implemented": "This service is fully implemented with real Guinea-Bissau administrative procedures.",
         "login_required": "Please login to access this service",
         "payment_simulation": "This is a payment simulation for demonstration purposes. In the actual implementation, real payment processing would be integrated.",
         "application_submitted": "Your application has been submitted successfully!",
@@ -308,5 +400,38 @@
         "track_application": "Track Your Application",
         "support_description": "Contact our support team for assistance with your application.",
         "track_description": "Already submitted? Track the status of your application using your tracking number."
+    },
+    "search": {
+        "placeholder": "Search for services...",
+        "results": "Search Results for",
+        "no_results": "No results found for",
+        "try_different": "Try different search terms"
+    },
+    "home": {
+        "hero_title": "Welcome to the Digital Government Portal",
+        "hero_subtitle": "Access government services quickly and securely",
+        "quick_actions": "Quick Actions",
+        "browse_procedures": "Browse Procedures",
+        "browse_procedures_desc": "Explore all available government services",
+        "track_application": "Track Application",
+        "track_application_desc": "Search and track your submitted applications",
+        "create_account": "Create Account",
+        "create_account_desc": "Register to access government services",
+        "apply_passport": "Apply for Passport",
+        "apply_passport_desc": "Start your passport application process",
+        "available_services": "Available Services"
+    },
+    "procedures": {
+        "title": "Government Procedures",
+        "subtitle": "Browse government services by category",
+        "search_placeholder": "Search procedures...",
+        "services_found": "service(s) found",
+        "no_results_title": "No results found",
+        "no_results_subtitle": "Try adjusting your search criteria",
+        "available": "Available",
+        "coming_soon": "Coming Soon",
+        "available_services": "Available Services",
+        "more_services": "more services",
+        "services": "services"
     }
 }
