@@ -7,19 +7,19 @@
                 <div class="col-md-8">
                     <h1 class="page-title">
                         <i class="fas fa-certificate me-3"></i>
-                        Birth Certificate Copy
+                        {{ 'birth_certificate.title' | translate }}
                     </h1>
-                    <p class="text-muted">Request a certified copy of birth certificate</p>
+                    <p class="text-muted">{{ 'birth_certificate.subtitle' | translate }}</p>
                 </div>
                 <div class="col-md-4 text-md-end">
                     <div class="tracking-info" *ngIf="application">
                         <div class="tracking-display d-inline-flex align-items-center">
                             <span class="tracking-text">
-                                <strong>Tracking #:</strong> {{ application.trackingNumber }}
+                                <strong>{{ 'birth_certificate.tracking_number' | translate }}</strong> {{ application.trackingNumber }}
                             </span>
                             <button class="btn btn-sm btn-outline-primary ms-2" 
                                 (click)="copyTrackingNumber()" 
-                                title="Copy tracking number">
+                                [title]="'birth_certificate.copy_tracking' | translate">
                                 <i class="fas fa-copy"></i>
                             </button>
                         </div>
@@ -33,17 +33,17 @@
             <div class="progress-steps">
                 <div class="step" [class.active]="currentStep >= 1" [class.completed]="currentStep > 1">
                     <div class="step-circle">1</div>
-                    <span class="step-label">Person Info</span>
+                    <span class="step-label">{{ 'birth_certificate.steps.person_info' | translate }}</span>
                 </div>
                 <div class="step-line" [class.completed]="currentStep > 1"></div>
                 <div class="step" [class.active]="currentStep >= 2" [class.completed]="currentStep > 2">
                     <div class="step-circle">2</div>
-                    <span class="step-label">Payment</span>
+                    <span class="step-label">{{ 'birth_certificate.steps.payment' | translate }}</span>
                 </div>
                 <div class="step-line" [class.completed]="currentStep > 2"></div>
                 <div class="step" [class.active]="currentStep >= 3" [class.completed]="currentStep >= 3">
                     <div class="step-circle">3</div>
-                    <span class="step-label">CRVS Feedback</span>
+                    <span class="step-label">{{ 'birth_certificate.steps.crvs_feedback' | translate }}</span>
                 </div>
             </div>
         </div>
@@ -67,13 +67,13 @@
                 <!-- Step 1: Person Information -->
                 <div class="form-step" *ngIf="currentStep === 1">
                     <div class="step-header mb-4">
-                        <h3>Birth Certificate Information</h3>
-                        <p class="text-muted">Provide details of the person whose birth certificate is being requested</p>
+                        <h3>{{ 'birth_certificate.form.title' | translate }}</h3>
+                        <p class="text-muted">{{ 'birth_certificate.form.subtitle' | translate }}</p>
                     </div>
 
                     <!-- Request Type -->
                     <div class="mb-4">
-                        <label class="form-label">Who is this request for? *</label>
+                        <label class="form-label">{{ 'birth_certificate.form.request_for' | translate }} *</label>
                         <div class="request-type-selection">
                             <div class="form-check form-check-card">
                                 <input class="form-check-input" type="radio" value="self" formControlName="requestType"
@@ -81,8 +81,8 @@
                                 <label class="form-check-label" for="self">
                                     <div class="card-content">
                                         <i class="fas fa-user fa-2x mb-2"></i>
-                                        <h6>For Myself</h6>
-                                        <small class="text-muted">My own birth certificate</small>
+                                        <h6>{{ 'birth_certificate.form.for_myself' | translate }}</h6>
+                                        <small class="text-muted">{{ 'birth_certificate.form.for_myself_desc' | translate }}</small>
                                     </div>
                                 </label>
                             </div>
@@ -92,8 +92,8 @@
                                 <label class="form-check-label" for="other">
                                     <div class="card-content">
                                         <i class="fas fa-users fa-2x mb-2"></i>
-                                        <h6>For Someone Else</h6>
-                                        <small class="text-muted">Child, relative, or other person</small>
+                                        <h6>{{ 'birth_certificate.form.for_someone_else' | translate }}</h6>
+                                        <small class="text-muted">{{ 'birth_certificate.form.for_someone_else_desc' | translate }}</small>
                                     </div>
                                 </label>
                             </div>
@@ -101,88 +101,88 @@
                     </div>
 
                     <!-- Person's Information -->
-                    <h5 class="mb-3">Person's Information</h5>
+                    <h5 class="mb-3">{{ 'birth_certificate.form.person_information' | translate }}</h5>
                     <div class="row">
                         <div class="col-md-4 mb-3">
-                            <label class="form-label">First Name *</label>
+                            <label class="form-label">{{ 'birth_certificate.form.first_name' | translate }} *</label>
                             <input type="text" class="form-control" formControlName="personFirstName"
                                 [class.is-invalid]="certificateForm.get('personFirstName')?.invalid && certificateForm.get('personFirstName')?.touched">
-                            <div class="invalid-feedback">First name is required</div>
+                            <div class="invalid-feedback">{{ 'birth_certificate.form.first_name_required' | translate }}</div>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label class="form-label">Middle Name</label>
+                            <label class="form-label">{{ 'birth_certificate.form.middle_name' | translate }}</label>
                             <input type="text" class="form-control" formControlName="personMiddleName">
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label class="form-label">Last Name *</label>
+                            <label class="form-label">{{ 'birth_certificate.form.last_name' | translate }} *</label>
                             <input type="text" class="form-control" formControlName="personLastName"
                                 [class.is-invalid]="certificateForm.get('personLastName')?.invalid && certificateForm.get('personLastName')?.touched">
-                            <div class="invalid-feedback">Last name is required</div>
+                            <div class="invalid-feedback">{{ 'birth_certificate.form.last_name_required' | translate }}</div>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-md-4 mb-3">
-                            <label class="form-label">Date of Birth *</label>
+                            <label class="form-label">{{ 'birth_certificate.form.date_of_birth' | translate }} *</label>
                             <input type="date" class="form-control" formControlName="personDateOfBirth"
                                 [class.is-invalid]="certificateForm.get('personDateOfBirth')?.invalid && certificateForm.get('personDateOfBirth')?.touched">
-                            <div class="invalid-feedback">Date of birth is required</div>
+                            <div class="invalid-feedback">{{ 'birth_certificate.form.date_birth_required' | translate }}</div>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label class="form-label">Place of Birth *</label>
+                            <label class="form-label">{{ 'birth_certificate.form.place_of_birth' | translate }} *</label>
                             <input type="text" class="form-control" formControlName="personPlaceOfBirth"
                                 [class.is-invalid]="certificateForm.get('personPlaceOfBirth')?.invalid && certificateForm.get('personPlaceOfBirth')?.touched">
-                            <div class="invalid-feedback">Place of birth is required</div>
+                            <div class="invalid-feedback">{{ 'birth_certificate.form.place_birth_required' | translate }}</div>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label class="form-label">Gender *</label>
+                            <label class="form-label">{{ 'birth_certificate.form.gender' | translate }} *</label>
                             <select class="form-select" formControlName="personGender"
                                 [class.is-invalid]="certificateForm.get('personGender')?.invalid && certificateForm.get('personGender')?.touched">
-                                <option value="">Select Gender</option>
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
+                                <option value="">{{ 'birth_certificate.form.select_gender' | translate }}</option>
+                                <option value="Male">{{ 'birth_certificate.form.male' | translate }}</option>
+                                <option value="Female">{{ 'birth_certificate.form.female' | translate }}</option>
                             </select>
-                            <div class="invalid-feedback">Gender is required</div>
+                            <div class="invalid-feedback">{{ 'birth_certificate.form.gender_required' | translate }}</div>
                         </div>
                     </div>
 
                     <!-- Request Inputs -->
-                    <h5 class="mb-3 mt-4">Request Inputs</h5>
+                    <h5 class="mb-3 mt-4">{{ 'birth_certificate.form.request_inputs' | translate }}</h5>
                     <div class="row">
                         <div class="col-md-4 mb-3">
-                            <label class="form-label">User Identification Number *</label>
+                            <label class="form-label">{{ 'birth_certificate.form.user_id_number' | translate }} *</label>
                             <input type="text" class="form-control" formControlName="userIdentificationNumber"
-                                placeholder="Enter your ID number"
+                                [placeholder]="'birth_certificate.form.user_id_placeholder' | translate"
                                 [class.is-invalid]="certificateForm.get('userIdentificationNumber')?.invalid && certificateForm.get('userIdentificationNumber')?.touched">
                             <div class="invalid-feedback">
                                 <small *ngIf="certificateForm.get('userIdentificationNumber')?.errors?.['required']">
-                                    User identification number is required
+                                    {{ 'birth_certificate.form.user_id_required' | translate }}
                                 </small>
                                 <small *ngIf="certificateForm.get('userIdentificationNumber')?.errors?.['pattern']">
-                                    Please enter a valid ID number (8-12 digits)
+                                    {{ 'birth_certificate.form.user_id_invalid' | translate }}
                                 </small>
                             </div>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label class="form-label">Email Address *</label>
+                            <label class="form-label">{{ 'birth_certificate.form.email_address' | translate }} *</label>
                             <input type="email" class="form-control" formControlName="emailAddress"
-                                placeholder="Enter your email address"
+                                [placeholder]="'birth_certificate.form.email_placeholder' | translate"
                                 [class.is-invalid]="certificateForm.get('emailAddress')?.invalid && certificateForm.get('emailAddress')?.touched">
                             <div class="invalid-feedback">
                                 <small *ngIf="certificateForm.get('emailAddress')?.errors?.['required']">
-                                    Email address is required
+                                    {{ 'birth_certificate.form.email_required' | translate }}
                                 </small>
                                 <small *ngIf="certificateForm.get('emailAddress')?.errors?.['email']">
-                                    Please enter a valid email address
+                                    {{ 'birth_certificate.form.email_invalid' | translate }}
                                 </small>
                             </div>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label class="form-label">Request Reason *</label>
+                            <label class="form-label">{{ 'birth_certificate.form.request_reason' | translate }} *</label>
                             <input type="text" class="form-control" formControlName="requestReason"
-                                placeholder="Enter reason for request"
+                                [placeholder]="'birth_certificate.form.request_reason_placeholder' | translate"
                                 [class.is-invalid]="certificateForm.get('requestReason')?.invalid && certificateForm.get('requestReason')?.touched">
-                            <div class="invalid-feedback">Request reason is required</div>
+                            <div class="invalid-feedback">{{ 'birth_certificate.form.reason_required' | translate }}</div>
                         </div>
                     </div>
                 </div>
@@ -190,24 +190,24 @@
                 <!-- Step 2: Payment -->
                 <div class="form-step" *ngIf="currentStep === 2">
                     <div class="step-header mb-4">
-                        <h3>Payment</h3>
-                        <p class="text-muted">Complete your payment to process your certificate request</p>
+                        <h3>{{ 'birth_certificate.payment.title' | translate }}</h3>
+                        <p class="text-muted">{{ 'birth_certificate.payment.subtitle' | translate }}</p>
                     </div>
 
                     <div class="row">
                         <div class="col-md-8">
                             <div class="payment-summary mb-4">
-                                <h5>Payment Summary</h5>
+                                <h5>{{ 'birth_certificate.payment.summary' | translate }}</h5>
                                 <div class="fee-item">
                                     <div class="d-flex justify-content-between">
-                                        <span>Birth Certificate Copy</span>
+                                        <span>{{ 'birth_certificate.payment.certificate_copy' | translate }}</span>
                                         <span>200 XAF</span>
                                     </div>
                                 </div>
                                 <hr>
                                 <div class="total-amount">
                                     <div class="d-flex justify-content-between">
-                                        <strong>Total Amount</strong>
+                                        <strong>{{ 'birth_certificate.payment.total_amount' | translate }}</strong>
                                         <strong class="text-primary">{{ calculateTotalAmount() }} XAF</strong>
                                     </div>
                                 </div>
@@ -218,15 +218,15 @@
                                 <div class="d-flex align-items-center">
                                     <i class="fas fa-check-circle fa-2x text-success me-3"></i>
                                     <div>
-                                        <h6 class="mb-1">Payment Completed Successfully!</h6>
-                                        <p class="mb-0">Your payment has been processed. Please proceed to the next step to finalize your request.</p>
+                                        <h6 class="mb-1">{{ 'birth_certificate.payment.payment_completed' | translate }}</h6>
+                                        <p class="mb-0">{{ 'birth_certificate.payment.payment_completed_desc' | translate }}</p>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Payment Methods with Accordions -->
                             <div class="payment-methods" *ngIf="!hasPaymentCompleted">
-                                <h5 class="mb-3">Select Payment Method</h5>
+                                <h5 class="mb-3">{{ 'birth_certificate.payment.select_method' | translate }}</h5>
                                 
                                 <!-- MTN Mobile Money -->
                                 <div class="payment-accordion mb-3" [class.disabled]="arePaymentMethodsDisabled()">
@@ -245,23 +245,23 @@
                                         <div class="payment-instructions mb-3">
                                             <h6 class="text-primary">
                                                 <i class="fas fa-info-circle me-2"></i>
-                                                MTN Mobile Money Payment Process
+                                                {{ 'birth_certificate.payment.mtn_process' | translate }}
                                             </h6>
                                             <div class="instruction-steps">
                                                 <div class="step-item">
-                                                    <strong>Step 1:</strong> Dial <code>*126#</code> on your MTN line
+                                                    <strong>Step 1:</strong> {{ 'birth_certificate.payment.dial_ussd' | translate }}
                                                 </div>
                                                 <div class="step-item">
-                                                    <strong>Step 2:</strong> Select "2" for Bill Payment
+                                                    <strong>Step 2:</strong> {{ 'birth_certificate.payment.select_bill_payment' | translate }}
                                                 </div>
                                                 <div class="step-item">
-                                                    <strong>Step 3:</strong> Enter the 6-digit merchant code
+                                                    <strong>Step 3:</strong> {{ 'birth_certificate.payment.enter_merchant_code' | translate }}
                                                 </div>
                                                 <div class="step-item">
-                                                    <strong>Step 4:</strong> Enter payment amount: <strong>{{ calculateTotalAmount() }} XAF</strong>
+                                                    <strong>Step 4:</strong> {{ 'birth_certificate.payment.enter_amount' | translate }} <strong>{{ calculateTotalAmount() }} XAF</strong>
                                                 </div>
                                                 <div class="step-item">
-                                                    <strong>Step 5:</strong> Find the transaction ID that was sent to you by SMS and enter it in the Transaction ID field
+                                                    <strong>Step 5:</strong> {{ 'birth_certificate.payment.transaction_id_sms' | translate }}
                                                 </div>
                                             </div>
                                         </div>
@@ -269,46 +269,46 @@
                                         <form [formGroup]="mtnForm">
                                             <div class="row">
                                                 <div class="col-md-6 mb-3">
-                                                    <label class="form-label">MTN Phone Number *</label>
+                                                    <label class="form-label">{{ 'birth_certificate.payment.mtn_phone' | translate }} *</label>
                                                     <input type="tel" class="form-control" formControlName="phoneNumber"
-                                                        placeholder="6XXXXXXXX"
+                                                        [placeholder]="'birth_certificate.payment.mtn_phone_placeholder' | translate"
                                                         [class.is-invalid]="mtnForm.get('phoneNumber')?.invalid && mtnForm.get('phoneNumber')?.touched">
                                                     <div class="invalid-feedback">
                                                         <small *ngIf="mtnForm.get('phoneNumber')?.errors?.['required']">
-                                                            MTN phone number is required
+                                                            {{ 'birth_certificate.payment.mtn_phone_required' | translate }}
                                                         </small>
                                                         <small *ngIf="mtnForm.get('phoneNumber')?.errors?.['pattern']">
-                                                            Please enter a valid MTN number (6XXXXXXXX)
+                                                            {{ 'birth_certificate.payment.mtn_phone_invalid' | translate }}
                                                         </small>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 mb-3">
-                                                    <label class="form-label">Merchant Code</label>
+                                                    <label class="form-label">{{ 'birth_certificate.payment.merchant_code' | translate }}</label>
                                                     <input type="text" class="form-control" formControlName="merchantCode"
                                                         readonly>
-                                                    <small class="form-text text-muted">Fixed merchant code for MK Gov services</small>
+                                                    <small class="form-text text-muted">{{ 'birth_certificate.payment.merchant_code_desc' | translate }}</small>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-6 mb-3">
-                                                    <label class="form-label">Amount</label>
+                                                    <label class="form-label">{{ 'birth_certificate.payment.amount' | translate }}</label>
                                                     <input type="text" class="form-control" formControlName="amount"
                                                         readonly>
                                                 </div>
                                                 <div class="col-md-6 mb-3">
-                                                    <label class="form-label">Transaction ID *</label>
+                                                    <label class="form-label">{{ 'birth_certificate.payment.transaction_id' | translate }} *</label>
                                                     <input type="text" class="form-control" formControlName="transactionId"
-                                                        placeholder="e.g., 11104326398"
+                                                        [placeholder]="'birth_certificate.payment.transaction_id_placeholder' | translate"
                                                         [class.is-invalid]="mtnForm.get('transactionId')?.invalid && mtnForm.get('transactionId')?.touched">
                                                     <div class="invalid-feedback">
                                                         <small *ngIf="mtnForm.get('transactionId')?.errors?.['required']">
-                                                            Transaction ID is required
+                                                            {{ 'birth_certificate.payment.transaction_id_required' | translate }}
                                                         </small>
                                                         <small *ngIf="mtnForm.get('transactionId')?.errors?.['pattern']">
-                                                            Transaction ID must be 11 digits (e.g., 11104326398)
+                                                            {{ 'birth_certificate.payment.transaction_id_invalid' | translate }}
                                                         </small>
                                                     </div>
-                                                    <small class="form-text text-muted">Enter the 11-digit transaction ID from MTN confirmation SMS</small>
+                                                    <small class="form-text text-muted">{{ 'birth_certificate.payment.transaction_id_desc' | translate }}</small>
                                                 </div>
                                             </div>
 
@@ -317,7 +317,7 @@
                                                 (click)="processMtnPayment()">
                                                 <span *ngIf="isProcessingPayment && activePaymentMethod === 'mtn'" 
                                                     class="spinner-border spinner-border-sm me-2"></span>
-                                                Pay Now
+                                                {{ 'birth_certificate.payment.pay_now' | translate }}
                                             </button>
                                         </form>
                                     </div>
@@ -340,20 +340,20 @@
                                         <div class="payment-instructions mb-3">
                                             <h6 class="text-primary">
                                                 <i class="fas fa-info-circle me-2"></i>
-                                                Orange Money Payment Process
+                                                {{ 'birth_certificate.payment.orange_process' | translate }}
                                             </h6>
                                             <div class="instruction-steps">
                                                 <div class="step-item">
-                                                    <strong>Step 1:</strong> Dial <code>#150*47#</code> on your Orange line
+                                                    <strong>Step 1:</strong> {{ 'birth_certificate.payment.orange_ussd' | translate }}
                                                 </div>
                                                 <div class="step-item">
-                                                    <strong>Step 2:</strong> Enter the merchant code when prompted
+                                                    <strong>Step 2:</strong> {{ 'birth_certificate.payment.orange_merchant' | translate }}
                                                 </div>
                                                 <div class="step-item">
-                                                    <strong>Step 3:</strong> Enter payment amount: <strong>{{ calculateTotalAmount() }} XAF</strong>
+                                                    <strong>Step 3:</strong> {{ 'birth_certificate.payment.orange_amount' | translate }} <strong>{{ calculateTotalAmount() }} XAF</strong>
                                                 </div>
                                                 <div class="step-item">
-                                                    <strong>Step 4:</strong> Find the transaction ID that was sent to you by SMS and enter it in the Transaction ID field
+                                                    <strong>Step 4:</strong> {{ 'birth_certificate.payment.orange_transaction_sms' | translate }}
                                                 </div>
                                             </div>
                                         </div>
@@ -361,46 +361,46 @@
                                         <form [formGroup]="orangeForm">
                                             <div class="row">
                                                 <div class="col-md-6 mb-3">
-                                                    <label class="form-label">Orange Phone Number *</label>
+                                                    <label class="form-label">{{ 'birth_certificate.payment.orange_phone' | translate }} *</label>
                                                     <input type="tel" class="form-control" formControlName="phoneNumber"
-                                                        placeholder="6XXXXXXXX"
+                                                        [placeholder]="'birth_certificate.payment.mtn_phone_placeholder' | translate"
                                                         [class.is-invalid]="orangeForm.get('phoneNumber')?.invalid && orangeForm.get('phoneNumber')?.touched">
                                                     <div class="invalid-feedback">
                                                         <small *ngIf="orangeForm.get('phoneNumber')?.errors?.['required']">
-                                                            Orange phone number is required
+                                                            {{ 'birth_certificate.payment.orange_phone_required' | translate }}
                                                         </small>
                                                         <small *ngIf="orangeForm.get('phoneNumber')?.errors?.['pattern']">
-                                                            Please enter a valid Orange number (6XXXXXXXX)
+                                                            {{ 'birth_certificate.payment.orange_phone_invalid' | translate }}
                                                         </small>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 mb-3">
-                                                    <label class="form-label">Merchant Code</label>
+                                                    <label class="form-label">{{ 'birth_certificate.payment.merchant_code' | translate }}</label>
                                                     <input type="text" class="form-control" formControlName="merchantCode"
                                                         readonly>
-                                                    <small class="form-text text-muted">Fixed merchant code for MK Gov services</small>
+                                                    <small class="form-text text-muted">{{ 'birth_certificate.payment.merchant_code_desc' | translate }}</small>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-6 mb-3">
-                                                    <label class="form-label">Amount</label>
+                                                    <label class="form-label">{{ 'birth_certificate.payment.amount' | translate }}</label>
                                                     <input type="text" class="form-control" formControlName="amount"
                                                         readonly>
                                                 </div>
                                                 <div class="col-md-6 mb-3">
-                                                    <label class="form-label">Transaction ID *</label>
+                                                    <label class="form-label">{{ 'birth_certificate.payment.transaction_id' | translate }} *</label>
                                                     <input type="text" class="form-control" formControlName="transactionId"
-                                                        placeholder="e.g., AB123456.1234.X12345"
+                                                        [placeholder]="'birth_certificate.payment.orange_transaction_placeholder' | translate"
                                                         [class.is-invalid]="orangeForm.get('transactionId')?.invalid && orangeForm.get('transactionId')?.touched">
                                                     <div class="invalid-feedback">
                                                         <small *ngIf="orangeForm.get('transactionId')?.errors?.['required']">
-                                                            Transaction ID is required
+                                                            {{ 'birth_certificate.payment.transaction_id_required' | translate }}
                                                         </small>
                                                         <small *ngIf="orangeForm.get('transactionId')?.errors?.['pattern']">
-                                                            Transaction ID format: AB123456.1234.X12345
+                                                            {{ 'birth_certificate.payment.orange_transaction_format' | translate }}
                                                         </small>
                                                     </div>
-                                                    <small class="form-text text-muted">Enter the transaction ID from Orange confirmation SMS (Format: AB123456.1234.X12345)</small>
+                                                    <small class="form-text text-muted">{{ 'birth_certificate.payment.orange_transaction_desc' | translate }}</small>
                                                 </div>
                                             </div>
 
@@ -409,7 +409,7 @@
                                                 (click)="processOrangePayment()">
                                                 <span *ngIf="isProcessingPayment && activePaymentMethod === 'orange'" 
                                                     class="spinner-border spinner-border-sm me-2"></span>
-                                                Pay Now
+                                                {{ 'birth_certificate.payment.pay_now' | translate }}
                                             </button>
                                         </form>
                                     </div>
@@ -432,20 +432,20 @@
                                         <div class="payment-instructions mb-3">
                                             <h6 class="text-primary">
                                                 <i class="fas fa-info-circle me-2"></i>
-                                                Visa Credit Card Payment Process
+                                                {{ 'birth_certificate.payment.visa_process' | translate }}
                                             </h6>
                                             <div class="instruction-steps">
                                                 <div class="step-item">
-                                                    <strong>Step 1:</strong> Enter your Visa card details below
+                                                    <strong>Step 1:</strong> {{ 'birth_certificate.payment.visa_step1' | translate }}
                                                 </div>
                                                 <div class="step-item">
-                                                    <strong>Step 2:</strong> Verify all information is correct
+                                                    <strong>Step 2:</strong> {{ 'birth_certificate.payment.visa_step2' | translate }}
                                                 </div>
                                                 <div class="step-item">
-                                                    <strong>Step 3:</strong> Click "Pay Now" to process payment
+                                                    <strong>Step 3:</strong> {{ 'birth_certificate.payment.visa_step3' | translate }}
                                                 </div>
                                                 <div class="step-item">
-                                                    <strong>Step 4:</strong> Your payment will be processed securely through our payment gateway
+                                                    <strong>Step 4:</strong> {{ 'birth_certificate.payment.visa_step4' | translate }}
                                                 </div>
                                             </div>
                                         </div>
@@ -453,68 +453,68 @@
                                         <form [formGroup]="visaForm">
                                             <div class="row">
                                                 <div class="col-md-6 mb-3">
-                                                    <label class="form-label">Card Number *</label>
+                                                    <label class="form-label">{{ 'birth_certificate.payment.card_number' | translate }} *</label>
                                                     <input type="text" class="form-control" formControlName="cardNumber"
-                                                        placeholder="4*** **** **** ****"
+                                                        [placeholder]="'birth_certificate.payment.card_number_placeholder' | translate"
                                                         maxlength="19"
                                                         (input)="onCardNumberInput($event)"
                                                         (keypress)="onCardNumberKeypress($event)"
                                                         [class.is-invalid]="visaForm.get('cardNumber')?.invalid && visaForm.get('cardNumber')?.touched">
                                                     <div class="invalid-feedback">
                                                         <small *ngIf="visaForm.get('cardNumber')?.errors?.['required']">
-                                                            Card number is required
+                                                            {{ 'birth_certificate.payment.card_number_required' | translate }}
                                                         </small>
                                                         <small *ngIf="visaForm.get('cardNumber')?.errors?.['creditCard']">
-                                                            Please enter a valid 16-digit card number
+                                                            {{ 'birth_certificate.payment.card_number_invalid' | translate }}
                                                         </small>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-3 mb-3">
-                                                    <label class="form-label">Expiry Date *</label>
+                                                    <label class="form-label">{{ 'birth_certificate.payment.expiry_date' | translate }} *</label>
                                                     <input type="text" class="form-control" formControlName="expiryDate"
-                                                        placeholder="MM/YY"
+                                                        [placeholder]="'birth_certificate.payment.expiry_date_placeholder' | translate"
                                                         maxlength="5"
                                                         (input)="onExpiryDateInput($event)"
                                                         (keypress)="onExpiryDateKeypress($event)"
                                                         [class.is-invalid]="visaForm.get('expiryDate')?.invalid && visaForm.get('expiryDate')?.touched">
                                                     <div class="invalid-feedback">
                                                         <small *ngIf="visaForm.get('expiryDate')?.errors?.['required']">
-                                                            Expiry date is required
+                                                            {{ 'birth_certificate.payment.expiry_required' | translate }}
                                                         </small>
                                                         <small *ngIf="visaForm.get('expiryDate')?.errors?.['pattern']">
-                                                            Format: MM/YY
+                                                            {{ 'birth_certificate.payment.expiry_invalid' | translate }}
                                                         </small>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-3 mb-3">
-                                                    <label class="form-label">CVV *</label>
+                                                    <label class="form-label">{{ 'birth_certificate.payment.cvv' | translate }} *</label>
                                                     <input type="text" class="form-control" formControlName="cvv"
-                                                        placeholder="123"
+                                                        [placeholder]="'birth_certificate.payment.cvv_placeholder' | translate"
                                                         maxlength="3"
                                                         (keypress)="onCvvKeypress($event)"
                                                         [class.is-invalid]="visaForm.get('cvv')?.invalid && visaForm.get('cvv')?.touched">
                                                     <div class="invalid-feedback">
                                                         <small *ngIf="visaForm.get('cvv')?.errors?.['required']">
-                                                            CVV is required
+                                                            {{ 'birth_certificate.payment.cvv_required' | translate }}
                                                         </small>
                                                         <small *ngIf="visaForm.get('cvv')?.errors?.['pattern']">
-                                                            CVV must be 3 digits
+                                                            {{ 'birth_certificate.payment.cvv_invalid' | translate }}
                                                         </small>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-6 mb-3">
-                                                    <label class="form-label">Cardholder Name *</label>
+                                                    <label class="form-label">{{ 'birth_certificate.payment.cardholder_name' | translate }} *</label>
                                                     <input type="text" class="form-control" formControlName="cardholderName"
-                                                        placeholder="John Doe"
+                                                        [placeholder]="'birth_certificate.payment.cardholder_placeholder' | translate"
                                                         [class.is-invalid]="visaForm.get('cardholderName')?.invalid && visaForm.get('cardholderName')?.touched">
                                                     <div class="invalid-feedback">
-                                                        Cardholder name is required
+                                                        {{ 'birth_certificate.payment.cardholder_required' | translate }}
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 mb-3">
-                                                    <label class="form-label">Amount</label>
+                                                    <label class="form-label">{{ 'birth_certificate.payment.amount' | translate }}</label>
                                                     <input type="text" class="form-control" formControlName="amount"
                                                         readonly>
                                                 </div>
@@ -525,7 +525,7 @@
                                                 (click)="processVisaPayment()">
                                                 <span *ngIf="isProcessingPayment && activePaymentMethod === 'visa'" 
                                                     class="spinner-border spinner-border-sm me-2"></span>
-                                                Pay Now
+                                                {{ 'birth_certificate.payment.pay_now' | translate }}
                                             </button>
                                         </form>
                                     </div>
@@ -535,24 +535,24 @@
                             <!-- Payment Status Messages -->
                             <div class="alert alert-info mt-3" *ngIf="paymentStatusPending">
                                 <i class="fas fa-clock me-2"></i>
-                                Payment Status: <strong>Pending</strong> - Your payment is being processed...
+                                {{ 'birth_certificate.payment.payment_pending' | translate }}
                             </div>
                         </div>
                         
                         <div class="col-md-4">
                             <div class="delivery-info-card">
-                                <h6>Delivery Information</h6>
+                                <h6>{{ 'birth_certificate.payment.delivery_info' | translate }}</h6>
                                 <div class="info-item">
                                     <i class="fas fa-clock text-primary me-2"></i>
-                                    <strong>Expected Delivery:</strong>
+                                    <strong>{{ 'birth_certificate.payment.expected_delivery' | translate }}</strong>
                                     <br>
-                                    <span class="text-muted">{{ getExpectedDeliveryTime() }}</span>
+                                    <span class="text-muted">{{ 'birth_certificate.payment.business_days' | translate }}</span>
                                 </div>
                                 <div class="info-item">
                                     <i class="fas fa-shield-alt text-success me-2"></i>
-                                    <strong>Certified Document:</strong>
+                                    <strong>{{ 'birth_certificate.payment.certified_document' | translate }}</strong>
                                     <br>
-                                    <span class="text-muted">Official government seal and signature</span>
+                                    <span class="text-muted">{{ 'birth_certificate.payment.official_seal' | translate }}</span>
                                 </div>
                             </div>
 
@@ -560,12 +560,12 @@
                             <div class="payment-processing-card mb-3" *ngIf="showRefreshButton">
                                 <h6 class="text-primary">
                                     <i class="fas fa-credit-card me-2"></i>
-                                    Payment Under Process
+                                    {{ 'birth_certificate.payment.payment_under_process' | translate }}
                                 </h6>
-                                <p class="text-muted mb-3">Your payment is being processed. Please wait 40 seconds before refreshing.</p>
+                                <p class="text-muted mb-3">{{ 'birth_certificate.payment.payment_wait' | translate }}</p>
                                 <button class="btn btn-outline-primary w-100" (click)="refreshPaymentStatus()">
                                     <i class="fas fa-sync-alt me-2"></i>
-                                    Refresh Status
+                                    {{ 'birth_certificate.payment.refresh_status' | translate }}
                                 </button>
                             </div>
                         </div>
@@ -578,28 +578,28 @@
                         <div class="success-icon mb-4">
                             <i class="fas fa-check-circle fa-4x text-success"></i>
                         </div>
-                        <h3>Request Submitted Successfully!</h3>
-                        <p class="text-muted mb-4">Your birth certificate request has been submitted and payment processed.</p>
+                        <h3>{{ 'birth_certificate.confirmation.success_title' | translate }}</h3>
+                        <p class="text-muted mb-4">{{ 'birth_certificate.confirmation.success_desc' | translate }}</p>
 
                         <div class="confirmation-details">
                             <div class="detail-item">
-                                <strong>Tracking Number:</strong>
+                                <strong>{{ 'birth_certificate.confirmation.tracking_number' | translate }}</strong>
                                 <span class="text-primary">{{ application?.trackingNumber }}</span>
                             </div>
                             <div class="detail-item">
-                                <strong>Expected Completion:</strong> {{ getExpectedDeliveryTime() }}
+                                <strong>{{ 'birth_certificate.confirmation.expected_completion' | translate }}</strong> {{ getExpectedDeliveryTime() }}
                             </div>
                             <div class="detail-item">
-                                <strong>Total Paid:</strong> {{ calculateTotalAmount() }} XAF
+                                <strong>{{ 'birth_certificate.confirmation.total_paid' | translate }}</strong> {{ calculateTotalAmount() }} XAF
                             </div>
                             <div class="detail-item">
-                                <strong>Document Delivery:</strong> The certified birth certificate copy has been sent to your email address
+                                <strong>{{ 'birth_certificate.confirmation.document_delivery' | translate }}</strong> {{ 'birth_certificate.confirmation.delivery_desc' | translate }}
                             </div>
                         </div>
 
                         <div class="alert alert-info mt-4">
                             <i class="fas fa-envelope me-2"></i>
-                            <strong>Email Confirmation:</strong> Your certified birth certificate copy has been sent to your registered email address. Please check your inbox and spam folder.
+                            <strong>{{ 'birth_certificate.confirmation.email_confirmation' | translate }}</strong> {{ 'birth_certificate.confirmation.email_sent' | translate }}
                         </div>
                     </div>
                 </div>
@@ -612,27 +612,27 @@
                     <button type="button" class="btn btn-outline-secondary" *ngIf="currentStep > 1 && currentStep < 3"
                         (click)="previousStep()">
                         <i class="fas fa-arrow-left me-2"></i>
-                        Previous
+                        {{ 'birth_certificate.buttons.previous' | translate }}
                     </button>
 
                     <div class="ms-auto">
                         <button type="button" class="btn btn-success" *ngIf="currentStep === 1"
                             [disabled]="isSubmitting" (click)="onSubmitApplication()">
                             <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
-                            Submit Request
+                            {{ 'birth_certificate.buttons.submit_request' | translate }}
                         </button>
 
                         <button type="button" class="btn btn-primary" *ngIf="currentStep === 2"
                             [disabled]="!paymentVerificationComplete"
                             (click)="proceedToConfirmation()">
-                            Next
+                            {{ 'birth_certificate.buttons.next' | translate }}
                             <i class="fas fa-arrow-right ms-2"></i>
                         </button>
 
                         <button type="button" class="btn btn-primary" *ngIf="currentStep === 3"
                             (click)="goToTracking()">
                             <i class="fas fa-search me-2"></i>
-                            Track Request
+                            {{ 'birth_certificate.buttons.track_request' | translate }}
                         </button>
                     </div>
                 </div>

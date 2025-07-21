@@ -42,7 +42,7 @@
 
                             <!-- Step 1: Basic Information -->
                             <div *ngIf="currentStep === 1" class="step-content">
-                                <h4 class="step-title mb-4">Account Information</h4>
+                                <h4 class="step-title mb-4">{{ 'forms.registration.account_information' | translate }}</h4>
 
                                 <!-- Account Type -->
                                 <div class="mb-4">
@@ -83,10 +83,8 @@
                                         [class.is-invalid]="registrationForm.get('cniNumber')?.invalid && registrationForm.get('cniNumber')?.touched">
                                     <div class="invalid-feedback"
                                         *ngIf="registrationForm.get('cniNumber')?.invalid && registrationForm.get('cniNumber')?.touched">
-                                        <small *ngIf="registrationForm.get('cniNumber')?.errors?.['required']">CNI
-                                            number is required</small>
-                                        <small *ngIf="registrationForm.get('cniNumber')?.errors?.['pattern']">Invalid
-                                            CNI number format</small>
+                                        <small *ngIf="registrationForm.get('cniNumber')?.errors?.['required']">{{ 'forms.registration.cni_required' | translate }}</small>
+                                        <small *ngIf="registrationForm.get('cniNumber')?.errors?.['pattern']">{{ 'forms.registration.cni_invalid' | translate }}</small>
                                     </div>
                                 </div>
 
@@ -99,11 +97,9 @@
                                     <div class="invalid-feedback"
                                         *ngIf="registrationForm.get('consularCardNumber')?.invalid && registrationForm.get('consularCardNumber')?.touched">
                                         <small
-                                            *ngIf="registrationForm.get('consularCardNumber')?.errors?.['required']">Consular
-                                            card number is required</small>
+                                            *ngIf="registrationForm.get('consularCardNumber')?.errors?.['required']">{{ 'forms.registration.consular_required' | translate }}</small>
                                         <small
-                                            *ngIf="registrationForm.get('consularCardNumber')?.errors?.['pattern']">Invalid
-                                            consular card format</small>
+                                            *ngIf="registrationForm.get('consularCardNumber')?.errors?.['pattern']">{{ 'forms.registration.consular_invalid' | translate }}</small>
                                     </div>
                                 </div>
 
@@ -115,10 +111,8 @@
                                         [class.is-invalid]="registrationForm.get('phoneNumber')?.invalid && registrationForm.get('phoneNumber')?.touched">
                                     <div class="invalid-feedback"
                                         *ngIf="registrationForm.get('phoneNumber')?.invalid && registrationForm.get('phoneNumber')?.touched">
-                                        <small *ngIf="registrationForm.get('phoneNumber')?.errors?.['required']">Phone
-                                            number is required</small>
-                                        <small *ngIf="registrationForm.get('phoneNumber')?.errors?.['pattern']">Invalid
-                                            phone number format</small>
+                                        <small *ngIf="registrationForm.get('phoneNumber')?.errors?.['required']">{{ 'forms.registration.phone_required' | translate }}</small>
+                                        <small *ngIf="registrationForm.get('phoneNumber')?.errors?.['pattern']">{{ 'forms.registration.phone_invalid' | translate }}</small>
                                     </div>
                                 </div>
 
@@ -129,10 +123,8 @@
                                         [class.is-invalid]="registrationForm.get('email')?.invalid && registrationForm.get('email')?.touched">
                                     <div class="invalid-feedback"
                                         *ngIf="registrationForm.get('email')?.invalid && registrationForm.get('email')?.touched">
-                                        <small *ngIf="registrationForm.get('email')?.errors?.['required']">Email is
-                                            required</small>
-                                        <small *ngIf="registrationForm.get('email')?.errors?.['email']">Invalid email
-                                            format</small>
+                                        <small *ngIf="registrationForm.get('email')?.errors?.['required']">{{ 'forms.registration.email_required' | translate }}</small>
+                                        <small *ngIf="registrationForm.get('email')?.errors?.['email']">{{ 'forms.registration.email_invalid' | translate }}</small>
                                     </div>
                                 </div>
 
@@ -144,7 +136,7 @@
 
                             <!-- Step 2: Password -->
                             <div *ngIf="currentStep === 2" class="step-content">
-                                <h4 class="step-title mb-4">Create Password</h4>
+                                <h4 class="step-title mb-4">{{ 'forms.registration.create_password' | translate }}</h4>
 
                                 <!-- Password -->
                                 <div class="mb-3">
@@ -161,10 +153,8 @@
                                     </div>
                                     <div class="invalid-feedback"
                                         *ngIf="registrationForm.get('password')?.invalid && registrationForm.get('password')?.touched">
-                                        <small *ngIf="registrationForm.get('password')?.errors?.['required']">Password
-                                            is required</small>
-                                        <small *ngIf="registrationForm.get('password')?.errors?.['minlength']">Password
-                                            must be at least 6 characters</small>
+                                        <small *ngIf="registrationForm.get('password')?.errors?.['required']">{{ 'forms.registration.password_required' | translate }}</small>
+                                        <small *ngIf="registrationForm.get('password')?.errors?.['minlength']">{{ 'forms.registration.password_minlength' | translate }}</small>
                                     </div>
                                 </div>
 
@@ -185,10 +175,8 @@
                                     <div class="invalid-feedback"
                                         *ngIf="(registrationForm.get('confirmPassword')?.invalid && registrationForm.get('confirmPassword')?.touched) || registrationForm.errors?.['passwordMismatch']">
                                         <small
-                                            *ngIf="registrationForm.get('confirmPassword')?.errors?.['required']">Confirm
-                                            password is required</small>
-                                        <small *ngIf="registrationForm.errors?.['passwordMismatch']">Passwords do not
-                                            match</small>
+                                            *ngIf="registrationForm.get('confirmPassword')?.errors?.['required']">{{ 'forms.registration.confirm_password_required' | translate }}</small>
+                                        <small *ngIf="registrationForm.errors?.['passwordMismatch']">{{ 'forms.registration.passwords_mismatch' | translate }}</small>
                                     </div>
                                 </div>
 
@@ -203,7 +191,7 @@
                                         </label>
                                         <div class="invalid-feedback"
                                             *ngIf="registrationForm.get('acceptedTerms')?.invalid && registrationForm.get('acceptedTerms')?.touched">
-                                            You must accept the terms and conditions
+                                            {{ 'forms.registration.terms_required' | translate }}
                                         </div>
                                     </div>
                                 </div>

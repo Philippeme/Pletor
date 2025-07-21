@@ -6,8 +6,8 @@
             <div class="search-icon mb-3">
                 <i class="fas fa-search fa-3x text-primary"></i>
             </div>
-            <h1 class="page-title">{{ 'navigation.search_files' | translate }}</h1>
-            <p class="page-subtitle">Track your application status using your tracking number</p>
+            <h1 class="page-title">{{ 'search_files.title' | translate }}</h1>
+            <p class="page-subtitle">{{ 'search_files.subtitle' | translate }}</p>
         </div>
 
         <!-- Search Form -->
@@ -16,13 +16,13 @@
                 <div class="search-card">
                     <form [formGroup]="searchForm" (ngSubmit)="onSearch()">
                         <div class="mb-3">
-                            <label class="form-label">Application Tracking Number</label>
+                            <label class="form-label">{{ 'search_files.tracking_number' | translate }}</label>
                             <div class="input-group input-group-lg">
                                 <span class="input-group-text">
                                     <i class="fas fa-hashtag"></i>
                                 </span>
                                 <input type="text" class="form-control" formControlName="trackingNumber"
-                                    placeholder="MKG123456789ABC"
+                                    [placeholder]="'search_files.tracking_placeholder' | translate"
                                     [class.is-invalid]="searchForm.get('trackingNumber')?.invalid && searchForm.get('trackingNumber')?.touched">
                                 <button type="submit" class="btn btn-primary"
                                     [disabled]="isLoading || searchForm.invalid">
@@ -34,10 +34,10 @@
                             <div class="invalid-feedback"
                                 *ngIf="searchForm.get('trackingNumber')?.invalid && searchForm.get('trackingNumber')?.touched">
                                 <small *ngIf="searchForm.get('trackingNumber')?.errors?.['required']">
-                                    Tracking number is required
+                                    {{ 'search_files.tracking_required' | translate }}
                                 </small>
                                 <small *ngIf="searchForm.get('trackingNumber')?.errors?.['pattern']">
-                                    Invalid tracking number format (e.g., MKG123456789ABC)
+                                    {{ 'search_files.tracking_invalid' | translate }}
                                 </small>
                             </div>
                         </div>
@@ -46,7 +46,7 @@
                             <button type="button" class="btn btn-outline-secondary" *ngIf="hasSearched"
                                 (click)="clearSearch()">
                                 <i class="fas fa-times me-2"></i>
-                                Clear Search
+                                {{ 'search_files.clear_search' | translate }}
                             </button>
                         </div>
                     </form>
@@ -73,12 +73,12 @@
                     <div class="application-header">
                         <div class="row align-items-center">
                             <div class="col-md-8">
-                                <h3 class="application-title">{{ searchResult.serviceName | translate }}</h3>
+                                <h3 class="application-title">{{ getServiceName(searchResult.serviceId) }}</h3>
                                 <p class="application-meta">
-                                    <strong>Tracking Number:</strong> {{ searchResult.trackingNumber }}
+                                    <strong>{{ 'birth_certificate.tracking_number' | translate }}</strong> {{ searchResult.trackingNumber }}
                                 </p>
                                 <p class="application-meta">
-                                    <strong>Submitted:</strong> {{ formatDate(searchResult.submissionDate) }}
+                                    <strong>{{ 'search_files.application_header.submitted' | translate }}</strong> {{ formatDate(searchResult.submissionDate) }}
                                 </p>
                             </div>
                             <div class="col-md-4 text-md-end">
@@ -96,10 +96,10 @@
                             <div class="col-md-8">
                                 <h5 class="progress-title mb-2">
                                     <i class="fas fa-route me-2"></i>
-                                    Current Progress: {{ getCurrentStepInfo()?.stepName }}
+                                    {{ 'search_files.application_header.current_progress' | translate }}: {{ getCurrentStepInfo()?.stepName }}
                                 </h5>
                                 <p class="progress-subtitle">
-                                    Step {{ getCurrentStepInfo()?.stepNumber }} of {{ getCurrentStepInfo()?.totalSteps }}
+                                    {{ 'search_files.application_header.step_of' | translate:{ step: getCurrentStepInfo()?.stepNumber, total: getCurrentStepInfo()?.totalSteps } }}
                                 </p>
                             </div>
                             <div class="col-md-4 text-md-end">
@@ -125,7 +125,7 @@
                     <div class="application-timeline" *ngIf="filteredTimeline && filteredTimeline.length > 0">
                         <h5 class="timeline-title mb-4">
                             <i class="fas fa-list-check me-2"></i>
-                            Application Progress (Showing {{ filteredTimeline.length }} of {{ getTotalStepsForService(searchResult.serviceId) }} steps)
+                            {{ 'search_files.timeline.title' | translate }} ({{ 'search_files.application_header.progress_showing' | translate:{ shown: filteredTimeline.length, total: getTotalStepsForService(searchResult.serviceId) } }})
                         </h5>
 
                         <div class="timeline">
@@ -169,9 +169,9 @@
                                 <div class="preview-icon">
                                     <i class="fas fa-arrow-down text-muted"></i>
                                 </div>
-                                <h6 class="preview-title">Next Step</h6>
+                                <h6 class="preview-title">{{ 'search_files.timeline.next_step' | translate }}</h6>
                                 <p class="preview-text">{{ getNextStepPreview() }}</p>
-                                <small class="text-muted">Will be available when current step is completed</small>
+                                <small class="text-muted">{{ 'search_files.timeline.available_when' | translate }}</small>
                             </div>
                         </div>
                     </div>
@@ -180,7 +180,7 @@
                     <div class="payment-info" *ngIf="searchResult.payments && searchResult.payments.length > 0">
                         <h5 class="payment-title mb-3">
                             <i class="fas fa-credit-card me-2"></i>
-                            Payment Information
+                            {{ 'search_files.payment_info.title' | translate }}
                         </h5>
 
                         <div class="payment-item" *ngFor="let payment of searchResult.payments">
@@ -188,7 +188,7 @@
                                 <div class="col-md-6">
                                     <strong>{{ payment.description }}</strong>
                                     <br>
-                                    <small class="text-muted">Ref: {{ payment.referenceNumber }}</small>
+                                    <small class="text-muted">{{ 'search_files.payment_info.reference' | translate }} {{ payment.referenceNumber }}</small>
                                 </div>
                                 <div class="col-md-3 text-center">
                                     <span class="payment-amount">
@@ -210,12 +210,12 @@
                     <div class="additional-info" *ngIf="searchResult.notes">
                         <h5 class="info-title mb-3">
                             <i class="fas fa-info-circle me-2"></i>
-                            Additional Information
+                            {{ 'search_files.additional_info.title' | translate }}
                         </h5>
                         <p class="info-text">{{ searchResult.notes }}</p>
                     </div>
 
-                    <!-- NEW: Action Buttons Section -->
+                    <!-- Action Buttons Section -->
                     <div class="action-buttons" *ngIf="searchResult">
                         <div class="d-flex flex-wrap gap-3 justify-content-center align-items-center">
                             
@@ -231,7 +231,7 @@
                             <div class="completion-badge" *ngIf="!canContinueApplication()">
                                 <span class="badge bg-success fs-6 px-3 py-2">
                                     <i class="fas fa-check-circle me-2"></i>
-                                    Application Completed
+                                    {{ 'search_files.actions.application_completed' | translate }}
                                 </span>
                             </div>
 
@@ -239,14 +239,14 @@
                             <button type="button" class="btn btn-outline-secondary" 
                                 onclick="window.print()">
                                 <i class="fas fa-print me-2"></i>
-                                Print Details
+                                {{ 'search_files.actions.print_details' | translate }}
                             </button>
 
                             <!-- Secondary Action: Share -->
                             <button type="button" class="btn btn-outline-info"
                                 (click)="copyTrackingNumber()">
                                 <i class="fas fa-share me-2"></i>
-                                Share Tracking
+                                {{ 'search_files.actions.share_tracking' | translate }}
                             </button>
 
                         </div>
@@ -256,12 +256,12 @@
                             <div class="alert alert-info border-0 mb-0">
                                 <div class="row align-items-center">
                                     <div class="col-md-8">
-                                        <strong>Next Action Required:</strong> 
-                                        Complete {{ getCurrentStepInfo()?.stepName }}
+                                        <strong>{{ 'search_files.timeline.next_action' | translate }}</strong> 
+                                        {{ 'search_files.timeline.complete_step' | translate:{ step: getCurrentStepInfo()?.stepName } }}
                                     </div>
                                     <div class="col-md-4 text-md-end">
                                         <small class="text-muted">
-                                            {{ getProgressPercentage() }}% Complete
+                                            {{ 'search_files.timeline.completion_progress' | translate:{ percent: getProgressPercentage() } }}
                                         </small>
                                     </div>
                                 </div>
@@ -275,19 +275,19 @@
                             <div class="col-md-6">
                                 <div class="summary-item">
                                     <i class="fas fa-calendar text-primary me-2"></i>
-                                    <strong>Expected Completion:</strong>
+                                    <strong>{{ 'search_files.actions.expected_completion' | translate }}</strong>
                                     <span *ngIf="searchResult.expectedCompletionDate">
                                         {{ formatSimpleDate(searchResult.expectedCompletionDate) }}
                                     </span>
                                     <span *ngIf="!searchResult.expectedCompletionDate" class="text-muted">
-                                        To be determined
+                                        {{ 'search_files.actions.to_be_determined' | translate }}
                                     </span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="summary-item">
                                     <i class="fas fa-user text-primary me-2"></i>
-                                    <strong>Application Type:</strong>
+                                    <strong>{{ 'search_files.actions.application_type' | translate }}</strong>
                                     {{ searchResult.applicantType | titlecase }}
                                 </div>
                             </div>
@@ -302,18 +302,18 @@
         <div class="row justify-content-center mt-5" *ngIf="!searchResult || errorMessage">
             <div class="col-lg-8">
                 <div class="help-section text-center">
-                    <h4 class="help-title">Need Help?</h4>
+                    <h4 class="help-title">{{ 'search_files.help.title' | translate }}</h4>
                     <p class="help-text">
-                        If you can't find your application or need assistance, please contact our support team.
+                        {{ 'search_files.help.description' | translate }}
                     </p>
                     <div class="help-actions">
                         <button class="btn btn-outline-primary me-3">
                             <i class="fas fa-phone me-2"></i>
-                            Contact Support
+                            {{ 'search_files.help.contact_support' | translate }}
                         </button>
                         <button class="btn btn-outline-secondary">
                             <i class="fas fa-question-circle me-2"></i>
-                            View FAQ
+                            {{ 'search_files.help.view_faq' | translate }}
                         </button>
                     </div>
                 </div>
