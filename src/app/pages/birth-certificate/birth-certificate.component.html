@@ -41,7 +41,7 @@
                     <span class="step-label">Payment</span>
                 </div>
                 <div class="step-line" [class.completed]="currentStep > 2"></div>
-                <div class="step" [class.active]="currentStep >= 3">
+                <div class="step" [class.active]="currentStep >= 3" [class.completed]="currentStep >= 3">
                     <div class="step-circle">3</div>
                     <span class="step-label">CRVS Feedback</span>
                 </div>

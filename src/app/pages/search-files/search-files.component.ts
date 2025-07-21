@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { ApplicationService } from '../../services/application.service';
 import { Application, ApplicationTimeline, TimelineStatus } from '../../models/application.model';
@@ -21,6 +21,7 @@ export class SearchFilesComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
+    private router: Router,
     private applicationService: ApplicationService,
     private translate: TranslateService
   ) {
@@ -69,6 +70,84 @@ export class SearchFilesComponent implements OnInit {
       });
     } else {
       this.searchForm.get('trackingNumber')?.markAsTouched();
+    }
+  }
+
+  /**
+   * NEW: Navigate to the appropriate application component to continue the process
+   */
+  continueApplication(): void {
+    if (!this.searchResult) return;
+
+    const serviceId = this.searchResult.serviceId;
+    const applicationId = this.searchResult.id;
+
+    let route: string;
+    switch (serviceId) {
+      case 1: // Passport Application
+        route = '/passport-application';
+        break;
+      case 2: // Birth Certificate
+        route = '/birth-certificate';
+        break;
+      default:
+        console.warn('Unknown service ID:', serviceId);
+        return;
+    }
+
+    // Navigate to the application with the application ID as query parameter
+    this.router.navigate([route], {
+      queryParams: { applicationId: applicationId }
+    });
+  }
+
+  /**
+   * NEW: Check if the application can be continued (not completed)
+   */
+  canContinueApplication(): boolean {
+    if (!this.searchResult) return false;
+    
+    const completedStatuses = ['completed', 'delivered', 'collected'];
+    return !completedStatuses.includes(this.searchResult.status.toLowerCase());
+  }
+
+  /**
+   * NEW: Get the continue button text based on application type and status
+   */
+  getContinueButtonText(): string {
+    if (!this.searchResult) return 'Continue Application';
+
+    const serviceName = this.getServiceName(this.searchResult.serviceId);
+    const currentStepInfo = this.getCurrentStepInfo();
+    
+    if (currentStepInfo) {
+      return `Continue ${serviceName} - Step ${currentStepInfo.stepNumber}`;
+    }
+    
+    return `Continue ${serviceName}`;
+  }
+
+  /**
+   * NEW: Get service name based on service ID
+   */
+  getServiceName(serviceId: number): string {
+    switch (serviceId) {
+      case 1: return 'Passport Application';
+      case 4: return 'Birth Certificate';
+      default: return 'Application';
+    }
+  }
+
+  /**
+   * NEW: Get the continue button icon based on application type
+   */
+  getContinueButtonIcon(): string {
+    if (!this.searchResult) return 'fas fa-arrow-right';
+
+    switch (this.searchResult.serviceId) {
+      case 1: return 'fas fa-passport';
+      case 2: return 'fas fa-certificate';
+      default: return 'fas fa-arrow-right';
     }
   }
 
@@ -263,5 +342,24 @@ export class SearchFilesComponent implements OnInit {
       month: 'short',
       day: 'numeric'
     });
+  }
+
+  /**
+   * NEW: Copy tracking number to clipboard (for sharing functionality)
+   */
+  copyTrackingNumber(): void {
+    if (this.searchResult?.trackingNumber) {
+      navigator.clipboard.writeText(this.searchResult.trackingNumber).then(() => {
+        // Success feedback could be added here
+      }).catch(() => {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = this.searchResult!.trackingNumber;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+      });
+    }
   }
 }

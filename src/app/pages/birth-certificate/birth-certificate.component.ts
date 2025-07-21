@@ -446,7 +446,7 @@ export class BirthCertificateComponent implements OnInit {
   refreshPaymentStatus(): void {
     const elapsedTime = Date.now() - this.paymentProcessingStartTime;
     
-    if (elapsedTime >= 40000) { // 40 seconds have passed
+    if (elapsedTime >= 30000) { // 40 seconds have passed
       this.isProcessingPayment = false;
       this.showRefreshButton = false;
       this.hasPaymentCompleted = true;
@@ -458,10 +458,12 @@ export class BirthCertificateComponent implements OnInit {
       this.showOrangeAccordion = false;
       this.showVisaAccordion = false;
       this.activePaymentMethod = '';
+
+      this.successMessage = '';
       
       this.completePaymentProcess();
     } else {
-      const remainingTime = Math.ceil((40000 - elapsedTime) / 1000);
+      const remainingTime = Math.ceil((30000 - elapsedTime) / 1000);
       if (this.currentStep === 2 && !this.hasPaymentCompleted) {
       this.successMessage = `Payment is still processing. Please wait ${remainingTime} more seconds before refreshing.`;
       }

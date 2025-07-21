@@ -215,6 +215,60 @@
                         <p class="info-text">{{ searchResult.notes }}</p>
                     </div>
 
+                    <!-- NEW: Action Buttons Section -->
+                    <div class="action-buttons" *ngIf="searchResult">
+                        <div class="d-flex flex-wrap gap-3 justify-content-center align-items-center">
+                            
+                            <!-- Continue Application Button (only if not completed) -->
+                            <button type="button" class="btn btn-primary btn-lg" 
+                                *ngIf="canContinueApplication()"
+                                (click)="continueApplication()">
+                                <i [class]="getContinueButtonIcon()" class="me-2"></i>
+                                {{ getContinueButtonText() }}
+                            </button>
+
+                            <!-- Application Completed Badge (if completed) -->
+                            <div class="completion-badge" *ngIf="!canContinueApplication()">
+                                <span class="badge bg-success fs-6 px-3 py-2">
+                                    <i class="fas fa-check-circle me-2"></i>
+                                    Application Completed
+                                </span>
+                            </div>
+
+                            <!-- Secondary Action: Print/Download -->
+                            <button type="button" class="btn btn-outline-secondary" 
+                                onclick="window.print()">
+                                <i class="fas fa-print me-2"></i>
+                                Print Details
+                            </button>
+
+                            <!-- Secondary Action: Share -->
+                            <button type="button" class="btn btn-outline-info"
+                                (click)="copyTrackingNumber()">
+                                <i class="fas fa-share me-2"></i>
+                                Share Tracking
+                            </button>
+
+                        </div>
+
+                        <!-- Progress Summary for In-Progress Applications -->
+                        <div class="progress-summary mt-3" *ngIf="canContinueApplication() && getCurrentStepInfo()">
+                            <div class="alert alert-info border-0 mb-0">
+                                <div class="row align-items-center">
+                                    <div class="col-md-8">
+                                        <strong>Next Action Required:</strong> 
+                                        Complete {{ getCurrentStepInfo()?.stepName }}
+                                    </div>
+                                    <div class="col-md-4 text-md-end">
+                                        <small class="text-muted">
+                                            {{ getProgressPercentage() }}% Complete
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Application Summary Footer -->
                     <div class="application-footer">
                         <div class="row">
