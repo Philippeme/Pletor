@@ -267,6 +267,112 @@
             }
         }
 
+        // NOUVEAU: Biometric processing card styles (similaire au payment processing)
+        .biometric-processing-card {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border: 2px solid var(--primary-color);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            animation: slideInUp 0.5s ease-out;
+
+            h6 {
+                color: var(--primary-color);
+                font-weight: 600;
+                margin-bottom: 1rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                
+                i {
+                    font-size: 1.2rem;
+                }
+            }
+
+            p {
+                color: #1565c0;
+                font-size: 0.95rem;
+                line-height: 1.5;
+            }
+
+            .btn-success {
+                background: linear-gradient(135deg, var(--success-color), #388e3c);
+                border: none;
+                font-weight: 600;
+                padding: 0.75rem 1.5rem;
+                border-radius: 8px;
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+
+                &:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+                    background: linear-gradient(135deg, #388e3c, var(--success-color));
+                }
+
+                .spinner-border-sm {
+                    width: 1rem;
+                    height: 1rem;
+                }
+            }
+
+            .btn-outline-primary {
+                border-color: var(--primary-color);
+                color: var(--primary-color);
+                font-weight: 500;
+                background: rgba(255, 255, 255, 0.8);
+                backdrop-filter: blur(10px);
+
+                &:hover {
+                    background-color: var(--primary-color);
+                    color: white;
+                    transform: translateY(-1px);
+                    box-shadow: 0 2px 8px rgba(26, 115, 232, 0.3);
+                }
+            }
+        }
+
+        // NOUVEAU: Biometric confirmation message styles
+        .biometric-confirmation-message {
+            animation: fadeInScale 0.6s ease-out;
+
+            .alert-success {
+                border-radius: 12px;
+                padding: 2rem;
+                box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);
+                border: 2px solid var(--success-color);
+
+                .fa-check-circle {
+                    color: var(--success-color);
+                    animation: bounceIn 0.8s ease;
+                }
+
+                h5 {
+                    color: var(--success-color);
+                    font-weight: 700;
+                    margin-bottom: 0.5rem;
+                }
+
+                .confirmation-text {
+                    color: #155724;
+                    line-height: 1.6;
+                    
+                    p {
+                        margin-bottom: 1rem;
+                        
+                        &:last-child {
+                            margin-bottom: 0;
+                        }
+                    }
+
+                    strong {
+                        color: var(--success-color);
+                        font-weight: 600;
+                    }
+                }
+            }
+        }
+
         // Payment accordion styles (adapted from birth certificate)
         .payment-accordion {
             border: 2px solid #dee2e6;
@@ -447,7 +553,7 @@
             }
         }
 
-                // Biometric appointment section
+        // Biometric appointment section
         .appointment-section {
             .appointment-card {
                 border: none;
@@ -535,6 +641,19 @@
         }
 
         .biometric-process-info {
+            // NOUVEAU: Transition pour masquer/afficher les instructions
+            opacity: 1;
+            transform: translateY(0);
+            transition: all 0.5s ease;
+
+            &.hidden {
+                opacity: 0;
+                transform: translateY(-20px);
+                pointer-events: none;
+                height: 0;
+                overflow: hidden;
+            }
+
             .process-steps {
                 .process-step {
                     display: flex;
@@ -706,6 +825,7 @@
     }
 }
 
+// NOUVELLES ANIMATIONS
 @keyframes bounceIn {
     0% {
         opacity: 0;
@@ -721,6 +841,53 @@
     100% {
         opacity: 1;
         transform: scale(1);
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+// Animation pour les éléments qui apparaissent/disparaissent
+.fade-transition {
+    transition: all 0.5s ease;
+    
+    &.ng-enter {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    
+    &.ng-enter-active {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    &.ng-leave {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    &.ng-leave-active {
+        opacity: 0;
+        transform: translateY(-20px);
     }
 }
 
@@ -756,8 +923,19 @@
             }
         }
 
-        .payment-processing-card {
+        .payment-processing-card,
+        .biometric-processing-card {
             margin-bottom: 1rem;
+            padding: 1rem;
+            
+            h6 {
+                font-size: 1rem;
+            }
+            
+            .btn {
+                font-size: 0.9rem;
+                padding: 0.5rem 1rem;
+            }
         }
 
         .delivery-info-card {
@@ -780,6 +958,37 @@
         .contact-info-card {
             margin-top: 1rem;
         }
+
+        .biometric-confirmation-message {
+            .alert-success {
+                padding: 1.5rem;
+                
+                .fa-check-circle {
+                    font-size: 2rem;
+                }
+                
+                h5 {
+                    font-size: 1.1rem;
+                }
+            }
+        }
+
+        .appointment-table-container {
+            overflow-x: auto;
+            
+            .appointment-details-table {
+                min-width: 300px;
+                
+                td {
+                    padding: 0.75rem;
+                    font-size: 0.9rem;
+                    
+                    &.detail-label {
+                        width: 40%;
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -798,20 +1007,89 @@
             border-color: var(--primary-color-dark);
             transform: translateY(-1px);
         }
+
+        &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
     }
 
     .btn-success {
-        background-color: var(--primary-color);
-        border-color: var(--primary-color);
+        background-color: var(--success-color);
+        border-color: var(--success-color);
         border-radius: 8px;
         font-weight: 500;
         padding: 0.75rem 1.5rem;
         transition: all 0.3s ease;
 
         &:hover {
-            background-color: var(--primary-color-dark);
-            border-color: var(--primary-color-dark);
+            background-color: var(--success-color-dark);
+            border-color: var(--success-color-dark);
             transform: translateY(-1px);
+        }
+    }
+
+    .btn-outline-secondary {
+        border-color: #6c757d;
+        color: #6c757d;
+        border-radius: 8px;
+        font-weight: 500;
+        padding: 0.75rem 1.5rem;
+        transition: all 0.3s ease;
+
+        &:hover {
+            background-color: #6c757d;
+            border-color: #6c757d;
+            color: white;
+            transform: translateY(-1px);
+        }
+    }
+}
+
+// Print styles pour les reçus et confirmations
+@media print {
+    .passport-application-page {
+        background: white !important;
+        
+        .form-navigation,
+        .biometric-processing-card .btn,
+        .payment-processing-card {
+            display: none !important;
+        }
+        
+        .appointment-card,
+        .biometric-confirmation-message {
+            page-break-inside: avoid;
+            box-shadow: none !important;
+            border: 1px solid #ccc !important;
+        }
+    }
+}
+
+// High contrast mode support
+@media (prefers-contrast: high) {
+    .passport-application-page {
+        .biometric-processing-card,
+        .payment-processing-card {
+            border-width: 3px;
+        }
+        
+        .biometric-confirmation-message .alert-success {
+            border-width: 3px;
+        }
+    }
+}
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce) {
+    .passport-application-page {
+        .biometric-processing-card,
+        .biometric-confirmation-message,
+        .process-step,
+        .btn {
+            animation: none !important;
+            transition: none !important;
         }
     }
 }

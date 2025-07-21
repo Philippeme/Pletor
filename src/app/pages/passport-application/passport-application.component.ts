@@ -32,7 +32,7 @@ export class PassportApplicationComponent implements OnInit {
   isSubmitting = false;
   errorMessage = '';
   successMessage = '';
-  isApplicationReady = false; // NOUVEAU: Flag pour s'assurer que l'application est prête
+  isApplicationReady = false;
 
   // File upload properties
   uploadedFiles: { [key: string]: File } = {};
@@ -51,6 +51,14 @@ export class PassportApplicationComponent implements OnInit {
   hasPaymentCompleted = false;
   showRefreshButton = false;
   paymentProcessingStartTime = 0;
+
+  // NOUVEAU: Biometric submission processing states
+  isProcessingBiometric = false;
+  biometricSubmissionComplete = false;
+  hasBiometricSubmitted = false;
+  showBiometricRefreshButton = false;
+  biometricProcessingStartTime = 0;
+  showBiometricInstructions = true; // Contrôle l'affichage des instructions
 
   // Accordion states
   activePaymentMethod = '';
@@ -182,7 +190,7 @@ export class PassportApplicationComponent implements OnInit {
       next: (application) => {
         if (application) {
           this.application = application;
-          this.isApplicationReady = true; // CORRIGÉ: Marquer comme prêt
+          this.isApplicationReady = true;
           this.determineCurrentStep();
         } else {
           this.errorMessage = 'Application not found.';
@@ -208,7 +216,7 @@ export class PassportApplicationComponent implements OnInit {
       ).subscribe({
         next: (application) => {
           this.application = application;
-          this.isApplicationReady = true; // CORRIGÉ: Marquer comme prêt
+          this.isApplicationReady = true;
           console.log('Application created successfully:', application);
         },
         error: (error) => {
@@ -248,7 +256,6 @@ export class PassportApplicationComponent implements OnInit {
   private determineCurrentStep(): void {
     if (!this.application) return;
 
-    // CORRIGÉ: Déterminer l'étape basée sur la timeline plutôt que le statut
     if (this.application.timeline && this.application.timeline.length > 0) {
       const completedSteps = this.application.timeline.filter(step => step.isCompleted).length;
       const inProgressStep = this.application.timeline.find(step => step.status === 'in_progress');
@@ -262,7 +269,6 @@ export class PassportApplicationComponent implements OnInit {
         this.currentStep = 1;
       }
     } else {
-      // Fallback sur le statut seulement si pas de timeline
       switch (this.application.status) {
         case ApplicationStatus.DRAFT:
           this.currentStep = 1;
@@ -294,13 +300,11 @@ export class PassportApplicationComponent implements OnInit {
         email: currentUser.email
       });
       
-      // Clear child-specific fields
       this.passportForm.patchValue({
         relationshipToApplicant: '',
         guardianPhone: ''
       });
     } else if (requestType === 'child') {
-      // Set validation for child-specific fields
       this.passportForm.get('relationshipToApplicant')?.setValidators([Validators.required]);
       this.passportForm.get('guardianPhone')?.setValidators([Validators.required]);
     }
@@ -309,14 +313,12 @@ export class PassportApplicationComponent implements OnInit {
     this.passportForm.get('guardianPhone')?.updateValueAndValidity();
   }
 
-  // Get section title based on request type
   getPersonSectionTitle(): string {
     const requestType = this.passportForm.get('requestType')?.value;
     return requestType === 'self' ? 'Your Information' : 'Child\'s Information';
   }
 
   nextStep(): void {
-    // CORRIGÉ: Vérifier que l'application est prête avant de continuer
     if (!this.isApplicationReady || !this.application) {
       this.errorMessage = 'Please wait for the application to load.';
       return;
@@ -325,8 +327,7 @@ export class PassportApplicationComponent implements OnInit {
     if (this.currentStep < this.totalSteps) {
       if (this.validateCurrentStep()) {
         this.currentStep++;
-        this.errorMessage = ''; // Clear error message
-        // Synchroniser avec ApplicationService
+        this.errorMessage = '';
         this.syncApplicationProgress();
       }
     }
@@ -335,8 +336,7 @@ export class PassportApplicationComponent implements OnInit {
   previousStep(): void {
     if (this.currentStep > 1) {
       this.currentStep--;
-      this.errorMessage = ''; // Clear error message
-      // Synchroniser avec ApplicationService
+      this.errorMessage = '';
       this.syncApplicationProgress();
     }
   }
@@ -345,17 +345,17 @@ export class PassportApplicationComponent implements OnInit {
     this.errorMessage = '';
     
     switch (this.currentStep) {
-      case 1: // Personal Information
+      case 1:
         const personalFields = ['requestType', 'firstName', 'lastName', 'dateOfBirth', 'placeOfBirth', 'gender', 'maritalStatus'];
         if (this.passportForm.get('requestType')?.value === 'child') {
           personalFields.push('relationshipToApplicant', 'guardianPhone');
         }
         return this.validateFields(personalFields);
-      case 2: // Contact & Emergency Information
+      case 2:
         const contactFields = ['phoneNumber', 'email', 'currentAddress', 'permanentAddress',
           'emergencyContactName', 'emergencyContactPhone', 'emergencyContactRelation'];
         return this.validateFields(contactFields);
-      case 3: // Document Upload - CORRIGÉ: Validation plus robuste
+      case 3:
         return this.validateDocumentUploads();
       default:
         return true;
@@ -386,7 +386,6 @@ export class PassportApplicationComponent implements OnInit {
     const requiredDocs = this.requiredDocuments.filter(doc => doc.required);
     const uploadedRequiredDocs = requiredDocs.filter(doc => this.uploadedFiles[doc.id]);
     
-    // CORRIGÉ: Affichage des documents uploadés pour debug
     console.log('Required documents:', requiredDocs.map(d => d.id));
     console.log('Uploaded files:', Object.keys(this.uploadedFiles));
     console.log('Required vs Uploaded:', uploadedRequiredDocs.length, '/', requiredDocs.length);
@@ -399,7 +398,7 @@ export class PassportApplicationComponent implements OnInit {
       return false;
     }
     
-    this.errorMessage = ''; // Clear any previous error
+    this.errorMessage = '';
     return true;
   }
 
@@ -431,13 +430,11 @@ export class PassportApplicationComponent implements OnInit {
   }
 
   onSubmitApplication(): void {
-    // CORRIGÉ: Vérifications plus robustes
     if (!this.isApplicationReady || !this.application) {
       this.errorMessage = 'Application not ready. Please wait.';
       return;
     }
 
-    // Validate form and documents
     if (!this.passportForm.valid) {
       this.markFormGroupTouched(this.passportForm);
       this.errorMessage = 'Please complete all required fields.';
@@ -445,20 +442,16 @@ export class PassportApplicationComponent implements OnInit {
     }
 
     if (!this.validateDocumentUploads()) {
-      // Error message already set in validateDocumentUploads
       return;
     }
 
     this.isSubmitting = true;
     this.errorMessage = '';
     
-    // Simulate API call for demo purposes
     setTimeout(() => {
       try {
-        // Update application status
         this.application!.status = ApplicationStatus.PAYMENT_PENDING;
         
-        // Create mock request data
         this.request = {
           id: 'req-' + Date.now(),
           procedure_id: 1,
@@ -470,13 +463,11 @@ export class PassportApplicationComponent implements OnInit {
         this.isSubmitting = false;
         this.successMessage = 'Application submitted successfully!';
         
-        // Move to payment step
         this.currentStep = 4;
         this.updatePaymentAmounts();
 
         this.syncApplicationProgress();
         
-        // Clear success message after 3 seconds
         setTimeout(() => {
           this.successMessage = '';
         }, 2000);
@@ -489,7 +480,6 @@ export class PassportApplicationComponent implements OnInit {
     }, 1500);
   }
 
-  // Copy tracking number to clipboard
   copyTrackingNumber(): void {
     if (this.application?.trackingNumber) {
       navigator.clipboard.writeText(this.application.trackingNumber).then(() => {
@@ -538,7 +528,6 @@ export class PassportApplicationComponent implements OnInit {
     }
   }
 
-  // MTN Mobile Money payment process
   processMtnPayment(): void {
     if (this.mtnForm.invalid) {
       this.markFormGroupTouched(this.mtnForm);
@@ -549,7 +538,6 @@ export class PassportApplicationComponent implements OnInit {
     this.initiatePaymentProcess();
   }
 
-  // Orange Money payment process
   processOrangePayment(): void {
     if (this.orangeForm.invalid) {
       this.markFormGroupTouched(this.orangeForm);
@@ -560,7 +548,6 @@ export class PassportApplicationComponent implements OnInit {
     this.initiatePaymentProcess();
   }
 
-  // Visa Credit Card payment process
   processVisaPayment(): void {
     if (this.visaForm.invalid) {
       this.markFormGroupTouched(this.visaForm);
@@ -582,24 +569,25 @@ export class PassportApplicationComponent implements OnInit {
   refreshPaymentStatus(): void {
     const elapsedTime = Date.now() - this.paymentProcessingStartTime;
     
-    if (elapsedTime >= 40000) { // 40 seconds have passed
+    if (elapsedTime >= 30000) {
       this.isProcessingPayment = false;
       this.showRefreshButton = false;
       this.hasPaymentCompleted = true;
       this.paymentVerificationComplete = true;
       this.paymentStatusPending = false;
       
-      // Close all accordions
       this.showMtnAccordion = false;
       this.showOrangeAccordion = false;
       this.showVisaAccordion = false;
       this.activePaymentMethod = '';
       
+      this.successMessage = '';
+      
       this.completePaymentProcess();
     } else {
-      const remainingTime = Math.ceil((40000 - elapsedTime) / 1000);
-      // Only show message if still on payment step
-      if (this.currentStep === 4) {
+      const remainingTime = Math.ceil((30000 - elapsedTime) / 1000);
+      
+      if (this.currentStep === 4 && !this.hasPaymentCompleted) {
         this.successMessage = `Payment is still processing. Please wait ${remainingTime} more seconds before refreshing.`;
       }
     } 
@@ -619,7 +607,6 @@ export class PassportApplicationComponent implements OnInit {
         payment.status = PaymentStatus.COMPLETED;
         this.application!.status = ApplicationStatus.PROCESSING;
         
-        // NOUVEAU: Synchroniser après paiement
         this.syncApplicationProgress();
         
         if (this.request) {
@@ -645,7 +632,6 @@ export class PassportApplicationComponent implements OnInit {
     });
   }
 
-  // Unified markFormGroupTouched method - FIXED VERSION
   private markFormGroupTouched(formGroup: FormGroup): void {
     Object.keys(formGroup.controls).forEach(key => {
       const control = formGroup.get(key);
@@ -655,31 +641,98 @@ export class PassportApplicationComponent implements OnInit {
     });
   }
 
-  // Move to biometric step after payment
   proceedToBiometric(): void {
     if (this.paymentVerificationComplete) {
       this.currentStep = 5;
-      this.successMessage = ''; // Clear any payment messages
-      this.errorMessage = ''; // Clear any error messages
+      this.successMessage = '';
+      this.errorMessage = '';
 
-      // NOUVEAU: Synchroniser l'état avec ApplicationService
+      // Ne pas initier automatiquement - seul le clic sur le bouton doit déclencher l'action
       this.syncApplicationProgress();
     }
   }
 
-  // Biometric appointment methods - Auto-generated appointment
+  // NOUVELLE MÉTHODE: Initier le processus de soumission biométrique
+  initiateBiometricSubmissionProcess(): void {
+    this.isProcessingBiometric = true;
+    this.showBiometricRefreshButton = true;
+    this.biometricProcessingStartTime = Date.now();
+    this.errorMessage = '';
+    this.successMessage = 'Biometric submission initiated. Please click Submit to confirm your biometric enrollment request.';
+  }
+
+  // NOUVELLE MÉTHODE: Soumettre la demande biométrique
+  submitBiometricRequest(): void {
+    if (!this.isApplicationReady || !this.application) {
+      this.errorMessage = 'Application not ready. Please wait.';
+      return;
+    }
+
+    // Initier le processus de soumission biométrique uniquement au clic
+    this.isProcessingBiometric = true;
+    this.showBiometricRefreshButton = true;
+    this.biometricProcessingStartTime = Date.now();
+    this.errorMessage = '';
+    this.successMessage = 'Your biometric enrollment request has been submitted and is being processed...';
+  }
+
+  // NOUVELLE MÉTHODE: Rafraîchir le statut de soumission biométrique
+  refreshBiometricStatus(): void {
+    const elapsedTime = Date.now() - this.biometricProcessingStartTime;
+    
+    if (elapsedTime >= 30000) { 
+      this.isProcessingBiometric = false;
+      this.showBiometricRefreshButton = false;
+      this.hasBiometricSubmitted = true;
+      this.biometricSubmissionComplete = true;
+      this.showBiometricInstructions = false; // Masquer les instructions
+      
+      this.successMessage = '';
+      
+      this.completeBiometricSubmissionProcess();
+    } else {
+      const remainingTime = Math.ceil((30000 - elapsedTime) / 1000);
+
+      if (this.currentStep === 5 && !this.hasBiometricSubmitted) {
+        this.successMessage = `Biometric submission is being processed. Please wait ${remainingTime} more seconds before refreshing.`;
+      }
+    }
+  }
+
+  // NOUVELLE MÉTHODE: Compléter le processus de soumission biométrique
+  private completeBiometricSubmissionProcess(): void {
+    if (!this.application) return;
+
+    // Mettre à jour le statut de l'application
+    this.application.status = ApplicationStatus.PROCESSING;
+    
+    // Message de confirmation
+    this.successMessage = '';
+    this.errorMessage = '';
+    
+    this.syncApplicationProgress();
+  }
+
+  // NOUVELLE MÉTHODE: Vérifier si le bloc de traitement biométrique doit être affiché
+  shouldShowBiometricProcessing(): boolean {
+    return this.currentStep === 5 && !this.hasBiometricSubmitted;
+  }
+
+  // NOUVELLE MÉTHODE: Vérifier si le message de confirmation doit être affiché
+  shouldShowBiometricConfirmation(): boolean {
+    return this.currentStep === 5 && this.hasBiometricSubmitted && this.biometricSubmissionComplete;
+  }
+
   getAppointmentDate(): string {
     const today = new Date();
     let appointmentDate = new Date(today);
     let daysAdded = 0;
     let businessDaysAdded = 0;
 
-    // Add 3 business days (excluding Saturday and Sunday)
     while (businessDaysAdded < 3) {
       daysAdded++;
       appointmentDate = new Date(today.getTime() + (daysAdded * 24 * 60 * 60 * 1000));
       
-      // Check if it's not Saturday (6) or Sunday (0)
       if (appointmentDate.getDay() !== 0 && appointmentDate.getDay() !== 6) {
         businessDaysAdded++;
       }
@@ -694,14 +747,12 @@ export class PassportApplicationComponent implements OnInit {
   }
 
   generateAppointmentReference(): string {
-    // Generate a consistent reference based on application tracking number
     if (this.application?.trackingNumber) {
       return this.application.trackingNumber.slice(-8);
     }
     return Date.now().toString().slice(-8);
   }
 
-  // Biometric appointment methods
   getMinAppointmentDate(): string {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
@@ -730,20 +781,15 @@ export class PassportApplicationComponent implements OnInit {
 
   proceedToCollection(): void {
     this.currentStep = 6;
-
-    // NOUVEAU: Synchroniser l'état avec ApplicationService
     this.syncApplicationProgress();
   }
 
-  /**
-   * NOUVELLE MÉTHODE: Synchronise l'état d'avancement avec ApplicationService
-   */
   private syncApplicationProgress(): void {
     if (this.application && this.application.id) {
       this.applicationService.updateApplicationStep(
         this.application.id,
         this.currentStep,
-        1 // serviceId pour passport
+        1
       ).subscribe({
         next: (success) => {
           if (success) {
@@ -778,15 +824,13 @@ export class PassportApplicationComponent implements OnInit {
   }
 
   calculateTotalAmount(): number {
-    return 110000; // Passport fee in XAF
+    return 110000;
   }
 
-  // Payment method helpers
   arePaymentMethodsDisabled(): boolean {
     return this.hasPaymentCompleted;
   }
 
-  // Custom validator for credit card
   creditCardValidator(control: any) {
     const value = control.value;
     if (!value) return null;
@@ -797,7 +841,6 @@ export class PassportApplicationComponent implements OnInit {
     return isValid ? null : { creditCard: true };
   }
 
-  // Auto-format Visa card number with spaces
   onCardNumberInput(event: any): void {
     let value = event.target.value.replace(/\D/g, '');
     

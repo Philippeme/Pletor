@@ -462,7 +462,9 @@ export class BirthCertificateComponent implements OnInit {
       this.completePaymentProcess();
     } else {
       const remainingTime = Math.ceil((40000 - elapsedTime) / 1000);
+      if (this.currentStep === 2 && !this.hasPaymentCompleted) {
       this.successMessage = `Payment is still processing. Please wait ${remainingTime} more seconds before refreshing.`;
+      }
     }
   }
 

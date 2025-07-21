@@ -56,7 +56,7 @@
                     <span class="step-label">Biometric Enrollment</span>
                 </div>
                 <div class="step-line" [class.completed]="currentStep > 5"></div>
-                <div class="step" [class.active]="currentStep >= 6">
+                <div class="step" [class.active]="currentStep >= 6" [class.completed]="currentStep >= 6">
                     <div class="step-circle">6</div>
                     <span class="step-label">Collection</span>
                 </div>
@@ -678,7 +678,7 @@
                                     <i class="fas fa-clock text-primary me-2"></i>
                                     <strong>Processing Time:</strong>
                                     <br>
-                                    <span class="text-muted">48 hours after biometric enrollment</span>
+                                    <span class="text-muted">7 days after biometric enrollment</span>
                                 </div>
                                 <div class="info-item">
                                     <i class="fas fa-shield-alt text-success me-2"></i>
@@ -780,8 +780,54 @@
                                 </div>
                             </div>
 
-                            <!-- Biometric Process Information -->
-                            <div class="biometric-process-info mt-4">
+                            <!-- NOUVEAU: Biometric Submission Processing Section -->
+                            <div class="biometric-processing-card mt-4" *ngIf="shouldShowBiometricProcessing()">
+                                <h6 class="text-primary">
+                                    <i class="fas fa-fingerprint me-2"></i>
+                                    Biometric Enrollment Ongoing 
+                                </h6>
+                                <p class="text-muted mb-3">
+                                    Following your biometric enrollment, a police officer will confirm it is done and you will be invited to collect your passport in the following days.
+                                    Check status here.
+                                </p>
+                                <button class="btn btn-success w-100 mb-3" 
+                                    [disabled]="isProcessingBiometric"
+                                    (click)="submitBiometricRequest()">
+                                    <span *ngIf="isProcessingBiometric" class="spinner-border spinner-border-sm me-2"></span>
+                                    <i class="fas fa-info-circle me-2" *ngIf="!isProcessingBiometric"></i>
+                                    Check status
+                                </button>
+                                <button class="btn btn-outline-primary w-100" 
+                                    *ngIf="showBiometricRefreshButton"
+                                    (click)="refreshBiometricStatus()">
+                                    <i class="fas fa-sync-alt me-2"></i>
+                                    Refresh Status
+                                </button>
+                            </div>
+
+                            <!-- NOUVEAU: Message de confirmation après soumission -->
+                            <div class="biometric-confirmation-message mt-4" *ngIf="shouldShowBiometricConfirmation()">
+                                <div class="alert alert-success border-0" style="background: linear-gradient(135deg, #d4edda, #c3e6cb);">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <i class="fas fa-check-circle fa-3x text-success me-3"></i>
+                                        <div>
+                                            <h5 class="mb-1 text-success">Request Successfully Submitted!</h5>
+                                            <p class="mb-0">Your biometric enrollment request has been processed.</p>
+                                        </div>
+                                    </div>
+                                    <div class="confirmation-text">
+                                        <p class="mb-2">
+                                            <strong>Click Next to see target collection date.</strong> 
+                                        </p>
+                                        <p class="mb-0">
+                                            Do not hesitate to contact us through usual channels should you need any support.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Biometric Process Information - CONDITIONNEL -->
+                            <div class="biometric-process-info mt-4" *ngIf="showBiometricInstructions && !shouldShowBiometricConfirmation()">
                                 <h5 class="mb-3">
                                     <i class="fas fa-fingerprint me-2"></i>
                                     What to Expect During Biometric Enrollment
@@ -832,7 +878,8 @@
                                     </div>
                                 </div>
 
-                                <div class="alert alert-info mt-4">
+                                <!-- Duration Information - CONDITIONNEL -->
+                                <div class="alert alert-info mt-4" *ngIf="showBiometricInstructions">
                                     <i class="fas fa-clock me-2"></i>
                                     <strong>Duration:</strong> The entire process typically takes 15-20 minutes per person.
                                 </div>
@@ -986,8 +1033,9 @@
                         </button>
 
                         <button type="button" class="btn btn-primary" *ngIf="currentStep === 5"
+                            [disabled]="!biometricSubmissionComplete"
                             (click)="proceedToCollection()">
-                            Complete Application
+                            Next
                             <i class="fas fa-arrow-right ms-2"></i>
                         </button>
 
