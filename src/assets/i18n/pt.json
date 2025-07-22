@@ -585,7 +585,7 @@
             "certified_document": "Documento Certificado:",
             "official_seal": "Selo oficial do governo e assinatura",
             "payment_under_process": "Pagamento em Processo",
-            "payment_wait": "O seu pagamento está sendo processado. Por favor aguarde 40 segundos antes de atualizar.",
+            "payment_wait": "O seu pagamento está sendo processado. Por favor aguarde 30 segundos antes de atualizar.",
             "refresh_status": "Atualizar Estado"
         },
         "confirmation": {
@@ -619,15 +619,19 @@
         "application_header": {
             "submitted": "Submetida:",
             "current_progress": "Progresso Atual:",
-            "step_of": "Passo {step} de {total}",
-            "progress_showing": "Mostrando {shown} de {total} passos"
+            "step_label": "Passo",
+            "of_label": "de",
+            "progress_showing_label": "Mostrando",
+            "progress_of_label": "de",
+            "progress_steps_label": "passos"
         },
         "timeline": {
             "title": "Progresso da Candidatura",
             "next_step": "Próximo Passo",
             "next_action": "Próxima Ação Requerida:",
-            "complete_step": "Completar {step}",
-            "completion_progress": "{percent}% Completo",
+            "complete_step_prefix": "Completar",
+            "completion_progress_prefix": "Completo",
+            "completion_progress_suffix": "%",
             "available_when": "Estará disponível quando o passo atual for completado"
         },
         "payment_info": {
@@ -640,7 +644,8 @@
         },
         "actions": {
             "continue_application": "Continuar Candidatura",
-            "continue_service": "Continuar {service} - Passo {step}",
+            "continue_service_prefix": "Continuar",
+            "continue_service_step": "- Passo",
             "application_completed": "Candidatura Concluída",
             "print_details": "Imprimir Detalhes",
             "share_tracking": "Partilhar Rastreamento",
@@ -703,7 +708,8 @@
             "parent": "Pai/Mãe",
             "guardian": "Tutor Legal",
             "guardian_phone": "Número de Telefone do Tutor",
-            "age_years": "Idade: {age} anos",
+            "age_label": "Idade:",
+            "years_label": "anos",
             "contact_emergency_title": "Informações de Contacto e Emergência",
             "contact_emergency_subtitle": "Forneça os seus detalhes de contacto atuais e contacto de emergência",
             "contact_information": "Informações de Contacto",
@@ -764,9 +770,72 @@
             "validity": "Validade:",
             "validity_desc": "5 anos a partir da data de emissão",
             "payment_under_process": "Pagamento em Processo",
-            "payment_wait": "O seu pagamento está sendo processado. Por favor aguarde 40 segundos antes de atualizar."
+            "payment_wait": "O seu pagamento está sendo processado. Por favor aguarde 40 segundos antes de atualizar.",
+
+            "steps": {
+                "step_1": "Passo 1:",
+                "step_2": "Passo 2:",
+                "step_3": "Passo 3:",
+                "step_4": "Passo 4:",
+                "step_5": "Passo 5:"
+            },
+            
+            "mtn_process": "Processo de Pagamento MTN Mobile Money",
+            "dial_ussd": "Disque *126# na sua linha MTN",
+            "select_bill_payment": "Selecione \"2\" para Pagamento de Conta",
+            "enter_merchant_code": "Insira o código do comerciante de 6 dígitos",
+            "mtn_mobile_money": "MTN Mobile Money",
+            "enter_amount": "Insira o valor do pagamento:",
+            "transaction_id_sms": "Encontre o ID da transação que foi enviado por SMS e insira-o no campo ID da Transação",
+            "mtn_phone": "Número de Telefone MTN",
+            "mtn_phone_placeholder": "6XXXXXXXX",
+            "mtn_phone_required": "Número de telefone MTN é obrigatório",
+            "mtn_phone_invalid": "Por favor insira um número MTN válido (6XXXXXXXX)",
+            
+            "orange_process": "Processo de Pagamento Orange Money",
+            "orange_ussd": "Disque #150*47# na sua linha Orange",
+            "orange_merchant": "Insira o código do comerciante quando solicitado",
+            "orange_amount": "Insira o valor do pagamento:",
+            "orange_transaction_sms": "Encontre o ID da transação que foi enviado por SMS e insira-o no campo ID da Transação",
+            "orange_phone": "Número de Telefone Orange",
+            "orange_money": "Orange Money",
+            "orange_phone_placeholder": "6XXXXXXXX",
+            "orange_phone_required": "Número de telefone Orange é obrigatório",
+            "orange_phone_invalid": "Por favor insira um número Orange válido (6XXXXXXXX)",
+            "orange_transaction_placeholder": "ex., AB123456.1234.X12345",
+            "orange_transaction_format": "Formato do ID da transação: AB123456.1234.X12345",
+            "orange_transaction_desc": "Insira o ID da transação do SMS de confirmação Orange (Formato: AB123456.1234.X12345)",
+            
+            "visa_credit_card": "Cartão de Crédito Visa",
+            "visa_process": "Processo de Pagamento Cartão de Crédito Visa",
+            "visa_step1": "Insira os detalhes do seu cartão Visa abaixo",
+            "visa_step2": "Verifique se todas as informações estão corretas",
+            "visa_step3": "Clique em \"Pagar Agora\" para processar o pagamento",
+            "visa_step4": "O seu pagamento será processado com segurança através do nosso gateway de pagamento",
+            "card_number": "Número do Cartão",
+            "card_number_placeholder": "4*** **** **** ****",
+            "card_number_required": "Número do cartão é obrigatório",
+            "card_number_invalid": "Por favor insira um número de cartão válido de 16 dígitos",
+            "expiry_date": "Data de Validade",
+            "expiry_date_placeholder": "MM/AA",
+            "expiry_required": "Data de validade é obrigatória",
+            "expiry_invalid": "Formato: MM/AA",
+            "cvv": "CVV",
+            "cvv_placeholder": "123",
+            "cvv_required": "CVV é obrigatório",
+            "cvv_invalid": "CVV deve ter 3 dígitos",
+            "cardholder_name": "Nome do Portador do Cartão",
+            "cardholder_placeholder": "João Silva",
+            "cardholder_required": "Nome do portador do cartão é obrigatório",
+            
+            "merchant_code": "Código do Comerciante",
+            "merchant_code_desc": "Código fixo do comerciante para serviços MK Gov",
+            "amount": "Valor",
+            "transaction_id": "ID da Transação",
+            "transaction_id_required": "ID da transação é obrigatório",
+            "pay_now": "Pagar Agora"
         },
-        "biometric": {
+                "biometric": {
             "title": "Inscrição Biométrica",
             "subtitle": "Complete a captura dos seus dados biométricos num centro DGSN",
             "appointment_confirmed": "Agendamento Confirmado",

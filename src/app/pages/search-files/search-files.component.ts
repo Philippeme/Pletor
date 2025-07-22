@@ -111,21 +111,109 @@ export class SearchFilesComponent implements OnInit {
     return !completedStatuses.includes(this.searchResult.status.toLowerCase());
   }
 
-  /**
-   * NEW: Get the continue button text based on application type and status
-   */
-  getContinueButtonText(): string {
-    if (!this.searchResult) return 'Continue Application';
 
-    const serviceName = this.getServiceName(this.searchResult.serviceId);
+  /**
+   * Get step progress text with translation
+   */
+  getStepProgressText(): string {
+    const currentStepInfo = this.getCurrentStepInfo();
+    if (!currentStepInfo) return '';
+    
+    const stepLabel = this.translate.instant('search_files.application_header.step_label');
+    const ofLabel = this.translate.instant('search_files.application_header.of_label');
+    
+    return `${stepLabel} ${currentStepInfo.stepNumber} ${ofLabel} ${currentStepInfo.totalSteps}`;
+  }
+
+  /**
+   * Get progress showing text with translation
+   */
+  getProgressShowingText(): string {
+    if (!this.searchResult || !this.filteredTimeline.length) return '';
+    
+    const showingLabel = this.translate.instant('search_files.application_header.progress_showing_label');
+    const ofLabel = this.translate.instant('search_files.application_header.progress_of_label');
+    const stepsLabel = this.translate.instant('search_files.application_header.progress_steps_label');
+    
+    const shown = this.filteredTimeline.length;
+    const total = this.getTotalStepsForService(this.searchResult.serviceId);
+    
+    return `${showingLabel} ${shown} ${ofLabel} ${total} ${stepsLabel}`;
+  }
+
+  /**
+   * Get complete step text with translation
+   */
+  getCompleteStepText(): string {
+    const currentStepInfo = this.getCurrentStepInfo();
+    if (!currentStepInfo) return '';
+    
+    const completePrefix = this.translate.instant('search_files.timeline.complete_step_prefix');
+    
+    return `${completePrefix} ${currentStepInfo.stepName}`;
+  }
+
+  /**
+   * Get completion progress text with translation
+   */
+  getCompletionProgressText(): string {
+    const progressPrefix = this.translate.instant('search_files.timeline.completion_progress_prefix');
+    const progressSuffix = this.translate.instant('search_files.timeline.completion_progress_suffix');
+    
+    return `${this.getProgressPercentage()}${progressSuffix} ${progressPrefix}`;
+  }
+
+  /**
+   * NEW: Get the continue button text with separated translations
+   */
+  getContinueButtonTextTranslated(): string {
+    if (!this.searchResult) {
+      return this.translate.instant('search_files.actions.continue_application');
+    }
+
+    const serviceName = this.getServiceNameTranslated(this.searchResult.serviceId);
     const currentStepInfo = this.getCurrentStepInfo();
     
     if (currentStepInfo) {
-      return `Continue ${serviceName} - Step ${currentStepInfo.stepNumber}`;
+      const continuePrefix = this.translate.instant('search_files.actions.continue_service_prefix');
+      const stepLabel = this.translate.instant('search_files.actions.continue_service_step');
+      
+      return `${continuePrefix} ${serviceName} ${stepLabel} ${currentStepInfo.stepNumber}`;
     }
     
-    return `Continue ${serviceName}`;
+    const continuePrefix = this.translate.instant('search_files.actions.continue_service_prefix');
+    return `${continuePrefix} ${serviceName}`;
   }
+
+  /**
+   * NEW: Get service name with translation
+   */
+  getServiceNameTranslated(serviceId: number): string {
+    switch (serviceId) {
+      case 1: 
+        return this.translate.instant('search_files.services.passport');
+      case 4: 
+        return this.translate.instant('search_files.services.birth_certificate');
+      default: 
+        return this.translate.instant('search_files.actions.continue_application');
+    }
+  }
+
+    /**
+     * NEW: Get the continue button text based on application type and status
+     */
+    getContinueButtonText(): string {
+      if (!this.searchResult) return 'Continue Application';
+
+      const serviceName = this.getServiceName(this.searchResult.serviceId);
+      const currentStepInfo = this.getCurrentStepInfo();
+      
+      if (currentStepInfo) {
+        return `Continue ${serviceName} - Step ${currentStepInfo.stepNumber}`;
+      }
+      
+      return `Continue ${serviceName}`;
+    }
 
   /**
    * NEW: Get service name based on service ID

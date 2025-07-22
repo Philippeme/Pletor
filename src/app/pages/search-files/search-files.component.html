@@ -96,10 +96,10 @@
                             <div class="col-md-8">
                                 <h5 class="progress-title mb-2">
                                     <i class="fas fa-route me-2"></i>
-                                    {{ 'search_files.application_header.current_progress' | translate }}: {{ getCurrentStepInfo()?.stepName }}
+                                    {{ 'search_files.application_header.current_progress' | translate }} {{ getCurrentStepInfo()?.stepName }}
                                 </h5>
                                 <p class="progress-subtitle">
-                                    {{ 'search_files.application_header.step_of' | translate:{ step: getCurrentStepInfo()?.stepNumber, total: getCurrentStepInfo()?.totalSteps } }}
+                                    {{ getStepProgressText() }}
                                 </p>
                             </div>
                             <div class="col-md-4 text-md-end">
@@ -125,7 +125,7 @@
                     <div class="application-timeline" *ngIf="filteredTimeline && filteredTimeline.length > 0">
                         <h5 class="timeline-title mb-4">
                             <i class="fas fa-list-check me-2"></i>
-                            {{ 'search_files.timeline.title' | translate }} ({{ 'search_files.application_header.progress_showing' | translate:{ shown: filteredTimeline.length, total: getTotalStepsForService(searchResult.serviceId) } }})
+                            {{ 'search_files.timeline.title' | translate }} ({{ getProgressShowingText() }})
                         </h5>
 
                         <div class="timeline">
@@ -224,7 +224,7 @@
                                 *ngIf="canContinueApplication()"
                                 (click)="continueApplication()">
                                 <i [class]="getContinueButtonIcon()" class="me-2"></i>
-                                {{ getContinueButtonText() }}
+                                    {{ getContinueButtonTextTranslated() }}
                             </button>
 
                             <!-- Application Completed Badge (if completed) -->
@@ -257,11 +257,11 @@
                                 <div class="row align-items-center">
                                     <div class="col-md-8">
                                         <strong>{{ 'search_files.timeline.next_action' | translate }}</strong> 
-                                        {{ 'search_files.timeline.complete_step' | translate:{ step: getCurrentStepInfo()?.stepName } }}
+                                                {{ getCompleteStepText() }}
                                     </div>
                                     <div class="col-md-4 text-md-end">
                                         <small class="text-muted">
-                                            {{ 'search_files.timeline.completion_progress' | translate:{ percent: getProgressPercentage() } }}
+                                            {{ getCompletionProgressText() }}
                                         </small>
                                     </div>
                                 </div>

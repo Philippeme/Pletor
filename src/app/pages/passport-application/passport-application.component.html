@@ -143,7 +143,9 @@
                                 [class.is-invalid]="passportForm.get('dateOfBirth')?.invalid && passportForm.get('dateOfBirth')?.touched">
                             <div class="invalid-feedback">{{ 'passport_application.form.date_birth_required' | translate }}</div>
                             <small class="form-text text-muted" *ngIf="passportForm.get('dateOfBirth')?.value">
-                                {{ 'passport_application.form.age_years' | translate:{ age: calculateAge(passportForm.get('dateOfBirth')?.value) } }}
+                                {{ 'passport_application.form.age_label' | translate }} 
+                                {{ calculateAge(passportForm.get('dateOfBirth')?.value) }} 
+                                {{ 'passport_application.form.years_label' | translate }}
                             </small>
                         </div>
                         <div class="col-md-4 mb-3">
@@ -380,19 +382,19 @@
                                             </h6>
                                             <div class="instruction-steps">
                                                 <div class="step-item">
-                                                    <strong>Step 1:</strong> {{ 'birth_certificate.payment.dial_ussd' | translate }}
+                                                    <strong>{{ 'passport_application.payment.steps.step_1' | translate }}</strong> {{ 'passport_application.payment.dial_ussd' | translate }}
                                                 </div>
                                                 <div class="step-item">
-                                                    <strong>Step 2:</strong> {{ 'birth_certificate.payment.select_bill_payment' | translate }}
+                                                    <strong>{{ 'passport_application.payment.steps.step_2' | translate }}</strong> {{ 'passport_application.payment.select_bill_payment' | translate }}
                                                 </div>
                                                 <div class="step-item">
-                                                    <strong>Step 3:</strong> {{ 'birth_certificate.payment.enter_merchant_code' | translate }}
+                                                    <strong>{{ 'passport_application.payment.steps.step_3' | translate }}</strong> {{ 'passport_application.payment.enter_merchant_code' | translate }}
                                                 </div>
                                                 <div class="step-item">
-                                                    <strong>Step 4:</strong> {{ 'birth_certificate.payment.enter_amount' | translate }} <strong>{{ calculateTotalAmount() }} XAF</strong>
+                                                    <strong>{{ 'passport_application.payment.steps.step_4' | translate }}</strong> {{ 'passport_application.payment.enter_amount' | translate }} <strong>{{ calculateTotalAmount() }} XAF</strong>
                                                 </div>
                                                 <div class="step-item">
-                                                    <strong>Step 5:</strong> {{ 'birth_certificate.payment.transaction_id_sms' | translate }}
+                                                    <strong>{{ 'passport_application.payment.steps.step_5' | translate }}</strong> {{ 'passport_application.payment.transaction_id_sms' | translate }}
                                                 </div>
                                             </div>
                                         </div>
@@ -454,8 +456,210 @@
                                     </div>
                                 </div>
 
-                                <!-- Orange Money and Visa sections similar structure... -->
-                                <!-- For brevity, using same structure with payment forms -->
+                                <!-- Orange Money -->
+                                <div class="payment-accordion mb-3" [class.disabled]="arePaymentMethodsDisabled()">
+                                    <div class="accordion-header" (click)="togglePaymentAccordion('orange')">
+                                        <div class="payment-method-option">
+                                            <input type="radio" name="paymentMethod" value="orange" 
+                                                [checked]="activePaymentMethod === 'orange'" [disabled]="arePaymentMethodsDisabled()">
+                                            <i class="fas fa-mobile-alt me-3"></i>
+                                            <span>Orange Money</span>
+                                            <i class="fas fa-chevron-down ms-auto" 
+                                                [class.rotated]="showOrangeAccordion"></i>
+                                        </div>
+                                    </div>
+                                    <div class="accordion-content" [class.show]="showOrangeAccordion">
+                                        <!-- Orange Payment Instructions -->
+                                        <div class="payment-instructions mb-3">
+                                            <h6 class="text-primary">
+                                                <i class="fas fa-info-circle me-2"></i>
+                                                {{ 'passport_application.payment.orange_process' | translate }}
+                                            </h6>
+                                            <div class="instruction-steps">
+                                                <div class="step-item">
+                                                    <strong>{{ 'passport_application.payment.steps.step_1' | translate }}</strong> {{ 'passport_application.payment.orange_ussd' | translate }}
+                                                </div>
+                                                <div class="step-item">
+                                                    <strong>{{ 'passport_application.payment.steps.step_2' | translate }}</strong> {{ 'passport_application.payment.orange_merchant' | translate }}
+                                                </div>
+                                                <div class="step-item">
+                                                    <strong>{{ 'passport_application.payment.steps.step_3' | translate }}</strong> {{ 'passport_application.payment.orange_amount' | translate }} <strong>{{ calculateTotalAmount() }} XAF</strong>
+                                                </div>
+                                                <div class="step-item">
+                                                    <strong>{{ 'passport_application.payment.steps.step_4' | translate }}</strong> {{ 'passport_application.payment.orange_transaction_sms' | translate }}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <form [formGroup]="orangeForm">
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">{{ 'passport_application.payment.orange_phone' | translate }} *</label>
+                                                    <input type="tel" class="form-control" formControlName="phoneNumber"
+                                                        [placeholder]="'passport_application.payment.orange_phone_placeholder' | translate"
+                                                        [class.is-invalid]="orangeForm.get('phoneNumber')?.invalid && orangeForm.get('phoneNumber')?.touched">
+                                                    <div class="invalid-feedback">
+                                                        <small *ngIf="orangeForm.get('phoneNumber')?.errors?.['required']">
+                                                            {{ 'passport_application.payment.orange_phone_required' | translate }}
+                                                        </small>
+                                                        <small *ngIf="orangeForm.get('phoneNumber')?.errors?.['pattern']">
+                                                            {{ 'passport_application.payment.orange_phone_invalid' | translate }}
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">{{ 'passport_application.payment.merchant_code' | translate }}</label>
+                                                    <input type="text" class="form-control" formControlName="merchantCode" readonly>
+                                                    <small class="form-text text-muted">{{ 'passport_application.payment.merchant_code_desc' | translate }}</small>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">{{ 'passport_application.payment.amount' | translate }}</label>
+                                                    <input type="text" class="form-control" formControlName="amount" readonly>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">{{ 'passport_application.payment.transaction_id' | translate }} *</label>
+                                                    <input type="text" class="form-control" formControlName="transactionId"
+                                                        [placeholder]="'passport_application.payment.orange_transaction_placeholder' | translate"
+                                                        [class.is-invalid]="orangeForm.get('transactionId')?.invalid && orangeForm.get('transactionId')?.touched">
+                                                    <div class="invalid-feedback">
+                                                        <small *ngIf="orangeForm.get('transactionId')?.errors?.['required']">
+                                                            {{ 'passport_application.payment.transaction_id_required' | translate }}
+                                                        </small>
+                                                        <small *ngIf="orangeForm.get('transactionId')?.errors?.['pattern']">
+                                                            {{ 'passport_application.payment.orange_transaction_format' | translate }}
+                                                        </small>
+                                                    </div>
+                                                    <small class="form-text text-muted">{{ 'passport_application.payment.orange_transaction_desc' | translate }}</small>
+                                                </div>
+                                            </div>
+
+                                            <button type="button" class="btn btn-warning" 
+                                                [disabled]="isProcessingPayment || orangeForm.invalid"
+                                                (click)="processOrangePayment()">
+                                                <span *ngIf="isProcessingPayment && activePaymentMethod === 'orange'" 
+                                                    class="spinner-border spinner-border-sm me-2"></span>
+                                                {{ 'passport_application.payment.pay_now' | translate }}
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <!-- Visa Credit Card -->
+                                <div class="payment-accordion mb-3" [class.disabled]="arePaymentMethodsDisabled()">
+                                    <div class="accordion-header" (click)="togglePaymentAccordion('visa')">
+                                        <div class="payment-method-option">
+                                            <input type="radio" name="paymentMethod" value="visa" 
+                                                [checked]="activePaymentMethod === 'visa'" [disabled]="arePaymentMethodsDisabled()">
+                                            <i class="fas fa-credit-card me-3"></i>
+                                            <span>{{ 'passport_application.payment.visa_credit_card' | translate }}</span>
+                                            <i class="fas fa-chevron-down ms-auto" 
+                                                [class.rotated]="showVisaAccordion"></i>
+                                        </div>
+                                    </div>
+                                    <div class="accordion-content" [class.show]="showVisaAccordion">
+                                        <!-- Visa Payment Instructions -->
+                                        <div class="payment-instructions mb-3">
+                                            <h6 class="text-primary">
+                                                <i class="fas fa-info-circle me-2"></i>
+                                                {{ 'passport_application.payment.visa_process' | translate }}
+                                            </h6>
+                                            <div class="instruction-steps">
+                                                <div class="step-item">
+                                                    <strong>{{ 'passport_application.payment.steps.step_1' | translate }}</strong> {{ 'passport_application.payment.visa_step1' | translate }}
+                                                </div>
+                                                <div class="step-item">
+                                                    <strong>{{ 'passport_application.payment.steps.step_2' | translate }}</strong> {{ 'passport_application.payment.visa_step2' | translate }}
+                                                </div>
+                                                <div class="step-item">
+                                                    <strong>{{ 'passport_application.payment.steps.step_3' | translate }}</strong> {{ 'passport_application.payment.visa_step3' | translate }}
+                                                </div>
+                                                <div class="step-item">
+                                                    <strong>{{ 'passport_application.payment.steps.step_4' | translate }}</strong> {{ 'passport_application.payment.visa_step4' | translate }}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <form [formGroup]="visaForm">
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">{{ 'passport_application.payment.card_number' | translate }} *</label>
+                                                    <input type="text" class="form-control" formControlName="cardNumber"
+                                                        [placeholder]="'passport_application.payment.card_number_placeholder' | translate"
+                                                        maxlength="19"
+                                                        (input)="onCardNumberInput($event)"
+                                                        (keypress)="onCardNumberKeypress($event)"
+                                                        [class.is-invalid]="visaForm.get('cardNumber')?.invalid && visaForm.get('cardNumber')?.touched">
+                                                    <div class="invalid-feedback">
+                                                        <small *ngIf="visaForm.get('cardNumber')?.errors?.['required']">
+                                                            {{ 'passport_application.payment.card_number_required' | translate }}
+                                                        </small>
+                                                        <small *ngIf="visaForm.get('cardNumber')?.errors?.['creditCard']">
+                                                            {{ 'passport_application.payment.card_number_invalid' | translate }}
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 mb-3">
+                                                    <label class="form-label">{{ 'passport_application.payment.expiry_date' | translate }} *</label>
+                                                    <input type="text" class="form-control" formControlName="expiryDate"
+                                                        [placeholder]="'passport_application.payment.expiry_date_placeholder' | translate"
+                                                        maxlength="5"
+                                                        (input)="onExpiryDateInput($event)"
+                                                        (keypress)="onExpiryDateKeypress($event)"
+                                                        [class.is-invalid]="visaForm.get('expiryDate')?.invalid && visaForm.get('expiryDate')?.touched">
+                                                    <div class="invalid-feedback">
+                                                        <small *ngIf="visaForm.get('expiryDate')?.errors?.['required']">
+                                                            {{ 'passport_application.payment.expiry_required' | translate }}
+                                                        </small>
+                                                        <small *ngIf="visaForm.get('expiryDate')?.errors?.['pattern']">
+                                                            {{ 'passport_application.payment.expiry_invalid' | translate }}
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 mb-3">
+                                                    <label class="form-label">{{ 'passport_application.payment.cvv' | translate }} *</label>
+                                                    <input type="text" class="form-control" formControlName="cvv"
+                                                        [placeholder]="'passport_application.payment.cvv_placeholder' | translate"
+                                                        maxlength="3"
+                                                        (keypress)="onCvvKeypress($event)"
+                                                        [class.is-invalid]="visaForm.get('cvv')?.invalid && visaForm.get('cvv')?.touched">
+                                                    <div class="invalid-feedback">
+                                                        <small *ngIf="visaForm.get('cvv')?.errors?.['required']">
+                                                            {{ 'passport_application.payment.cvv_required' | translate }}
+                                                        </small>
+                                                        <small *ngIf="visaForm.get('cvv')?.errors?.['pattern']">
+                                                            {{ 'passport_application.payment.cvv_invalid' | translate }}
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">{{ 'passport_application.payment.cardholder_name' | translate }} *</label>
+                                                    <input type="text" class="form-control" formControlName="cardholderName"
+                                                        [placeholder]="'passport_application.payment.cardholder_placeholder' | translate"
+                                                        [class.is-invalid]="visaForm.get('cardholderName')?.invalid && visaForm.get('cardholderName')?.touched">
+                                                    <div class="invalid-feedback">
+                                                        {{ 'passport_application.payment.cardholder_required' | translate }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">{{ 'passport_application.payment.amount' | translate }}</label>
+                                                    <input type="text" class="form-control" formControlName="amount" readonly>
+                                                </div>
+                                            </div>
+
+                                            <button type="button" class="btn btn-warning" 
+                                                [disabled]="isProcessingPayment || visaForm.invalid"
+                                                (click)="processVisaPayment()">
+                                                <span *ngIf="isProcessingPayment && activePaymentMethod === 'visa'" 
+                                                    class="spinner-border spinner-border-sm me-2"></span>
+                                                {{ 'passport_application.payment.pay_now' | translate }}
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
 
                             </div>
 
@@ -813,10 +1017,20 @@
                             <i class="fas fa-arrow-right ms-2"></i>
                         </button>
 
-                        <button type="button" class="btn btn-success" *ngIf="currentStep === 3"
-                            [disabled]="isSubmitting || !validateDocumentUploads()" (click)="onSubmitApplication()">
+                        <button type="button" 
+                            class="btn"
+                            [class.btn-success]="!shouldDisableProceedButton() && !isSubmitting"
+                            [class.btn-secondary]="shouldDisableProceedButton() && !isSubmitting"
+                            [class.btn-warning]="isSubmitting"
+                            *ngIf="currentStep === 3"
+                            [disabled]="shouldDisableProceedButton()" 
+                            (click)="onSubmitApplication()">
+                            
                             <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
-                            {{ 'passport_application.buttons.proceed_payment' | translate }}
+                            <i class="fas fa-credit-card me-2" *ngIf="!isSubmitting"></i>
+                            
+                            <span *ngIf="isSubmitting">{{ 'messages.loading' | translate }}...</span>
+                            <span *ngIf="!isSubmitting">{{ 'passport_application.buttons.proceed_payment' | translate }}</span>
                         </button>
 
                         <button type="button" class="btn btn-primary" *ngIf="currentStep === 4"
